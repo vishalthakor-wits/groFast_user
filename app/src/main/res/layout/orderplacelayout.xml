@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:background="@color/Login_theme"
+    android:layout_gravity="center"
+    android:gravity="center"
+    android:padding="30dp"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_gravity="center"
+        android:src="@drawable/baseline_check_circle_outline_24"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/thank_you"
+        android:textColor="@color/white"
+        android:layout_marginTop="20dp"
+        android:textSize="@dimen/text_size"/>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/thank_you_name"
+        android:textColor="@color/white"
+        android:layout_marginTop="10dp"
+        android:textSize="@dimen/hint_text_size"/>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/continue_shopping"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/Continue_shopping"
+        android:background="@drawable/color_button"
+        android:backgroundTint="@color/white"
+        android:textColor="@color/black"
+        android:padding="10dp"
+        android:layout_marginTop="30dp"
+        android:textAllCaps="false"
+        android:textStyle="bold" />
+
+
+
+</LinearLayout>

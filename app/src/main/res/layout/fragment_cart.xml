@@ -1,0 +1,516 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_color"
+    tools:context=".MainHomePage.CartFragment">
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/cart_data_show"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="@dimen/linear_padding"
+            android:layout_marginTop="@dimen/linear_padding"
+            android:layout_marginEnd="@dimen/linear_padding"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/cart_linear_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    app:cardBackgroundColor="@color/white"
+                    app:cardCornerRadius="@dimen/card_corners"
+                    app:cardElevation="2dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:padding="10dp">
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/fragment_cart_resent_product"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginBottom="10dp"
+                            android:background="@color/line_color" />
+
+                        <TextView
+                            android:id="@+id/cart_add_more_item"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:drawableStart="@drawable/baseline_add_24"
+                            android:drawableTint="@color/expired"
+                            android:text="@string/add_more_field"
+                            android:textColor="@color/expired"
+                            android:textSize="@dimen/hint_text_size" />
+
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    app:cardBackgroundColor="@color/white"
+                    app:cardCornerRadius="@dimen/card_corners"
+                    app:cardElevation="2dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:id="@+id/cart_add_item_linearlayout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:orientation="horizontal"
+                            android:padding="10dp">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/add_additional_product"
+                                android:textColor="@color/textview_text_color"
+                                android:textSize="@dimen/hint_text_size" />
+
+                            <ImageView
+                                android:id="@+id/cart_add_item_image"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/hide_arrow" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/cart_add_item_show_detail_layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:orientation="horizontal"
+                            android:padding="10dp"
+                            android:visibility="gone">
+
+                            <EditText
+                                android:id="@+id/cart_add_item_edittext"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:background="@drawable/textview_design"
+                                android:hint="@string/add_product_name"
+                                android:padding="@dimen/textview_inner_padding"
+                                android:textColor="@color/textview_text_color"
+                                android:textColorHint="@color/default_color"
+                                android:textSize="16sp" />
+
+
+                            <androidx.appcompat.widget.AppCompatButton
+                                android:id="@+id/cart_add_item_button"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="10dp"
+                                android:background="@drawable/color_button"
+                                android:text="@string/add_button"
+                                android:textAllCaps="false" />
+
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/line_color" />
+
+                        <LinearLayout
+                            android:id="@+id/cart_add_coupon_layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:orientation="horizontal"
+                            android:padding="10dp">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/add_coupon"
+                                android:textColor="@color/textview_text_color"
+                                android:textSize="@dimen/hint_text_size" />
+
+                            <ImageView
+                                android:id="@+id/cart_add_coupon_image"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/hide_arrow" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/cart_add_coupon_show_detail_layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:orientation="horizontal"
+                            android:padding="10dp"
+                            android:visibility="gone">
+
+                            <EditText
+                                android:id="@+id/cart_add_coupon_edittext"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:background="@drawable/textview_design"
+                                android:hint="@string/add_coupon_name"
+                                android:padding="@dimen/textview_inner_padding"
+                                android:textColor="@color/textview_text_color"
+                                android:textColorHint="@color/default_color"
+                                android:textSize="16sp" />
+
+                            <androidx.appcompat.widget.AppCompatButton
+                                android:id="@+id/cart_add_coupon_button"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="10dp"
+                                android:background="@drawable/color_button"
+                                android:text="@string/apply_button"
+                                android:textAllCaps="false" />
+
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/cart_coupon_link"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="15dp"
+                            android:layout_marginBottom="10dp"
+                            android:text="@string/show_coupon"
+                            android:textColor="@color/Login_theme"
+                            android:textSize="@dimen/hint_text_size"
+                            android:textStyle="bold"
+                            android:visibility="gone" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/line_color" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="10dp">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="@string/total_item"
+                                    android:textColor="@color/textview_text_color"
+                                    android:textSize="@dimen/hint_text_size" />
+
+                                <TextView
+                                    android:id="@+id/subtotal"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="00"
+                                    android:textColor="@color/textview_text_color"
+                                    android:textSize="@dimen/hint_text_size" />
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:id="@+id/cart_add_taxes_layout"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="10dp"
+                                android:gravity="center"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="@string/Tex"
+                                    android:textColor="@color/textview_text_color"
+                                    android:textSize="@dimen/hint_text_size" />
+
+                                <ImageView
+                                    android:id="@+id/cart_add_taxes_image"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:src="@drawable/hide_arrow" />
+
+                            </LinearLayout>
+
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/taxes_charges_cart_recycleview"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="10dp"
+                                android:visibility="gone" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="10dp"
+                                android:gravity="center"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="@string/grand_total"
+                                    android:textColor="@color/textview_text_color"
+                                    android:textSize="@dimen/hint_text_size"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:id="@+id/grand_total"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="00"
+                                    android:textColor="@color/textview_text_color"
+                                    android:textSize="@dimen/hint_text_size" />
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/line_color" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical"
+                            android:padding="10dp">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/tip"
+                                android:textColor="@color/textview_text_color"
+                                android:textSize="@dimen/hint_text_size"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="5dp"
+                                android:text="Lorem ipsum dolor sit amet consectetur adipisicing elit. Quod, aspernatur modi quasi laboriosam veritatis perferendis."
+                                android:textColor="@color/textview_text_color"
+                                android:textSize="@dimen/hint_text_size" />
+
+                            <LinearLayout
+                                android:id="@+id/tip_layout"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="10dp"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:id="@+id/tip_20"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:background="@drawable/button_line"
+                                    android:drawableStart="@drawable/baseline_currency_rupee_24"
+                                    android:drawableTint="@color/Login_theme"
+                                    android:paddingLeft="20dp"
+                                    android:paddingRight="20dp"
+                                    android:text="20"
+                                    android:textColor="@color/Login_theme"
+                                    android:textSize="@dimen/small_text" />
+
+                                <TextView
+                                    android:id="@+id/tip_30"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="10dp"
+                                    android:background="@drawable/button_line"
+                                    android:drawableStart="@drawable/baseline_currency_rupee_24"
+                                    android:drawableTint="@color/Login_theme"
+                                    android:paddingLeft="20dp"
+                                    android:paddingRight="20dp"
+                                    android:text="30"
+                                    android:textColor="@color/Login_theme"
+                                    android:textSize="@dimen/small_text" />
+
+                                <TextView
+                                    android:id="@+id/tip_other"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="10dp"
+                                    android:background="@drawable/button_line"
+                                    android:paddingLeft="20dp"
+                                    android:paddingRight="20dp"
+                                    android:text="@string/other"
+                                    android:textColor="@color/Login_theme"
+                                    android:textSize="@dimen/small_text" />
+
+                                <EditText
+                                    android:id="@+id/tip_amount_enter"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="10dp"
+                                    android:background="@drawable/button_line"
+                                    android:drawableStart="@drawable/baseline_currency_rupee_24"
+                                    android:drawableTint="@color/Login_theme"
+                                    android:hint="@string/add_amount"
+                                    android:inputType="number"
+                                    android:textColor="@color/Login_theme"
+                                    android:textSize="@dimen/hint_text_size"
+                                    android:visibility="gone" />
+                            </LinearLayout>
+
+
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/line_color" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical"
+                            android:padding="10dp">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/cancelation_policy"
+                                android:textColor="@color/textview_text_color"
+                                android:textSize="@dimen/hint_text_size"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="5dp"
+                                android:text="Lorem ipsum dolor sit amet consectetur adipisicing elit. In aliquam labore temporibus, quo ea accusantium repellendus pariatur.? Avoid cacellation as it leads to food wastage"
+                                android:textColor="@color/textview_text_color"
+                                android:textSize="@dimen/hint_text_size" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/checkout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/color_button"
+                    android:text="@string/checkout_button"
+                    android:textAllCaps="false"
+                    android:textColor="@color/button_text_color"
+                    android:textSize="@dimen/button_text_size" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <LinearLayout
+        android:id="@+id/cart_empty_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:visibility="gone"
+        android:padding="@dimen/padding"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/_150sdp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/empty_cart" />
+
+        <TextView
+            android:id="@+id/cart_empty_text1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_marginTop="20dp"
+            android:text="no data istory hhahaha"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_size" />
+
+        <TextView
+            android:id="@+id/cart_empty_text2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="3dp"
+            android:gravity="center"
+            android:text="nodara"
+            android:textColor="@color/default_color"
+            android:textSize="@dimen/hint_text_size"
+            android:visibility="visible" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/cart_empty_start_shopping"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/round_background"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:textSize="@dimen/text_size"
+            android:text="@string/start_shopping"
+            android:textAllCaps="false"
+            android:textColor="@color/white" />
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/progress_bar_cart_fragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone" />
+
+    <include
+        android:id="@+id/shimmer_layout_cart"
+        layout="@layout/shimmer_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+
+
+</FrameLayout>

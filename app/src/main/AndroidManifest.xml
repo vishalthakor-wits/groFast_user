@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.Grofast_user"
+        tools:targetApi="31">
+        <activity
+            android:name=".Details.OfferDetails"
+            android:exported="false" />
+        <activity
+            android:name=".MainHomePage.ShowAllOffer"
+            android:exported="false" />
+        <activity
+            android:name=".Details.SettingsPage"
+            android:exported="false" />
+        <activity
+            android:name=".Details.CouponDetails"
+            android:exported="false" />
+        <activity
+            android:name=".Details.Support"
+            android:exported="false" />
+        <activity
+            android:name=".Details.EditAddress"
+            android:exported="false" />
+        <activity
+            android:name=".Details.AddAddress"
+            android:exported="false" />
+        <activity
+            android:name=".Details.PaymentDetails"
+            android:exported="false" />
+        <activity
+            android:name=".Details.Wallethistory"
+            android:exported="false" />
+        <activity
+            android:name=".Details.Notification"
+            android:exported="false" />
+        <activity
+            android:name=".Details.NotificationSetting"
+            android:exported="false" />
+        <activity
+            android:name=".Details.Wallet"
+            android:exported="false" />
+        <activity
+            android:name=".Details.Coupon"
+            android:exported="false" />
+        <activity
+            android:name=".Details.MyAddress"
+            android:exported="false" />
+        <activity
+            android:name=".Details.EditProfile"
+            android:exported="false" />
+        <activity
+            android:name=".Details.ProductDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".MainHomePage.ShowAllCategories"
+            android:exported="false" />
+        <activity
+            android:name=".MainHomePage.HomePage"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".OtpPage"
+            android:exported="false" />
+        <activity
+            android:name=".MainActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Splash_Screen"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>

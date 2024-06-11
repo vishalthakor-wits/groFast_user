@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/navNotification"
+        android:icon="@drawable/baseline_notifications_24"
+        android:title="@string/menu_notification"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/navAccount"
+        android:icon="@drawable/baseline_menu_24"
+        android:title="@string/menu_menu"
+        app:showAsAction="ifRoom" />
+</menu>

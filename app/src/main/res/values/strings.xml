@@ -1,0 +1,313 @@
+<resources>
+    <string name="app_name">Grofast Grocery Store</string>
+
+    <!-- Main Activity-->
+
+    <string name="appname">Grofast Grocery Store</string>
+    <string name="hint_login_or_sign_up">Log in or sign up</string>
+    <string name="hint_phone_number">Phone number</string>
+    <string name="login_end_title">By continuing you agree to our</string>
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="terms_and_condition">T&amp;C</string>
+    <string name="content_policy">Content Policy</string>
+    <string name="company_name">Wingers It Services Pvt.Ltd</string>
+    <string name="pvt">Powered by</string>
+
+    <!-- Toast-->
+
+    <string name="toast_message_enter_number">Enter a phone number</string>
+    <string name="toast_message_valid_number">Enter a valid number</string>
+    <string name="toast_message_enter_otp">Please enter the OTP</string>
+    <string name="toast_message_correct_otp">Please enter correct otp</string>
+    <string name="toast_message_resend_otp">Wait for resend code</string>
+    <string name="toast_message_select_profile">Please select profile image</string>
+    <string name="toast_message_select_gender">Please select gender</string>
+    <string name="toast_message_enter_name">Please enter your name</string>
+    <string name="toast_message_enter_email">Please enter E-mail id</string>
+    <string name="toast_message_enter_valid_email">Please enter valid E-mail id</string>
+    <string name="toast_message_new_phone">Please change to a new phone number.</string>
+    <string name="toast_coupon_code_copied">Coupon code copied</string>
+
+
+    <!--     VALIDATION TOAST-->
+
+    <string name="toast_enter_receiver_name">Please enter receiver name</string>
+    <string name="toast_valid_receiver_name">Please enter valid receiver name</string>
+    <string name="toast_select_delevery_address">Please select address</string>
+    <string name="toast_aditional_note_saved">Suggestion saved</string>
+    <string name="toast_enter_addres">Please enter full address</string>
+    <string name="toast_enter_valid_addres">Please enter valid address</string>
+    <string name="toast_enter_country">Please enter country</string>
+    <string name="toast_enter_valid_country">Please enter valid country</string>
+    <string name="toast_enter_state">Please enter state</string>
+    <string name="toast_enter_valid_state">Please enter valid state</string>
+    <string name="toast_enter_city">Please enter city</string>
+    <string name="toast_enter_valid_city">Please enter valid city</string>
+    <string name="toast_enter_pincode">Please enter pincode</string>
+    <string name="toast_enter_valid_pincode">Please enter valid pincode</string>
+
+
+    <!--    Otp Page-->
+
+    <string name="otp_title">OTP Verification</string>
+    <string name="otp_message">We have sent a verification code to</string>
+    <string name="otp_resed_button">Resend SMS</string>
+    <string name="otp_time">Time</string>
+
+
+    <!--    Home Page-->
+
+    <string name="set_location">Set Location</string>
+    <string name="bottom_menu_product">Products</string>
+    <string name="bottom_menu_offers">Offers</string>
+    <string name="bottom_menu_home">Home</string>
+    <string name="bottom_menu_cart">Cart</string>
+    <string name="bottom_menu_history">History</string>
+
+
+    <!--    Add Location-->
+
+    <string name="add_location_text">Add Location</string>
+    <string name="current_location_text">Use Current Location</string>
+
+
+    <!--    Search View-->
+
+    <string name="search_location">Enter Location</string>
+    <string name="search_name">Search Results</string>
+    <string name="search_name_home_fragment">Type to Search...</string>
+    <string name="search_product_fragment">Search Groceries or Products</string>
+    <string name="search_offers_fragment">Search Items..</string>
+    <string name="search_coupon">Search Coupon</string>
+
+
+    <!--    Menu Item-->
+
+    <string name="menu_home">HomePage</string>
+    <string name="menu_enable_location">Enable Location</string>
+    <string name="menu_coupon">Coupon</string>
+    <string name="menu_wallet">Wallet</string>
+    <string name="menu_notification_setting">Notification Setting</string>
+    <string name="menu_notification">Notification</string>
+    <string name="menu_setting">Setting</string>
+    <string name="menu_search_list">Search List</string>
+    <string name="menu_edit_profile">Edit Profile</string>
+    <string name="menu_my_address">My Address</string>
+    <string name="menu_support">Support</string>
+    <string name="menu_log_out">Log Out</string>
+    <string name="menu_menu">Menu</string>
+    <string name="menu_language">Language</string>
+    <string name="menu_language_english">English</string>
+    <string name="menu_language_hindi">Hindi</string>
+
+
+    <!--    SETINGS PAGE -->
+
+    <string name="settings_account">Account</string>
+    <string name="settings_deactivate_account">Deactivate account</string>
+    <string name="settings_delete_account">Delete account</string>
+
+
+    <!--    SETINGS PAGE POLICIES -->
+
+    <string name="settings_policy">Policy</string>
+    <string name="settings_privacy_policy">Privacy policy</string>
+    <string name="settings_terms_and_conditions">Terms and conditions</string>
+    <string name="settings_content_policy">Content policy</string>
+    <string name="settings_refund_policy">Refund policy</string>
+    <string name="settings_cancellation_policy">Cancellation policy</string>
+    <string name="settings_delete_data_policy">Delete data policy</string>
+    <string name="settings_delete_account_policy">Delete account policy</string>
+    <string name="settings_report_policy">Report policy</string>
+    <string name="settings_infrigment_policy">Infrigment policy</string>
+    <string name="settings_grievance_policy">Grievance policy</string>
+    <string name="settings_bsd_license_policy">BSD license</string>
+
+    <!--    Home Fragment-->
+
+    <string name="top_categories">Top Categories</string>
+    <string name="view_all">View All</string>
+
+
+    <!--    Product Fragment-->
+
+    <string name="all_text">All</string>
+    <string name="short_by_text">short by</string>
+    <string name="categories_text">Categories</string>
+
+
+    <!--    Slider Layout-->
+
+    <string name="user_name">Your Name</string>
+
+
+    <!--    All Pages Name-->
+
+    <string name="coupon_page_name">Coupon</string>
+    <string name="coupondetails_page_name">Coupon Detail</string>
+    <string name="edit_profile_page_name">Edit Profile</string>
+    <string name="my_address_page_name">My Address</string>
+    <string name="product_details_page_name">Product Detail</string>
+    <string name="All_offer_page_name">Show All Offer</string>
+    <string name="All_offer_details_name">Offer Detail</string>
+    <string name="wallet_page_name">Wallet</string>
+    <string name="payment_page_name">Payment Details</string>
+    <string name="notification_setting_page_name">Notification Preferences</string>
+    <string name="notification_page_name">Notification</string>
+    <string name="show_all_categories_page_name">Categories</string>
+
+
+    <!--    Coupon-->
+
+    <string name="available_coupon">Available Coupon</string>
+
+
+    <!--    Button name-->
+
+    <string name="copy_button">Copy</string>
+    <string name="continue_button">Continue</string>
+    <string name="add_profile_button">Add profile</string>
+    <string name="edit_profile_button">Edit profile</string>
+    <string name="change_button">Change</string>
+    <string name="save_change_button">Save Changes</string>
+    <string name="change_number">Change Number</string>
+    <string name="add_address_button">Add Address</string>
+    <string name="save_address_button">Save Address</string>
+    <string name="update_address_button">Update Address</string>
+    <string name="add_cart_button">Add item</string>
+    <string name="add_button">Add</string>
+    <string name="apply_button">Apply</string>
+    <string name="activate_wallet_button">Activate Wallet</string>
+    <string name="checkout_button">Checkout</string>
+    <string name="complete_button">Complete order</string>
+    <string name="reorder_button">Reorder</string>
+    <string name="edit_button">Edit</string>
+
+
+    <!--    Edit Page Details-->
+
+    <string name="name">Name</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="email">Email</string>
+    <string name="email_hint">example@gmail.com</string>
+    <string name="location">Location</string>
+    <string name="location_hint">Your Location</string>
+    <string name="gender">Gender</string>
+    <string name="gender_male">Male</string>
+    <string name="gender_female">Female</string>
+    <string name="gender_other">Other</string>
+    <string name="add_product_name">Add item which not found in menu</string>
+    <string name="add_coupon_name">Enter Coupon code</string>
+
+
+    <!--    My Address-->
+
+    <string name="edit_address">Edit Address</string>
+    <string name="full_address">Full Address</string>
+    <string name="hint_enter_address">Enter Address</string>
+    <string name="city">City</string>
+    <string name="state">State</string>
+    <string name="country">Country</string>
+    <string name="India">India</string>
+    <string name="Bihar">Bihar</string>
+    <string name="pincode">Pincode</string>
+    <string name="Choose_an_action">Choose an action</string>
+    <string name="delete_address">Delete Address</string>
+
+
+    <!--    Product details-->
+
+    <string name="product_description">Description:</string>
+    <string name="product_related_item">Related Items:</string>
+
+
+    <!--    Wallet page-->
+
+    <string name="wallet_heading">Edition Wallet</string>
+    <string name="wallet_sub_heading">Seamless one-click checkout for all payment on Groseri</string>
+    <string name="wallet_card_1_heading">Easy Checkout</string>
+    <string name="wallet_card_1_subheading">Contrary to popular belief.</string>
+    <string name="wallet_card_2_heading">Safe and Secure</string>
+    <string name="wallet_card_2_subheading">Contrary to popular belief.</string>
+
+
+    <!--    Notification Setting-->
+
+    <string name="notification_1_heading">Push Notifications</string>
+    <string name="notification_1_sub_heading">Tap to enable notification</string>
+    <string name="notification_2_heading">Enable all</string>
+    <string name="notification_2_sub_heading">Activate all notification</string>
+    <string name="notification_3_heading">Newsletters</string>
+    <string name="notification_3_sub_heading">Receive newsletter to stay up-to date with whats brewing in food industry</string>
+    <string name="notification_4_heading">Promos and offers</string>
+    <string name="notification_4_sub_heading">Receive updates about coupons, promotions and money saving offers</string>
+    <string name="notification_5_heading">Social notifications</string>
+    <string name="notification_5_sub_heading">Get notified when someone follows your profile, or when you get likes and comments on reviews and photos posted by you</string>
+    <string name="notification_email">Email</string>
+    <string name="notification_push">Push</string>
+
+
+    <!--    Edit Image dialog-->
+
+    <string name="edit_profile_image_heading">Edit Profile Image</string>
+    <string name="change_image">Change Image</string>
+    <string name="remove_image">Remove Image</string>
+
+
+    <!--    Change phone number dialog-->
+
+    <string name="change_phone_number_title">Change Number</string>
+
+    <string name="up_to">Up To</string>
+    <string name="Discount">Discount</string>
+    <string name="Active">Active</string>
+    <string name="Inactive">Inactive</string>
+    <string name="Expired">Expired</string>
+    <string name="coin">Grofast coin available</string>
+    <string name="wallet_history">Wallet History</string>
+
+
+    <!--    cart fragment-->
+
+    <string name="add_more_field">Add more items</string>
+    <string name="add_additional_product">Add Additional Product</string>
+    <string name="add_coupon">Add Coupon</string>
+    <string name="total_item">Item Total</string>
+    <string name="qty">Qty : - </string>
+    <string name="Order_id">Order Id</string>
+    <string name="Tex">Taxes &amp; charges</string>
+    <string name="grand_total">Grand Total</string>
+    <string name="tip">Please tip your delivery partner</string>
+    <string name="other">Other</string>
+    <string name="cancelation_policy">Cancellation Policy</string>
+    <string name="show_coupon">Show Coupon</string>
+    <string name="add_amount">Enter Amount</string>
+    <string name="Invoice">Invoice</string>
+    <string name="Total">Total : </string>
+
+
+    <!--    Payment Details-->
+
+    <string name="order_by">Order by : </string>
+    <string name="recieved_by">Received by : </string>
+    <string name="recieved_name">Receiver Name</string>
+    <string name="recieved_number">Receiver Number</string>
+    <string name="delivery_address">Delivery Address</string>
+    <string name="payment">Payment Method</string>
+    <string name="cash">Cash on Delivery</string>
+    <string name="delivery_address_btn">Select Delivery Address</string>
+    <string name="add_new_address">ADD NEW ADDRESS</string>
+    <string name="delivery_to_this_address">Deliver to this Address</string>
+    <string name="place_order">Place Order</string>
+
+
+    <!--    order place-->
+
+    <string name="thank_you">Thank you for your Order</string>
+    <string name="thank_you_name">Your order is Confirmed</string>
+    <string name="Continue_shopping">Continue shopping</string>
+    <string name="start_shopping">Start shopping</string>
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="edit_profile_activity">Edit Profile</string>
+</resources>

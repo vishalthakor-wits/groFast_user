@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".Details.AddAddress">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="@dimen/padding">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="vertical"
+            android:padding="@dimen/padding">
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding"
+                android:hint="@string/full_address"
+                app:boxStrokeColor="@color/active"
+                app:hintTextColor="@color/default_color">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/add_address_address"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/textview_text_color"
+                    android:textSize="@dimen/hint_text_size" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding"
+                android:hint="@string/country"
+                app:boxStrokeColor="@color/active"
+                app:hintTextColor="@color/default_color">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/add_address_country"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/textview_text_color"
+                    android:text="@string/India"
+                    android:textSize="@dimen/hint_text_size"
+                    android:editable="false"
+                    android:focusable="false"
+                    android:clickable="false"/>
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding"
+                android:hint="@string/state"
+                app:boxStrokeColor="@color/active"
+                app:hintTextColor="@color/default_color">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/add_address_state"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/textview_text_color"
+                    android:text="@string/Bihar"
+                    android:textSize="@dimen/hint_text_size"
+                    android:editable="false"
+                    android:focusable="false"
+                    android:clickable="false"/>
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding"
+                android:hint="@string/city"
+                app:boxStrokeColor="@color/active"
+                app:hintTextColor="@color/default_color">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/add_address_city"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/textview_text_color"
+                    android:textSize="@dimen/hint_text_size" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding"
+                android:hint="@string/pincode"
+                app:boxStrokeColor="@color/active"
+                app:hintTextColor="@color/default_color">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/add_address_pincode"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:maxLength="6"
+                    android:textColor="@color/textview_text_color"
+                    android:textSize="@dimen/hint_text_size" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+        </LinearLayout>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/add_address_save_button"
+            android:layout_width="@dimen/_200sdp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/padding"
+            android:background="@drawable/round_background"
+            android:gravity="center"
+            android:text="@string/save_address_button"
+            android:textAllCaps="false"
+            android:textColor="@color/button_text_color"
+            android:textSize="@dimen/button_text_size" />
+
+        <ProgressBar
+            android:id="@+id/loader_save_address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            android:layout_marginTop="@dimen/padding"
+            android:gravity="center"/>
+
+    </LinearLayout>
+
+</androidx.core.widget.NestedScrollView>

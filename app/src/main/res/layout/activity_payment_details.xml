@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_color"
+    tools:context=".Details.PaymentDetails">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="@dimen/linear_padding">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="2dp"
+            android:layout_marginRight="2dp"
+            android:layout_marginBottom="10dp"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="@dimen/card_corners">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="10dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/order_by"
+                    android:textColor="@color/Login_theme"
+                    android:textSize="@dimen/text_size" />
+
+                <TextView
+                    android:id="@+id/payment_customer_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="Name"
+                    android:textColor="@color/textview_text_color"
+                    android:textSize="@dimen/hint_text_size" />
+
+                <TextView
+                    android:id="@+id/payment_customer_number"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="Number"
+                    android:textColor="@color/textview_text_color"
+                    android:textSize="@dimen/hint_text_size" />
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="2dp"
+            android:layout_marginRight="2dp"
+            android:layout_marginBottom="10dp"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="@dimen/card_corners">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="10dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/recieved_by"
+                    android:textColor="@color/Login_theme"
+                    android:textSize="@dimen/text_size" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/name"
+                    android:textColor="@color/textview_text_color"
+                    android:textSize="@dimen/hint_text_size" />
+
+                <EditText
+                    android:id="@+id/receiver_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/textview_design"
+                    android:hint="@string/recieved_name"
+                    android:padding="@dimen/textview_inner_padding"
+                    android:textColor="@color/textview_text_color"
+                    android:textColorHint="@color/default_color" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/phone_number"
+                    android:textColor="@color/textview_text_color"
+                    android:textSize="@dimen/hint_text_size" />
+
+                <EditText
+                    android:id="@+id/receiver_number"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/textview_design"
+                    android:hint="@string/recieved_number"
+                    android:inputType="number"
+                    android:maxLength="10"
+                    android:padding="@dimen/textview_inner_padding"
+                    android:textColor="@color/textview_text_color"
+                    android:textColorHint="@color/default_color" />
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="2dp"
+            android:layout_marginRight="2dp"
+            android:layout_marginBottom="10dp"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="@dimen/card_corners">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="10dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:drawableStart="@drawable/baseline_location_on_24"
+                        android:drawablePadding="5dp"
+                        android:drawableTint="@color/Login_theme"
+                        android:text="@string/delivery_address"
+                        android:textColor="@color/Login_theme"
+                        android:textSize="@dimen/text_size" />
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/change_selected_address"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:background="@drawable/selected_text"
+                        android:text="@string/change_button"
+                        android:textAllCaps="false"
+                        android:textColor="@color/button_text_color"
+                        android:visibility="gone" />
+
+                </LinearLayout>
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/selected_delivery_address_btn"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/color_button"
+                    android:text="@string/delivery_address_btn"
+                    android:textAllCaps="false"
+                    android:textColor="@color/button_text_color"
+                    android:textSize="@dimen/hint_text_size" />
+
+                <TextView
+                    android:id="@+id/selected_address_textview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="15dp"
+                    android:text="he"
+                    android:textColor="@color/default_color"
+                    android:textSize="@dimen/hint_text_size"
+                    android:visibility="gone" />
+
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="2dp"
+            android:layout_marginRight="2dp"
+            android:layout_marginBottom="10dp"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="@dimen/card_corners">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="10dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableStart="@drawable/baseline_payment_24"
+                    android:drawablePadding="5dp"
+                    android:drawableTint="@color/Login_theme"
+                    android:text="@string/payment"
+                    android:textColor="@color/Login_theme"
+                    android:textSize="@dimen/text_size" />
+
+                <RadioGroup
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/cash_on_Delivery_radiobtn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:buttonTint="@color/textview_text_color"
+                        android:drawableRight="@drawable/cash"
+                        android:drawablePadding="5dp"
+                        android:text="@string/cash"
+                        android:textColor="@color/textview_text_color"
+                        android:textSize="@dimen/hint_text_size" />
+
+                </RadioGroup>
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/place_order"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/color_button"
+            android:text="@string/place_order"
+            android:textAllCaps="false"
+            android:textColor="@color/button_text_color"
+            android:textSize="@dimen/hint_text_size" />
+
+        <ProgressBar
+            android:id="@+id/place_ordre_loader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            android:layout_marginTop="20dp" />
+    </LinearLayout>
+
+</androidx.core.widget.NestedScrollView>
