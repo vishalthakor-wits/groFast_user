@@ -21,7 +21,10 @@ import com.bumptech.glide.Glide;
 import com.wits.grofast_user.Adapter.RelatedProductAdapter;
 import com.wits.grofast_user.Api.RetrofitService;
 import com.wits.grofast_user.Api.interfaces.CartInterface;
+import com.wits.grofast_user.Api.interfaces.ProductInerface;
 import com.wits.grofast_user.Api.responseClasses.AddToCartResponse;
+import com.wits.grofast_user.Api.responseClasses.RelatedProductsResponse;
+import com.wits.grofast_user.Api.responseModels.ProductModel;
 import com.wits.grofast_user.R;
 import com.wits.grofast_user.session.UserActivitySession;
 
@@ -39,10 +42,12 @@ public class ProductDetailActivity extends AppCompatActivity {
     private TextView productName, productWeight, productPrice, productdescription, totalqunatity;
     RecyclerView recyclerView;
     RelatedProductAdapter relatedProductAdapter;
-    List<Map<String, Object>> relatedItems;
+    private List<ProductModel> relatedProducts=new ArrayList<>();
     AppCompatButton add_to_cart;
     ProgressBar progressBar;
     private final String TAG = "ProductDetailActivity";
+    private UserActivitySession userActivitySession;
+    private int categoryId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +58,7 @@ public class ProductDetailActivity extends AppCompatActivity {
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.outline_arrow_back_24);
         setContentView(R.layout.activity_product_detail);
 
+        userActivitySession=new UserActivitySession(getApplicationContext());
         productImage = findViewById(R.id.product_detail_image);
         productName = findViewById(R.id.product_detail_name);
         productWeight = findViewById(R.id.product_detail_weight);
@@ -74,6 +80,7 @@ public class ProductDetailActivity extends AppCompatActivity {
         }
 
         if (getIntent() != null) {
+            categoryId=getIntent().getIntExtra("categoryId",0);
             productName.setText(getIntent().getStringExtra("Name"));
             productWeight.setText(getIntent().getStringExtra("Weight"));
             productPrice.setText(getIntent().getStringExtra("Price"));
@@ -83,12 +90,10 @@ public class ProductDetailActivity extends AppCompatActivity {
         }
 
         //Related Product Item
-        relatedItems = new ArrayList<>();
-        loadRelatedItems();
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         recyclerView.setLayoutManager(layoutManager);
-        relatedProductAdapter = new RelatedProductAdapter(this, relatedItems);
-        recyclerView.setAdapter(relatedProductAdapter);
+
+        loadRelatedProducts(categoryId);
 
         addproductquantity.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -147,25 +152,27 @@ public class ProductDetailActivity extends AppCompatActivity {
         });
     }
 
-    private void loadRelatedItems() {
-        Map<String, Object> item1 = new HashMap<>();
-        item1.put("Name", "Apple");
-        item1.put("Price", "500Kg");
-        item1.put("image", R.drawable.apple);
 
-        Map<String, Object> item2 = new HashMap<>();
-        item2.put("Name", "strawberry");
-        item2.put("Price", "500Kg");
-        item2.put("image", R.drawable.strawberry);
+    private void loadRelatedProducts(int categoryId){
+        Call<RelatedProductsResponse> call=RetrofitService.getClient(userActivitySession.getToken()).create(ProductInerface.class).fetchRelatedProducts(categoryId);
 
-        Map<String, Object> item3 = new HashMap<>();
-        item3.put("Name", "Apple");
-        item3.put("Price", "500Kg");
-        item3.put("image", R.drawable.apple);
+        call.enqueue(new Callback<RelatedProductsResponse>() {
+            @Override
+            public void onResponse(Call<RelatedProductsResponse> call, Response<RelatedProductsResponse> response) {
+                if(response.isSuccessful()){
+                    RelatedProductsResponse relatedProductsResponse=response.body();
+                    relatedProducts=relatedProductsResponse.getProductList();
 
-        relatedItems.add(item1);
-        relatedItems.add(item2);
-        relatedItems.add(item3);
+                    relatedProductAdapter = new RelatedProductAdapter(getApplicationContext(), relatedProducts);
+                    recyclerView.setAdapter(relatedProductAdapter);
+                }else handleApiError(TAG,response,getApplicationContext());
+            }
+
+            @Override
+            public void onFailure(Call<RelatedProductsResponse> call, Throwable t) {
+
+            }
+        });
     }
 
     @Override

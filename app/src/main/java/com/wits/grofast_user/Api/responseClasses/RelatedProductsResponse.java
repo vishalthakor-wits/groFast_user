@@ -5,7 +5,7 @@ import com.wits.grofast_user.Api.responseModels.ProductModel;
 
 import java.util.List;
 
-public class RelatedPeoductsResponse {
+public class RelatedProductsResponse {
 
     private String message;
 

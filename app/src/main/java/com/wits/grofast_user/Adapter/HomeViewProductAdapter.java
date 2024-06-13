@@ -68,6 +68,7 @@ public class HomeViewProductAdapter extends RecyclerView.Adapter<HomeViewProduct
                 intent.putExtra("image", domain + item.getImage());
                 intent.putExtra("quantity", holder.total_product_quantity.getText());
                 intent.putExtra("ProductId", item.getId());
+                intent.putExtra("categoryId", item.getCategory_id());
                 context.startActivity(intent);
             }
         });
