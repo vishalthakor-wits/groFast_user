@@ -2,7 +2,7 @@ package com.wits.grofast_user.Api.interfaces;
 
 import com.wits.grofast_user.Api.responseClasses.HomeProductResponse;
 import com.wits.grofast_user.Api.responseClasses.ProductResponse;
-import com.wits.grofast_user.Api.responseClasses.RelatedPeoductsResponse;
+import com.wits.grofast_user.Api.responseClasses.RelatedProductsResponse;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -20,5 +20,5 @@ public interface ProductInerface {
     Call<HomeProductResponse> fetchHomeProducts();
 
     @POST("fetch-related-products")
-    Call<RelatedPeoductsResponse> fetchRelatedProducts(@Query("categoryId") int categoryId);
+    Call<RelatedProductsResponse> fetchRelatedProducts(@Query("categoryId") int categoryId);
 }
