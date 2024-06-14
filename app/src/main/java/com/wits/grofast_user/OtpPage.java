@@ -20,13 +20,14 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.wits.grofast_user.Api.RetrofitService;
 import com.wits.grofast_user.Api.interfaces.OtpInterface;
-import com.wits.grofast_user.Api.interfaces.UserInterface;
 import com.wits.grofast_user.Api.responseClasses.LoginResponse;
 import com.wits.grofast_user.Api.responseClasses.OtpVerifyResponse;
 import com.wits.grofast_user.Api.responseModels.UserModel;
 import com.wits.grofast_user.MainHomePage.HomePage;
+import com.wits.grofast_user.Notification.FCMInterface;
 import com.wits.grofast_user.session.UserActivitySession;
 import com.wits.grofast_user.session.UserDetailSession;
 
@@ -42,6 +43,7 @@ public class OtpPage extends AppCompatActivity {
     long COUNTDOWN_TIME_MILLIS = 30000;
     String TAG = "OtpPage";
     LinearLayout loadingOverlay;
+    private UserActivitySession userActivitySession;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +53,7 @@ public class OtpPage extends AppCompatActivity {
         getSupportActionBar().hide();
         setContentView(R.layout.activity_otp_page);
 
+        userActivitySession = new UserActivitySession(getApplicationContext());
         loadingOverlay = findViewById(R.id.loading_overlay);
 
         UserActivitySession session = new UserActivitySession(getApplicationContext());
@@ -109,6 +112,8 @@ public class OtpPage extends AppCompatActivity {
                                 userDetailSession.setImage(userModel.getImage());
                                 userDetailSession.setUuid(userModel.getUuid());
                                 userDetailSession.setWalletStatus(userModel.getWalletStatus());
+
+                                saveFcmToServer(genereateFcmToken());
                                 startActivity(i);
                             } else {
                                 handleApiError(TAG, response, getApplicationContext());
@@ -194,5 +199,38 @@ public class OtpPage extends AppCompatActivity {
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT);
         }
+    }
+
+    private String fcmToken;
+
+    private String genereateFcmToken() {
+        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task -> {
+            if (!task.isSuccessful()) {
+                Log.w(TAG, "Fetching FCM registration token failed", task.getException());
+                return;
+            }
+
+            // Get the FCM token
+            fcmToken = task.getResult();
+            Log.e(TAG, "onResponse: fcm token " + fcmToken);
+        });
+        return fcmToken;
+    }
+
+    private void saveFcmToServer(String fcmToken) {
+        Call<Void> call = RetrofitService.getClient(userActivitySession.getToken()).create(FCMInterface.class).storeFcmtoServer(fcmToken);
+
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (!response.isSuccessful())
+                    handleApiError(TAG, response, getApplicationContext());
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
     }
 }
