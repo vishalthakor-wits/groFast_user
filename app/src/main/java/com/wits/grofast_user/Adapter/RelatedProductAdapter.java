@@ -38,7 +38,7 @@ public class RelatedProductAdapter extends RecyclerView.Adapter<RelatedProductAd
     public void onBindViewHolder(@NonNull RelatedProductAdapter.ViewHolders holder, int position) {
        ProductModel item = productList.get(position);
         holder.name.setText(item.getName());
-        holder.price.setText(item.getFinal_price());
+        holder.price.setText(""+item.getFinal_price());
         Glide.with(context).load(domain + item.getImage()).placeholder(R.drawable.gobhi_image).into(holder.image);
     }
 
