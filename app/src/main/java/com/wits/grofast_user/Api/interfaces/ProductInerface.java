@@ -20,5 +20,5 @@ public interface ProductInerface {
     Call<HomeProductResponse> fetchHomeProducts();
 
     @POST("fetch-related-products")
-    Call<RelatedProductsResponse> fetchRelatedProducts(@Query("categoryId") int categoryId);
+    Call<RelatedProductsResponse> fetchRelatedProducts(@Query("categoryId") int categoryId,@Query("productId") int productId);
 }

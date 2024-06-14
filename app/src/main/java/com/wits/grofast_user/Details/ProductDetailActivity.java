@@ -47,7 +47,7 @@ public class ProductDetailActivity extends AppCompatActivity {
     ProgressBar progressBar;
     private final String TAG = "ProductDetailActivity";
     private UserActivitySession userActivitySession;
-    private int categoryId;
+    private int categoryId,productId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +71,7 @@ public class ProductDetailActivity extends AppCompatActivity {
         add_to_cart = findViewById(R.id.product_detail_add_to_cart);
         progressBar = findViewById(R.id.loader_product_cart_item);
 
-        int productId = getIntent().getIntExtra("ProductId", 0);
+        productId = getIntent().getIntExtra("ProductId", 0);
 
         if (productId != 0) {
             Log.e("TAG", "Product ID: " + productId);
@@ -93,7 +93,7 @@ public class ProductDetailActivity extends AppCompatActivity {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         recyclerView.setLayoutManager(layoutManager);
 
-        loadRelatedProducts(categoryId);
+        loadRelatedProducts(categoryId,productId);
 
         addproductquantity.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -153,8 +153,8 @@ public class ProductDetailActivity extends AppCompatActivity {
     }
 
 
-    private void loadRelatedProducts(int categoryId){
-        Call<RelatedProductsResponse> call=RetrofitService.getClient(userActivitySession.getToken()).create(ProductInerface.class).fetchRelatedProducts(categoryId);
+    private void loadRelatedProducts(int categoryId,int productId){
+        Call<RelatedProductsResponse> call=RetrofitService.getClient(userActivitySession.getToken()).create(ProductInerface.class).fetchRelatedProducts(categoryId,productId);
 
         call.enqueue(new Callback<RelatedProductsResponse>() {
             @Override
