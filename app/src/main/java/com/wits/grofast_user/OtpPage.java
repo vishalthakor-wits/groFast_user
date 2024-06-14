@@ -101,7 +101,6 @@ public class OtpPage extends AppCompatActivity {
                                 session.setLoginStaus(true);
                                 session.setToken(otpVerifyResponse.getAccessToken());
 
-
                                 userDetailSession.setUserId(userModel.getId());
                                 userDetailSession.setName(userModel.getName());
                                 userDetailSession.setEmail(userModel.getEmail());
