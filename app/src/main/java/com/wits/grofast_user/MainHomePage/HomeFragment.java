@@ -217,4 +217,10 @@ public class HomeFragment extends Fragment {
 
         getParentFragmentManager().beginTransaction().replace(R.id.fragmentnav, productFragment).addToBackStack(null).commit();
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        searchView.setQuery("",false);
+    }
 }
