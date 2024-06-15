@@ -65,7 +65,7 @@ public class CartResentAddProductAdapter extends RecyclerView.Adapter<CartResent
         holder.product_price.setText(item.getAmount().toString());
         holder.totalquantity.setText(item.getQuantity().toString());
 
-        Glide.with(context).load(product.getImage()).placeholder(R.drawable.apple).into(holder.product_image);
+        Glide.with(context).load(product.getImage()).placeholder(R.mipmap.ic_launcher).into(holder.product_image);
 
         holder.addquantity.setOnClickListener(new View.OnClickListener() {
             @Override

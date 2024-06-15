@@ -52,7 +52,7 @@ public class ShowAllCategoriesAdapter extends RecyclerView.Adapter<ShowAllCatego
         UserActivitySession userActivitySession = new UserActivitySession(context);
         CategoryModel item = categoryList.get(position);
         holder.Name.setText(item.getCategory_name());
-        Glide.with(context).load( item.getImage()).placeholder(R.color.default_color).into(holder.Banner);
+        Glide.with(context).load( item.getImage()).placeholder(R.mipmap.ic_launcher).into(holder.Banner);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

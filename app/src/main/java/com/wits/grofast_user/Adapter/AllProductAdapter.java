@@ -54,7 +54,7 @@ public class AllProductAdapter extends RecyclerView.Adapter<AllProductAdapter.Vi
         holder.name.setText(item.getName());
         holder.weight.setText(item.getPer() + " " + item.getUnitName());
         holder.price.setText(item.getFinal_price().toString());
-        Glide.with(context).load( item.getImage()).placeholder(R.drawable.gobhi_image).into(holder.image);
+        Glide.with(context).load( item.getImage()).placeholder(R.mipmap.ic_launcher).into(holder.image);
 
         holder.image.setOnClickListener(new View.OnClickListener() {
             @Override

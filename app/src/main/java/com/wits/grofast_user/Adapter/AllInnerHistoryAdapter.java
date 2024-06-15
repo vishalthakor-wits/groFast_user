@@ -39,7 +39,7 @@ public class AllInnerHistoryAdapter extends RecyclerView.Adapter<AllInnerHistory
 
         if (product != null) {
             holder.productname.setText("" + product.getName());
-            Glide.with(context).load( product.getImage()).placeholder(R.drawable.apple).into(holder.image);
+            Glide.with(context).load( product.getImage()).placeholder(R.mipmap.ic_launcher).into(holder.image);
         }
 
         holder.quantity.setText("" + item.getQuantity());
