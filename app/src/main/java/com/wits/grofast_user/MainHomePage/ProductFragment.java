@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -55,6 +56,7 @@ public class ProductFragment extends Fragment {
     RecyclerView recyclerView;
     AllProductAdapter allProductAdapter;
     private List<ProductModel> productList = new ArrayList<>();
+    private List<ProductModel> searchProductList = new ArrayList<>();
     private GridLayoutManager layoutManager;
     NestedScrollView show_data;
     private final String TAG = "ProductFragment";
@@ -63,6 +65,9 @@ public class ProductFragment extends Fragment {
     private ShimmerFrameLayout shimmerFrameLayout;
     LinearLayout no_product_layout;
     TextView no_product_text, no_product_text2;
+    private androidx.appcompat.widget.SearchView searchView;
+    private ImageView searchIcon;
+    private String searchQuery;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -83,6 +88,9 @@ public class ProductFragment extends Fragment {
         no_product_text = root.findViewById(R.id.no_product_text1);
         no_product_text2 = root.findViewById(R.id.no_product_text2);
 
+        searchView = root.findViewById(R.id.product_search_view);
+        searchIcon = root.findViewById(R.id.product_search_icon);
+
         ShowPageLoader();
         //Product Item
         layoutManager = new GridLayoutManager(getContext(), 2);
@@ -94,6 +102,30 @@ public class ProductFragment extends Fragment {
         } else {
             getProducts(1);
         }
+
+        searchView.setOnQueryTextListener(new androidx.appcompat.widget.SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                searchProducts(query, 1);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if (newText.isEmpty()) {
+                    showAllProducts();
+                }
+                searchQuery = newText;
+                return false;
+            }
+        });
+
+        searchIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                searchProducts(searchQuery, 1);
+            }
+        });
 
         completeorderbtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -214,6 +246,56 @@ public class ProductFragment extends Fragment {
         shimmerFrameLayout.stopShimmer();
         show_data.setVisibility(View.VISIBLE);
         completeorderbtn.setVisibility(View.VISIBLE);
+    }
+
+    private void searchProducts(String searchParameter, int page) {
+        ShowPageLoader();
+        Call<ProductResponse> call = RetrofitService.getClient(userActivitySession.getToken()).create(ProductInerface.class).searchProduct(searchParameter, page);
+
+        call.enqueue(new Callback<ProductResponse>() {
+            @Override
+            public void onResponse(Call<ProductResponse> call, Response<ProductResponse> response) {
+                HidePageLoader();
+                if (response.isSuccessful()) {
+                    ProductResponse productResponse = response.body();
+                    ProductPaginatedRes paginatedResponse = productResponse.getPaginatedProducts();
+                    searchProductList = paginatedResponse.getProductList();
+
+                    allProductAdapter = new AllProductAdapter(getContext(), searchProductList);
+                    recyclerView.setAdapter(allProductAdapter);
+
+                    Log.i(TAG, "onResponse: getProductByCategory message " + productResponse.getMessage());
+                    Log.i(TAG, "onResponse: total products " + paginatedResponse.getTotal());
+                    Log.i(TAG, "onResponse: fetched products " + paginatedResponse.getTo());
+                    Log.e(TAG, "onResponse: fragment Show all Product");
+                } else if (response.code() == 422) {
+                    try {
+                        String errorBodyString = response.errorBody().string();
+                        Gson gson = new Gson();
+                        JsonObject errorBodyJson = gson.fromJson(errorBodyString, JsonObject.class);
+
+                        String errorMessage = errorBodyJson.has("errorMessage") ? errorBodyJson.get("errorMessage").getAsString() : "No errorMessage";
+                        String message = errorBodyJson.has("message") ? errorBodyJson.get("message").getAsString() : "No message";
+
+                        showNoProductMessage(message, errorMessage);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    handleApiError(TAG, response, getContext());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ProductResponse> call, Throwable t) {
+                HidePageLoader();
+            }
+        });
+    }
+
+    private void showAllProducts() {
+        allProductAdapter = new AllProductAdapter(getContext(), productList);
+        recyclerView.setAdapter(allProductAdapter);
     }
 
     @Override
