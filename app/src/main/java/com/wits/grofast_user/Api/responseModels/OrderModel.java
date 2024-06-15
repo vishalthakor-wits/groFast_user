@@ -14,7 +14,7 @@ public class OrderModel {
 
     private String latitude;
 
-    private Integer discount;
+    private double discount;
 
     private String created_at;
 
@@ -49,7 +49,7 @@ public class OrderModel {
 
     private String receiver_phone_no;
 
-    private Integer total_amount;
+    private double total_amount;
 
     private Integer customer_id;
 
@@ -74,7 +74,7 @@ public class OrderModel {
         return latitude;
     }
 
-    public Integer getDiscount() {
+    public double getDiscount() {
         return discount;
     }
 
@@ -142,7 +142,7 @@ public class OrderModel {
         return receiver_phone_no;
     }
 
-    public Integer getTotal_amount() {
+    public double getTotal_amount() {
         return total_amount;
     }
 

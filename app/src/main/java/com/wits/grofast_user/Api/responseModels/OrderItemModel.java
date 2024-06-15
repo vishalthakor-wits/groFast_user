@@ -1,5 +1,7 @@
 package com.wits.grofast_user.Api.responseModels;
 
+import com.google.gson.annotations.SerializedName;
+
 public class OrderItemModel {
 
     private Integer quantity;
@@ -20,6 +22,7 @@ public class OrderItemModel {
 
     private String uuid;
 
+    @SerializedName("product")
     private ProductModel product;
 
     public Integer getQuantity() {
