@@ -1,7 +1,5 @@
 package com.wits.grofast_user.session;
 
-import static com.wits.grofast_user.Api.RetrofitService.domain;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 
@@ -35,7 +33,7 @@ public class UserDetailSession {
     }
 
     public void setImage(String image) {
-        editor.putString("userImage", domain + image);
+        editor.putString("userImage", image);
         editor.apply();
     }
 

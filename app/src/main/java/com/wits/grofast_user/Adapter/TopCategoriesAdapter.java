@@ -1,7 +1,5 @@
 package com.wits.grofast_user.Adapter;
 
-import static com.wits.grofast_user.Api.RetrofitService.domain;
-
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -48,7 +46,7 @@ public class TopCategoriesAdapter extends RecyclerView.Adapter<TopCategoriesAdap
         UserActivitySession userActivitySession = new UserActivitySession(context);
         CategoryModel item = categoryList.get(position).getHomeCategory();
         holder.Name.setText(item.getCategory_name());
-        Glide.with(context).load(domain + item.getImage()).placeholder(R.color.default_color).into(holder.Banner);
+        Glide.with(context).load(item.getImage()).placeholder(R.color.default_color).into(holder.Banner);
 
         holder.Banner.setOnClickListener(new View.OnClickListener() {
             @Override
