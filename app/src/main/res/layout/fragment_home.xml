@@ -36,6 +36,7 @@
                     app:layout_constraintTop_toBottomOf="@id/action_bar_id">
 
                     <androidx.appcompat.widget.SearchView
+                        android:id="@+id/home_product_search_view"
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
                         android:layout_weight="1"
@@ -44,6 +45,7 @@
                         app:searchIcon="@null" />
 
                     <ImageView
+                        android:id="@+id/home_product_search_icon"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="5dp"

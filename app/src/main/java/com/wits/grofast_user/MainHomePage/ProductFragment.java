@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.widget.AppCompatButton;
+import androidx.appcompat.widget.SearchView;
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -65,7 +66,7 @@ public class ProductFragment extends Fragment {
     private ShimmerFrameLayout shimmerFrameLayout;
     LinearLayout no_product_layout;
     TextView no_product_text, no_product_text2;
-    private androidx.appcompat.widget.SearchView searchView;
+    private SearchView searchView;
     private ImageView searchIcon;
     private String searchQuery;
 
@@ -92,13 +93,25 @@ public class ProductFragment extends Fragment {
         searchIcon = root.findViewById(R.id.product_search_icon);
 
         ShowPageLoader();
+
         //Product Item
         layoutManager = new GridLayoutManager(getContext(), 2);
         recyclerView.setLayoutManager(layoutManager);
 
         if (getArguments() != null) {
+            searchQuery = getArguments().getString("searchParameter");
             String category = getArguments().getString(ARG_CATEGORY_NAME);
-            getProductByCategory(category);
+
+            if (category != null) {
+                getProductByCategory(category);
+            } else {
+                searchView.setQuery(searchQuery, false);
+                searchProducts(searchQuery, 1);
+            }
+
+            Log.e(TAG, "onCreateView: category " + category);
+            Log.e(TAG, "onCreateView: searchQuery " + searchQuery);
+
         } else {
             getProducts(1);
         }
@@ -294,8 +307,10 @@ public class ProductFragment extends Fragment {
     }
 
     private void showAllProducts() {
-        allProductAdapter = new AllProductAdapter(getContext(), productList);
-        recyclerView.setAdapter(allProductAdapter);
+        if (!productList.isEmpty()) {
+            allProductAdapter = new AllProductAdapter(getContext(), productList);
+            recyclerView.setAdapter(allProductAdapter);
+        }
     }
 
     @Override

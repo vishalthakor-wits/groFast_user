@@ -8,8 +8,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.appcompat.widget.SearchView;
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -52,6 +54,10 @@ public class HomeFragment extends Fragment {
     private final String TAG = "HomeFragment";
     private UserActivitySession userActivitySession;
 
+    private ImageView searchIcon;
+    private String searchQuery;
+    private SearchView searchView;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -66,6 +72,9 @@ public class HomeFragment extends Fragment {
 
         layoutcategories = root.findViewById(R.id.layout_top_categories);
         shimmerFrameLayout = root.findViewById(R.id.shimmer_layout_home);
+
+        searchView = root.findViewById(R.id.home_product_search_view);
+        searchIcon = root.findViewById(R.id.home_product_search_icon);
 
         ShowPageLoader();
 
@@ -93,6 +102,28 @@ public class HomeFragment extends Fragment {
                 loadFragment(new ProductFragment());
             }
         });
+
+        searchView.setOnQueryTextListener(new androidx.appcompat.widget.SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                searchProductsOnProductFragment(query);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                searchQuery = newText;
+                return false;
+            }
+        });
+
+        searchIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                searchProductsOnProductFragment(searchQuery);
+            }
+        });
+
         return root;
     }
 
@@ -175,5 +206,15 @@ public class HomeFragment extends Fragment {
         if (isCategoriesLoaded && isProductsLoaded) {
             HidePageLoader();
         }
+    }
+
+    private void searchProductsOnProductFragment(String searchParameter) {
+        ProductFragment productFragment = new ProductFragment();
+
+        Bundle bundle = new Bundle();
+        bundle.putString("searchParameter", searchParameter);
+        productFragment.setArguments(bundle);
+
+        getParentFragmentManager().beginTransaction().replace(R.id.fragmentnav, productFragment).addToBackStack(null).commit();
     }
 }
