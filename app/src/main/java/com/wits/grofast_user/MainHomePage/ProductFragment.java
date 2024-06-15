@@ -318,4 +318,10 @@ public class ProductFragment extends Fragment {
         super.onStop();
         userActivitySession.setProductFetchIndicator(0);
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        searchView.setQuery("",false);
+    }
 }

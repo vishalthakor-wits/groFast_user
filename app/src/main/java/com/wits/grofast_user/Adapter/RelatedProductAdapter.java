@@ -1,6 +1,5 @@
 package com.wits.grofast_user.Adapter;
 
-import static com.wits.grofast_user.Api.RetrofitService.domain;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -39,7 +38,7 @@ public class RelatedProductAdapter extends RecyclerView.Adapter<RelatedProductAd
        ProductModel item = productList.get(position);
         holder.name.setText(item.getName());
         holder.price.setText(""+item.getFinal_price());
-        Glide.with(context).load(domain + item.getImage()).placeholder(R.drawable.gobhi_image).into(holder.image);
+        Glide.with(context).load( item.getImage()).placeholder(R.drawable.gobhi_image).into(holder.image);
     }
 
     @Override

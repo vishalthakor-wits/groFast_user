@@ -1,6 +1,5 @@
 package com.wits.grofast_user.Adapter;
 
-import static com.wits.grofast_user.Api.RetrofitService.domain;
 import static com.wits.grofast_user.CommonUtilities.handleApiError;
 import static com.wits.grofast_user.CommonUtilities.showToast;
 
@@ -55,7 +54,7 @@ public class AllProductAdapter extends RecyclerView.Adapter<AllProductAdapter.Vi
         holder.name.setText(item.getName());
         holder.weight.setText(item.getPer() + " " + item.getUnitName());
         holder.price.setText(item.getFinal_price().toString());
-        Glide.with(context).load(domain + item.getImage()).placeholder(R.drawable.gobhi_image).into(holder.image);
+        Glide.with(context).load( item.getImage()).placeholder(R.mipmap.ic_launcher).into(holder.image);
 
         holder.image.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,7 +64,7 @@ public class AllProductAdapter extends RecyclerView.Adapter<AllProductAdapter.Vi
                 intent.putExtra("Weight", item.getPer() + " " + item.getUnitName());
                 intent.putExtra("Price", item.getFinal_price().toString());
                 intent.putExtra("Description", item.getProduct_detail());
-                intent.putExtra("image", domain + item.getImage());
+                intent.putExtra("image", item.getImage());
                 intent.putExtra("quantity", holder.total_product_quantity.getText());
                 intent.putExtra("ProductId", item.getId());
                 intent.putExtra("categoryId", item.getCategory_id());

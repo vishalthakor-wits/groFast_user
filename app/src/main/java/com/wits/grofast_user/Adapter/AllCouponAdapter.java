@@ -1,7 +1,5 @@
 package com.wits.grofast_user.Adapter;
 
-import static com.wits.grofast_user.Api.RetrofitService.domain;
-
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -38,7 +36,7 @@ public class AllCouponAdapter extends RecyclerView.Adapter<AllCouponAdapter.View
     @Override
     public void onBindViewHolder(@NonNull AllCouponAdapter.ViewHolders holder, int position) {
         CouponModel item = AllCouponItems.get(position);
-        Glide.with(context).load(domain + item.getImage()).placeholder(R.color.default_color).into(holder.imageView);
+        Glide.with(context).load( item.getImage()).placeholder(R.color.default_color).into(holder.imageView);
 
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -46,7 +44,7 @@ public class AllCouponAdapter extends RecyclerView.Adapter<AllCouponAdapter.View
                 Intent intent = new Intent(context.getApplicationContext(), CouponDetails.class);
                 intent.putExtra("Code", item.getCode());
                 intent.putExtra("Description", item.getDescription());
-                intent.putExtra("image", domain + item.getImage());
+                intent.putExtra("image",  item.getImage());
                 intent.putExtra("Status",  item.getStatus());
                 setStatusColor(item.getStatus());
                 intent.putExtra("CouponId", item.getId());
