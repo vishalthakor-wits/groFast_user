@@ -39,10 +39,13 @@ public class AllInnerHistoryAdapter extends RecyclerView.Adapter<AllInnerHistory
         OrderItemModel item = orderItems.get(position);
         ProductModel product = item.getProduct();
 
+        if (product != null) {
+            holder.productname.setText("" + product.getName());
+            Glide.with(context).load(domain + product.getImage()).placeholder(R.drawable.apple).into(holder.image);
+        }
+
         holder.quantity.setText("" + item.getQuantity());
-        holder.productname.setText("" + product.getName());
         holder.price.setText("" + item.getSubtotal());
-        Glide.with(context).load(domain + product.getImage()).placeholder(R.drawable.apple).into(holder.image);
     }
 
     @Override

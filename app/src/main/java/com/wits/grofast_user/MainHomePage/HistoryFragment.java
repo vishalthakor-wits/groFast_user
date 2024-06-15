@@ -1,9 +1,9 @@
 package com.wits.grofast_user.MainHomePage;
 
-import static android.view.View.GONE;
 import static com.wits.grofast_user.CommonUtilities.handleApiError;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +24,9 @@ import com.wits.grofast_user.Adapter.AllHistoryAdapter;
 import com.wits.grofast_user.Api.RetrofitService;
 import com.wits.grofast_user.Api.interfaces.OrderInterface;
 import com.wits.grofast_user.Api.responseClasses.OrderHistoryResponse;
+import com.wits.grofast_user.Api.responseModels.OrderItemModel;
 import com.wits.grofast_user.Api.responseModels.OrderModel;
+import com.wits.grofast_user.Api.responseModels.ProductModel;
 import com.wits.grofast_user.R;
 import com.wits.grofast_user.session.UserActivitySession;
 
@@ -94,6 +96,9 @@ public class HistoryFragment extends Fragment {
                 if (response.isSuccessful()) {
                     OrderHistoryResponse orderHistoryResponse = response.body();
                     orderList = orderHistoryResponse.getOrderList();
+
+//                    logOrderHistory(orderList);
+
                     allHistoryAdapter = new AllHistoryAdapter(getContext(), orderList);
                     recyclerView.setAdapter(allHistoryAdapter);
                 } else if (response.code() == 422) {
@@ -130,6 +135,24 @@ public class HistoryFragment extends Fragment {
         shimmerFrameLayout.setVisibility(View.GONE);
         shimmerFrameLayout.stopShimmer();
         showdata.setVisibility(View.VISIBLE);
+    }
+
+    private void logOrderHistory(List<OrderModel> orderHistory){
+        for (OrderModel order : orderHistory) {
+            Log.e(TAG, " \n\nonResponse order: order id " + order.getId());
+
+            for (OrderItemModel orderItem : order.getOrderItems()) {
+                Log.e(TAG, "onResponse orderItem: product_id " + orderItem.getProduct_id());
+                Log.e(TAG, "onResponse orderItem: customer_order_id " + orderItem.getCustomer_order_id());
+                Log.e(TAG, "onResponse orderItem: subtotal " + orderItem.getSubtotal());
+
+                ProductModel productModel = orderItem.getProduct();
+
+                if (productModel != null) {
+                    Log.e(TAG, "onResponse productModel : product name  " + productModel.getName());
+                } else Log.e(TAG, "onResponse productModel : product model is null ");
+            }
+        }
     }
 
     private void showNoHistoryMessage(String message, String messaage2) {

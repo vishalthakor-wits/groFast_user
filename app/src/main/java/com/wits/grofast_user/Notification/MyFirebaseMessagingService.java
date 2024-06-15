@@ -21,7 +21,7 @@ import com.wits.grofast_user.R;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private static int notificationId = 0;
-    private static final String CHANNEL_ID = "mksst_channel_id";
+    private static final String CHANNEL_ID = "grofastChannel";
 
     @Override
     public void onMessageReceived(@NonNull RemoteMessage message) {

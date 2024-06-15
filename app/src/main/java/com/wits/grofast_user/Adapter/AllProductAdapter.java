@@ -6,7 +6,6 @@ import static com.wits.grofast_user.CommonUtilities.showToast;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,7 +53,7 @@ public class AllProductAdapter extends RecyclerView.Adapter<AllProductAdapter.Vi
     public void onBindViewHolder(@NonNull AllProductAdapter.ViewHolders holder, int position) {
         ProductModel item = productList.get(position);
         holder.name.setText(item.getName());
-        holder.weight.setText(item.getQuantity().toString() + " " + item.getUnitName());
+        holder.weight.setText(item.getPer() + " " + item.getUnitName());
         holder.price.setText(item.getFinal_price().toString());
         Glide.with(context).load(domain + item.getImage()).placeholder(R.drawable.gobhi_image).into(holder.image);
 
@@ -63,7 +62,7 @@ public class AllProductAdapter extends RecyclerView.Adapter<AllProductAdapter.Vi
             public void onClick(View v) {
                 Intent intent = new Intent(context, ProductDetailActivity.class);
                 intent.putExtra("Name", item.getName());
-                intent.putExtra("Weight", item.getQuantity().toString() + " " + item.getUnitName());
+                intent.putExtra("Weight", item.getPer() + " " + item.getUnitName());
                 intent.putExtra("Price", item.getFinal_price().toString());
                 intent.putExtra("Description", item.getProduct_detail());
                 intent.putExtra("image", domain + item.getImage());

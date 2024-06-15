@@ -21,4 +21,7 @@ public interface ProductInerface {
 
     @POST("fetch-related-products")
     Call<RelatedProductsResponse> fetchRelatedProducts(@Query("categoryId") int categoryId,@Query("productId") int productId);
+
+    @POST("serach-products")
+    Call<ProductResponse> searchProduct(@Query("product_name") String ProductName,@Query("page") int page);
 }
