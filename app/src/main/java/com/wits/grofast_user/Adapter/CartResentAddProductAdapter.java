@@ -3,6 +3,7 @@ package com.wits.grofast_user.Adapter;
 import static com.wits.grofast_user.CommonUtilities.handleApiError;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +22,7 @@ import com.wits.grofast_user.Api.responseClasses.CartFetchResponse;
 import com.wits.grofast_user.Api.responseModels.CartModel;
 import com.wits.grofast_user.Api.responseModels.ProductModel;
 import com.wits.grofast_user.Api.responseModels.TaxAndCharge;
+import com.wits.grofast_user.Details.ProductDetailActivity;
 import com.wits.grofast_user.MainHomePage.CartFragment;
 import com.wits.grofast_user.R;
 import com.wits.grofast_user.session.CartDetailSession;
@@ -57,6 +59,7 @@ public class CartResentAddProductAdapter extends RecyclerView.Adapter<CartResent
     public void onBindViewHolder(@NonNull CartResentAddProductAdapter.ViewHolders holder, int position) {
         userActivitySession = new UserActivitySession(context);
         cartDetailSession = new CartDetailSession(context);
+        View.OnClickListener productDetailClicklistner;
         adapter = this;
         CartModel item = cartItems.get(position);
         ProductModel product = item.getProduct();
@@ -66,6 +69,19 @@ public class CartResentAddProductAdapter extends RecyclerView.Adapter<CartResent
         holder.totalquantity.setText(item.getQuantity().toString());
 
         Glide.with(context).load(product.getImage()).placeholder(R.mipmap.ic_launcher).into(holder.product_image);
+
+        productDetailClicklistner = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, ProductDetailActivity.class);
+                intent.putExtra(context.getString(R.string.intent_key_product_model), product);
+                context.startActivity(intent);
+            }
+        };
+
+        holder.product_image.setOnClickListener(productDetailClicklistner);
+        holder.product_name.setOnClickListener(productDetailClicklistner);
+        holder.product_price.setOnClickListener(productDetailClicklistner);
 
         holder.addquantity.setOnClickListener(new View.OnClickListener() {
             @Override
