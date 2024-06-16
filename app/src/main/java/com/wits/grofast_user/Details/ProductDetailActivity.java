@@ -87,7 +87,7 @@ public class ProductDetailActivity extends AppCompatActivity {
             categoryId = product.getCategory_id();
 
             productName.setText("" + product.getName());
-            productWeight.setText("" + product.getPer());
+            productWeight.setText("" + product.getPer() + " " + product.getUnitName());
             productPrice.setText("" + product.getFinal_price());
             productdescription.setText("" + product.getProduct_detail());
             totalqunatity.setText("1");
