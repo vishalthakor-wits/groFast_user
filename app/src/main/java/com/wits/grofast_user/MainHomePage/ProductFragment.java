@@ -316,12 +316,7 @@ public class ProductFragment extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
+        searchView.setQuery("", false);
         userActivitySession.setProductFetchIndicator(0);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        searchView.setQuery("",false);
     }
 }

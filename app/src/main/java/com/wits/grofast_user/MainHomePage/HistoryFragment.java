@@ -7,10 +7,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.widget.AppCompatButton;
+import androidx.appcompat.widget.SearchView;
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -41,6 +43,7 @@ public class HistoryFragment extends Fragment {
     RecyclerView recyclerView;
     AllHistoryAdapter allHistoryAdapter;
     private List<OrderModel> orderList = new ArrayList<>();
+    private List<OrderModel> searchOrderList = new ArrayList<>();
     private UserActivitySession userActivitySession;
     private final String TAG = "HistoryFragment";
     LinearLayout empty_layout;
@@ -48,6 +51,10 @@ public class HistoryFragment extends Fragment {
     AppCompatButton gotoproduct;
     NestedScrollView showdata;
     ShimmerFrameLayout shimmerFrameLayout;
+
+    private ImageView searchIcon;
+    private String searchQuery;
+    private SearchView searchView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -69,6 +76,33 @@ public class HistoryFragment extends Fragment {
         userActivitySession = new UserActivitySession(getContext());
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(linearLayoutManager);
+
+        searchView = root.findViewById(R.id.order_search_view);
+        searchIcon = root.findViewById(R.id.order_search_icon);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                searchOrders(query);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if (newText.isEmpty()) {
+                    showAllorderHistory();
+                }
+                searchQuery = newText;
+                return false;
+            }
+        });
+
+        searchIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                searchOrders(searchQuery);
+            }
+        });
 
         ShowPageLoader();
         loadOrderHistory();
@@ -160,5 +194,56 @@ public class HistoryFragment extends Fragment {
         empty_layout.setVisibility(View.VISIBLE);
         empty_text1.setText(message);
         empty_text2.setText(messaage2);
+    }
+
+    private void searchOrders(String searchValue) {
+        ShowPageLoader();
+        Call<OrderHistoryResponse> call = RetrofitService.getClient(userActivitySession.getToken()).create(OrderInterface.class).searchOrders(searchValue);
+
+        call.enqueue(new Callback<OrderHistoryResponse>() {
+            @Override
+            public void onResponse(Call<OrderHistoryResponse> call, Response<OrderHistoryResponse> response) {
+                HidePageLoader();
+                if (response.isSuccessful()) {
+                    OrderHistoryResponse orderHistoryResponse = response.body();
+                    searchOrderList = orderHistoryResponse.getOrderList();
+
+
+                    allHistoryAdapter = new AllHistoryAdapter(getContext(), searchOrderList);
+                    recyclerView.setAdapter(allHistoryAdapter);
+                } else if (response.code() == 422) {
+                    try {
+                        String errorBodyString = response.errorBody().string();
+                        Gson gson = new Gson();
+                        JsonObject errorBodyJson = gson.fromJson(errorBodyString, JsonObject.class);
+
+                        String errorMessage = errorBodyJson.has("errorMessage") ? errorBodyJson.get("errorMessage").getAsString() : "No errorMessage";
+                        String message = errorBodyJson.has("message") ? errorBodyJson.get("message").getAsString() : "No message";
+
+                        showNoHistoryMessage(message, errorMessage);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                } else handleApiError(TAG, response, getContext());
+            }
+
+            @Override
+            public void onFailure(Call<OrderHistoryResponse> call, Throwable t) {
+                HidePageLoader();
+                t.printStackTrace();
+            }
+        });
+    }
+
+    private void showAllorderHistory() {
+        if (!orderList.isEmpty())
+            allHistoryAdapter = new AllHistoryAdapter(getContext(), orderList);
+        recyclerView.setAdapter(allHistoryAdapter);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        searchView.setQuery("", false);
     }
 }
