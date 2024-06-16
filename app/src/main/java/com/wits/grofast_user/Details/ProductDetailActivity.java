@@ -6,7 +6,6 @@ import static com.wits.grofast_user.CommonUtilities.showToast;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
@@ -79,17 +78,8 @@ public class ProductDetailActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
 
-        if (intent != null) {
-            if (intent.hasExtra(getString(R.string.intent_key_product_model))) {
-                product = intent.getParcelableExtra(getString(R.string.intent_key_product_model));
-            }
-//            categoryId=getIntent().getIntExtra("categoryId",0);
-//            productName.setText(getIntent().getStringExtra("Name"));
-//            productWeight.setText(getIntent().getStringExtra("Weight"));
-//            productPrice.setText(getIntent().getStringExtra("Price"));
-//            productdescription.setText(getIntent().getStringExtra("Description"));
-//            totalqunatity.setText(getIntent().getStringExtra("quantity"));
-//            Glide.with(getApplicationContext()).load(getIntent().getStringExtra("image")).placeholder(R.drawable.gobhi_image).into(productImage);
+        if (intent != null && intent.hasExtra(getString(R.string.intent_key_product_model))) {
+            product = intent.getParcelableExtra(getString(R.string.intent_key_product_model));
         }
 
         if (product != null) {
@@ -146,14 +136,11 @@ public class ProductDetailActivity extends AppCompatActivity {
         call.enqueue(new Callback<AddToCartResponse>() {
             @Override
             public void onResponse(Call<AddToCartResponse> call, Response<AddToCartResponse> response) {
+                totalqunatity.setText("1");
                 if (response.isSuccessful()) {
                     add_to_cart.setVisibility(View.VISIBLE);
                     progressBar.setVisibility(View.GONE);
                     AddToCartResponse cartResponse = response.body();
-                    Log.e("Addtocart", "Product added to cart message :" + cartResponse.getMessage());
-                    Log.e("Addtocart", "Product added to cart id : " + id);
-                    Log.e("Addtocart", "Product added to cart amount : " + amount);
-                    Log.e("Addtocart", "Product added to cart quantity :" + quantity);
                     showToast(getApplicationContext(), cartResponse.getMessage());
                 } else {
                     handleApiError(TAG, response, getApplicationContext());
