@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.wits.grofast_user.Adapter.RelatedProductAdapter;
 import com.wits.grofast_user.Api.RetrofitService;
 import com.wits.grofast_user.Api.interfaces.CartInterface;
@@ -29,9 +30,7 @@ import com.wits.grofast_user.R;
 import com.wits.grofast_user.session.UserActivitySession;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -48,6 +47,7 @@ public class ProductDetailActivity extends AppCompatActivity {
     private final String TAG = "ProductDetailActivity";
     private UserActivitySession userActivitySession;
     private int categoryId,productId;
+    private ShimmerFrameLayout shimmerRelatedProducts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +70,8 @@ public class ProductDetailActivity extends AppCompatActivity {
         totalqunatity = findViewById(R.id.total_product_detail_quantity);
         add_to_cart = findViewById(R.id.product_detail_add_to_cart);
         progressBar = findViewById(R.id.loader_product_cart_item);
+        shimmerRelatedProducts = findViewById(R.id.related_products_shimmer_layout);
+
 
         productId = getIntent().getIntExtra("ProductId", 0);
 
@@ -159,6 +161,7 @@ public class ProductDetailActivity extends AppCompatActivity {
         call.enqueue(new Callback<RelatedProductsResponse>() {
             @Override
             public void onResponse(Call<RelatedProductsResponse> call, Response<RelatedProductsResponse> response) {
+                stopShimmer();
                 if(response.isSuccessful()){
                     RelatedProductsResponse relatedProductsResponse=response.body();
                     relatedProducts=relatedProductsResponse.getProductList();
@@ -170,9 +173,15 @@ public class ProductDetailActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<RelatedProductsResponse> call, Throwable t) {
-
+                t.printStackTrace();
+                stopShimmer();
             }
         });
+    }
+
+    private void stopShimmer() {
+        shimmerRelatedProducts.setVisibility(View.GONE);
+        recyclerView.setVisibility(View.VISIBLE);
     }
 
     @Override
