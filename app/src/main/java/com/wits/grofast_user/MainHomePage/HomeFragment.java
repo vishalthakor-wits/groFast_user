@@ -219,8 +219,8 @@ public class HomeFragment extends Fragment {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
+    public void onStop() {
+        super.onStop();
         searchView.setQuery("",false);
     }
 }

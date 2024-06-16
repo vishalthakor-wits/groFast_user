@@ -35,6 +35,7 @@ public class UserActivitySession {
 
 //        0 -> fetchAllProducts
 //        1 -> fetchProductsByCategory
+//        2 -> searchProducts
     }
 
     public int getProductFetchIndicator() {

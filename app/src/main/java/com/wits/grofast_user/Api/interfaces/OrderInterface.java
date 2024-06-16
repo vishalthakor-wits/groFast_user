@@ -14,4 +14,7 @@ public interface OrderInterface {
 
     @GET("fetch-user-order-histroy")
     Call<OrderHistoryResponse> fetchOrderHistory();
+
+    @POST("search-user-order")
+    Call<OrderHistoryResponse> searchOrders(@Query("name") String couponCode);
 }
