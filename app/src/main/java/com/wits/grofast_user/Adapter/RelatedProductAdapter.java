@@ -2,6 +2,7 @@ package com.wits.grofast_user.Adapter;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,14 +14,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.wits.grofast_user.Api.responseModels.ProductModel;
+import com.wits.grofast_user.Details.ProductDetailActivity;
 import com.wits.grofast_user.R;
 
 import java.util.List;
-import java.util.Map;
 
 public class RelatedProductAdapter extends RecyclerView.Adapter<RelatedProductAdapter.ViewHolders> {
     private List<ProductModel> productList;
     private Context context;
+    private final String TAG = "RelatedProductAdapter";
 
     public RelatedProductAdapter(Context context, List<ProductModel> productList) {
         this.context = context;
@@ -39,6 +41,17 @@ public class RelatedProductAdapter extends RecyclerView.Adapter<RelatedProductAd
         holder.name.setText(item.getName());
         holder.price.setText(""+item.getFinal_price());
         Glide.with(context).load( item.getImage()).placeholder(R.drawable.gobhi_image).into(holder.image);
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, ProductDetailActivity.class);
+                intent.putExtra(context.getString(R.string.intent_key_product_model), item);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override

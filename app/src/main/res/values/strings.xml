@@ -310,4 +310,9 @@
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="edit_profile_activity">Edit Profile</string>
+
+    <!-- Intent Keys -->
+
+    <string name="intent_key_product_model">productDetails</string>
+
 </resources>

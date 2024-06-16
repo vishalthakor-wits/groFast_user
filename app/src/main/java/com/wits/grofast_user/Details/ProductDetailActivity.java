@@ -3,8 +3,9 @@ package com.wits.grofast_user.Details;
 import static com.wits.grofast_user.CommonUtilities.handleApiError;
 import static com.wits.grofast_user.CommonUtilities.showToast;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
@@ -48,7 +49,9 @@ public class ProductDetailActivity extends AppCompatActivity {
     private UserActivitySession userActivitySession;
     private int categoryId,productId;
     private ShimmerFrameLayout shimmerRelatedProducts;
+    private ProductModel product;
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,22 +76,22 @@ public class ProductDetailActivity extends AppCompatActivity {
         shimmerRelatedProducts = findViewById(R.id.related_products_shimmer_layout);
 
 
-        productId = getIntent().getIntExtra("ProductId", 0);
+        Intent intent = getIntent();
 
-        if (productId != 0) {
-            Log.e("TAG", "Product ID: " + productId);
-        } else {
-            Log.e("TAG", "No Product ID passed in the intent");
+        if (intent != null && intent.hasExtra(getString(R.string.intent_key_product_model))) {
+            product = intent.getParcelableExtra(getString(R.string.intent_key_product_model));
         }
 
-        if (getIntent() != null) {
-            categoryId=getIntent().getIntExtra("categoryId",0);
-            productName.setText(getIntent().getStringExtra("Name"));
-            productWeight.setText(getIntent().getStringExtra("Weight"));
-            productPrice.setText(getIntent().getStringExtra("Price"));
-            productdescription.setText(getIntent().getStringExtra("Description"));
-            totalqunatity.setText(getIntent().getStringExtra("quantity"));
-            Glide.with(getApplicationContext()).load(getIntent().getStringExtra("image")).placeholder(R.drawable.gobhi_image).into(productImage);
+        if (product != null) {
+            productId = product.getId();
+            categoryId = product.getCategory_id();
+
+            productName.setText("" + product.getName());
+            productWeight.setText("" + product.getPer());
+            productPrice.setText("" + product.getFinal_price());
+            productdescription.setText("" + product.getProduct_detail());
+            totalqunatity.setText("1");
+            Glide.with(getApplicationContext()).load(product.getImage()).placeholder(R.drawable.gobhi_image).into(productImage);
         }
 
         //Related Product Item
@@ -133,14 +136,11 @@ public class ProductDetailActivity extends AppCompatActivity {
         call.enqueue(new Callback<AddToCartResponse>() {
             @Override
             public void onResponse(Call<AddToCartResponse> call, Response<AddToCartResponse> response) {
+                totalqunatity.setText("1");
                 if (response.isSuccessful()) {
                     add_to_cart.setVisibility(View.VISIBLE);
                     progressBar.setVisibility(View.GONE);
                     AddToCartResponse cartResponse = response.body();
-                    Log.e("Addtocart", "Product added to cart message :" + cartResponse.getMessage());
-                    Log.e("Addtocart", "Product added to cart id : " + id);
-                    Log.e("Addtocart", "Product added to cart amount : " + amount);
-                    Log.e("Addtocart", "Product added to cart quantity :" + quantity);
                     showToast(getApplicationContext(), cartResponse.getMessage());
                 } else {
                     handleApiError(TAG, response, getApplicationContext());

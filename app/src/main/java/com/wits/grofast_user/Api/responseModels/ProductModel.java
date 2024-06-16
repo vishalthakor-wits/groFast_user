@@ -1,8 +1,13 @@
 package com.wits.grofast_user.Api.responseModels;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import androidx.annotation.NonNull;
+
 import com.google.gson.annotations.SerializedName;
 
-public class ProductModel {
+public class ProductModel implements Parcelable {
     private String image;
 
     private Integer quantity;
@@ -41,6 +46,84 @@ public class ProductModel {
 
     @SerializedName("unit_id")
     private String unitName;
+
+    protected ProductModel(Parcel in) {
+        image = in.readString();
+        if (in.readByte() == 0) {
+            quantity = null;
+        } else {
+            quantity = in.readInt();
+        }
+        if (in.readByte() == 0) {
+            stock_status = null;
+        } else {
+            stock_status = in.readInt();
+        }
+        product_detail = in.readString();
+        name = in.readString();
+        if (in.readByte() == 0) {
+            discount = null;
+        } else {
+            discount = in.readInt();
+        }
+        if (in.readByte() == 0) {
+            product_status = null;
+        } else {
+            product_status = in.readInt();
+        }
+        product_code = in.readString();
+        uuid = in.readString();
+        if (in.readByte() == 0) {
+            tax_id = null;
+        } else {
+            tax_id = in.readInt();
+        }
+        if (in.readByte() == 0) {
+            final_price = null;
+        } else {
+            final_price = in.readInt();
+        }
+        if (in.readByte() == 0) {
+            category_id = null;
+        } else {
+            category_id = in.readInt();
+        }
+        if (in.readByte() == 0) {
+            price = null;
+        } else {
+            price = in.readInt();
+        }
+        if (in.readByte() == 0) {
+            return_policy = null;
+        } else {
+            return_policy = in.readInt();
+        }
+        commission = in.readString();
+        if (in.readByte() == 0) {
+            id = null;
+        } else {
+            id = in.readInt();
+        }
+        per = in.readInt();
+        if (in.readByte() == 0) {
+            supplier_id = null;
+        } else {
+            supplier_id = in.readInt();
+        }
+        unitName = in.readString();
+    }
+
+    public static final Creator<ProductModel> CREATOR = new Creator<ProductModel>() {
+        @Override
+        public ProductModel createFromParcel(Parcel in) {
+            return new ProductModel(in);
+        }
+
+        @Override
+        public ProductModel[] newArray(int size) {
+            return new ProductModel[size];
+        }
+    };
 
     public String getImage() {
         return image;
@@ -116,5 +199,88 @@ public class ProductModel {
 
     public int getPer() {
         return per;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(@NonNull Parcel dest, int flags) {
+        dest.writeString(image);
+        if (quantity == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(quantity);
+        }
+        if (stock_status == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(stock_status);
+        }
+        dest.writeString(product_detail);
+        dest.writeString(name);
+        if (discount == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(discount);
+        }
+        if (product_status == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(product_status);
+        }
+        dest.writeString(product_code);
+        dest.writeString(uuid);
+        if (tax_id == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(tax_id);
+        }
+        if (final_price == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(final_price);
+        }
+        if (category_id == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(category_id);
+        }
+        if (price == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(price);
+        }
+        if (return_policy == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(return_policy);
+        }
+        dest.writeString(commission);
+        if (id == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(id);
+        }
+        dest.writeInt(per);
+        if (supplier_id == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(supplier_id);
+        }
+        dest.writeString(unitName);
     }
 }
