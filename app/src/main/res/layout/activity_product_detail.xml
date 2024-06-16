@@ -189,31 +189,31 @@
                                 android:layout_width="@dimen/_80sdp"
                                 android:layout_height="@dimen/_40sdp"
                                 android:layout_margin="@dimen/_5sdp"
-                                android:background="@color/shimmer_color" />
+                                android:background="@drawable/cool_gradient" />
 
                             <View
                                 android:layout_width="@dimen/_80sdp"
                                 android:layout_height="@dimen/_40sdp"
                                 android:layout_margin="@dimen/_5sdp"
-                                android:background="@color/shimmer_color" />
+                                android:background="@drawable/cool_gradient" />
 
                             <View
                                 android:layout_width="@dimen/_80sdp"
                                 android:layout_height="@dimen/_40sdp"
                                 android:layout_margin="@dimen/_5sdp"
-                                android:background="@color/shimmer_color" />
+                                android:background="@drawable/cool_gradient" />
 
                             <View
                                 android:layout_width="@dimen/_80sdp"
                                 android:layout_height="@dimen/_40sdp"
                                 android:layout_margin="@dimen/_5sdp"
-                                android:background="@color/shimmer_color" />
+                                android:background="@drawable/cool_gradient" />
 
                             <View
                                 android:layout_width="@dimen/_80sdp"
                                 android:layout_height="@dimen/_40sdp"
                                 android:layout_margin="@dimen/_5sdp"
-                                android:background="@color/shimmer_color" />
+                                android:background="@drawable/cool_gradient" />
 
                         </LinearLayout>
                     </HorizontalScrollView>
