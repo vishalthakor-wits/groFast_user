@@ -60,14 +60,7 @@ public class AllProductAdapter extends RecyclerView.Adapter<AllProductAdapter.Vi
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, ProductDetailActivity.class);
-                intent.putExtra("Name", item.getName());
-                intent.putExtra("Weight", item.getPer() + " " + item.getUnitName());
-                intent.putExtra("Price", item.getFinal_price().toString());
-                intent.putExtra("Description", item.getProduct_detail());
-                intent.putExtra("image", item.getImage());
-                intent.putExtra("quantity", holder.total_product_quantity.getText());
-                intent.putExtra("ProductId", item.getId());
-                intent.putExtra("categoryId", item.getCategory_id());
+                intent.putExtra(context.getString(R.string.intent_key_product_model), item);
                 context.startActivity(intent);
             }
         });

@@ -3,6 +3,8 @@ package com.wits.grofast_user.Details;
 import static com.wits.grofast_user.CommonUtilities.handleApiError;
 import static com.wits.grofast_user.CommonUtilities.showToast;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -48,7 +50,9 @@ public class ProductDetailActivity extends AppCompatActivity {
     private UserActivitySession userActivitySession;
     private int categoryId,productId;
     private ShimmerFrameLayout shimmerRelatedProducts;
+    private ProductModel product;
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,22 +77,31 @@ public class ProductDetailActivity extends AppCompatActivity {
         shimmerRelatedProducts = findViewById(R.id.related_products_shimmer_layout);
 
 
-        productId = getIntent().getIntExtra("ProductId", 0);
+        Intent intent = getIntent();
 
-        if (productId != 0) {
-            Log.e("TAG", "Product ID: " + productId);
-        } else {
-            Log.e("TAG", "No Product ID passed in the intent");
+        if (intent != null) {
+            if (intent.hasExtra(getString(R.string.intent_key_product_model))) {
+                product = intent.getParcelableExtra(getString(R.string.intent_key_product_model));
+            }
+//            categoryId=getIntent().getIntExtra("categoryId",0);
+//            productName.setText(getIntent().getStringExtra("Name"));
+//            productWeight.setText(getIntent().getStringExtra("Weight"));
+//            productPrice.setText(getIntent().getStringExtra("Price"));
+//            productdescription.setText(getIntent().getStringExtra("Description"));
+//            totalqunatity.setText(getIntent().getStringExtra("quantity"));
+//            Glide.with(getApplicationContext()).load(getIntent().getStringExtra("image")).placeholder(R.drawable.gobhi_image).into(productImage);
         }
 
-        if (getIntent() != null) {
-            categoryId=getIntent().getIntExtra("categoryId",0);
-            productName.setText(getIntent().getStringExtra("Name"));
-            productWeight.setText(getIntent().getStringExtra("Weight"));
-            productPrice.setText(getIntent().getStringExtra("Price"));
-            productdescription.setText(getIntent().getStringExtra("Description"));
-            totalqunatity.setText(getIntent().getStringExtra("quantity"));
-            Glide.with(getApplicationContext()).load(getIntent().getStringExtra("image")).placeholder(R.drawable.gobhi_image).into(productImage);
+        if (product != null) {
+            productId = product.getId();
+            categoryId = product.getCategory_id();
+
+            productName.setText("" + product.getName());
+            productWeight.setText("" + product.getPer());
+            productPrice.setText("" + product.getFinal_price());
+            productdescription.setText("" + product.getProduct_detail());
+            totalqunatity.setText("1");
+            Glide.with(getApplicationContext()).load(product.getImage()).placeholder(R.drawable.gobhi_image).into(productImage);
         }
 
         //Related Product Item
