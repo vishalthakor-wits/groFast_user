@@ -128,6 +128,7 @@ public class AllProductAdapter extends RecyclerView.Adapter<AllProductAdapter.Vi
             @Override
             public void onResponse(Call<AddToCartResponse> call, Response<AddToCartResponse> response) {
                 if (response.isSuccessful()) {
+                    holder.total_product_quantity.setText("1");
                     holder.btn_add_to_cart.setVisibility(View.VISIBLE);
                     holder.progressBar.setVisibility(View.GONE);
                     AddToCartResponse addToCartResponse = response.body();
@@ -139,7 +140,7 @@ public class AllProductAdapter extends RecyclerView.Adapter<AllProductAdapter.Vi
 
             @Override
             public void onFailure(Call<AddToCartResponse> call, Throwable t) {
-
+                t.printStackTrace();
             }
         });
 
