@@ -1,6 +1,7 @@
 package com.wits.grofast_user.Adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ public class TaxesChargesAdapter extends RecyclerView.Adapter<TaxesChargesAdapte
     private List<TaxAndCharge> taxAndCharges;
     private Context context;
     private CartDetailSession cartDetailSession;
+    private final String TAG = "TaxesChargesAdapter";
 
     public TaxesChargesAdapter(Context context, List<TaxAndCharge> taxAndCharges) {
         this.context = context;
@@ -42,6 +44,7 @@ public class TaxesChargesAdapter extends RecyclerView.Adapter<TaxesChargesAdapte
 
     @Override
     public int getItemCount() {
+        Log.e(TAG, "getItemCount: " + taxAndCharges.size());
         return taxAndCharges.size();
     }
 

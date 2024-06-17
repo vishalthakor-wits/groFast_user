@@ -5,7 +5,6 @@ import static com.wits.grofast_user.CommonUtilities.getDateFromTimestamp;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -69,12 +68,6 @@ public class AllHistoryAdapter extends RecyclerView.Adapter<AllHistoryAdapter.Vi
             TaxAndCharge charge = new TaxAndCharge(context.getString(R.string.order_tip), item.getTip());
             taxesnCgargesList.add(charge);
         }
-        {
-            Log.e(TAG, "\n\nonBindViewHolder: order id " + item.getId());
-            for (TaxAndCharge tax : taxesnCgargesList) {
-                Log.e(TAG, "onBindViewHolder: " + tax.getText() + " " + tax.getValue());
-            }
-        }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             holder.ProductDate.setText(getDateFromTimestamp(item.getCreated_at()));
@@ -91,6 +84,10 @@ public class AllHistoryAdapter extends RecyclerView.Adapter<AllHistoryAdapter.Vi
         holder.recyclerView.setLayoutManager(layoutManager);
         holder.recyclerView.setAdapter(allInnerHistoryAdapter);
         holder.recyclerView.setTag(position);
+
+        TaxesChargesAdapter adapter = new TaxesChargesAdapter(context, taxesnCgargesList);
+        holder.chargesRecyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
+        holder.chargesRecyclerView.setAdapter(adapter);
     }
 
     @Override
@@ -101,7 +98,7 @@ public class AllHistoryAdapter extends RecyclerView.Adapter<AllHistoryAdapter.Vi
     public class ViewHolders extends RecyclerView.ViewHolder {
         TextView ProductOrderId, ProductStatus, ProductInvoice, ProductDate, ProductPrice;
         LinearLayout ProductReorder;
-        RecyclerView recyclerView;
+        RecyclerView recyclerView, chargesRecyclerView;
 
         public ViewHolders(@NonNull View itemView) {
             super(itemView);
@@ -112,6 +109,7 @@ public class AllHistoryAdapter extends RecyclerView.Adapter<AllHistoryAdapter.Vi
             ProductPrice = itemView.findViewById(R.id.history_product_price);
             ProductReorder = itemView.findViewById(R.id.history_product_reorder_layout);
             recyclerView = itemView.findViewById(R.id.history_product_inner_recycleview);
+            chargesRecyclerView = itemView.findViewById(R.id.order_history_taxes_and_charges_recyclerview);
             LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
             recyclerView.setLayoutManager(layoutManager);
         }
