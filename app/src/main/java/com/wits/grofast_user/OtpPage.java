@@ -44,6 +44,7 @@ public class OtpPage extends AppCompatActivity {
     String TAG = "OtpPage";
     LinearLayout loadingOverlay;
     private UserActivitySession userActivitySession;
+    private Call<Void> call;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,7 +114,7 @@ public class OtpPage extends AppCompatActivity {
                                 userDetailSession.setUuid(userModel.getUuid());
                                 userDetailSession.setWalletStatus(userModel.getWalletStatus());
 
-                                saveFcmToServer(genereateFcmToken());
+                                saveFcmToServer();
                                 startActivity(i);
                             } else {
                                 handleApiError(TAG, response, getApplicationContext());
@@ -201,9 +202,8 @@ public class OtpPage extends AppCompatActivity {
         }
     }
 
-    private String fcmToken;
 
-    private String genereateFcmToken() {
+    private void saveFcmToServer() {
         FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task -> {
             if (!task.isSuccessful()) {
                 Log.w(TAG, "Fetching FCM registration token failed", task.getException());
@@ -211,26 +211,23 @@ public class OtpPage extends AppCompatActivity {
             }
 
             // Get the FCM token
-            fcmToken = task.getResult();
-            Log.e(TAG, "onResponse: fcm token " + fcmToken);
-        });
-        return fcmToken;
-    }
+            Call<Void> call = RetrofitService.getClient(userActivitySession.getToken()).create(FCMInterface.class).storeFcmtoServer(task.getResult());
+            Log.e(TAG, "onResponse: fcm token " + task.getResult());
 
-    private void saveFcmToServer(String fcmToken) {
-        Call<Void> call = RetrofitService.getClient(userActivitySession.getToken()).create(FCMInterface.class).storeFcmtoServer(fcmToken);
+            call.enqueue(new Callback<Void>() {
+                @Override
+                public void onResponse(Call<Void> call, Response<Void> response) {
+                    if (!response.isSuccessful()) {
+                        handleApiError(TAG, response, getApplicationContext());
+                    }
+                }
 
-        call.enqueue(new Callback<Void>() {
-            @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
-                if (!response.isSuccessful())
-                    handleApiError(TAG, response, getApplicationContext());
-            }
-
-            @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-                t.printStackTrace();
-            }
+                @Override
+                public void onFailure(Call<Void> call, Throwable t) {
+                    t.printStackTrace();
+                }
+            });
         });
     }
+
 }
