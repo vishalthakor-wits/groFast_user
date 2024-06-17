@@ -5,6 +5,7 @@ import static com.wits.grofast_user.CommonUtilities.getDateFromTimestamp;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,8 +19,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.wits.grofast_user.Api.responseModels.OrderItemModel;
 import com.wits.grofast_user.Api.responseModels.OrderModel;
 import com.wits.grofast_user.Api.responseModels.OrderStatusModel;
+import com.wits.grofast_user.Api.responseModels.TaxAndCharge;
 import com.wits.grofast_user.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class AllHistoryAdapter extends RecyclerView.Adapter<AllHistoryAdapter.ViewHolders> {
@@ -42,6 +45,37 @@ public class AllHistoryAdapter extends RecyclerView.Adapter<AllHistoryAdapter.Vi
     public void onBindViewHolder(@NonNull ViewHolders holder, int position) {
         OrderModel item = orderList.get(position);
         holder.ProductOrderId.setText("" + item.getId());
+        List<TaxAndCharge> taxesnCgargesList = new ArrayList<>();
+
+
+        if (item.getCgst() != 0.0 || item.getCgst() != 0) {
+            TaxAndCharge charge = new TaxAndCharge(context.getString(R.string.order_cgst), item.getCgst());
+            taxesnCgargesList.add(charge);
+        }
+        if (item.getSgst() != 0.0 || item.getSgst() != 0) {
+            TaxAndCharge charge = new TaxAndCharge(context.getString(R.string.order_sgst), item.getSgst());
+            taxesnCgargesList.add(charge);
+        }
+        if (item.getDelivery_charges() != 0.0 || item.getDelivery_charges() != 0) {
+            TaxAndCharge charge = new TaxAndCharge(context.getString(R.string.order_delevery_charges), item.getDelivery_charges());
+            taxesnCgargesList.add(charge);
+        }
+
+        if (item.getDiscount() != 0.0 || item.getDiscount() != 0) {
+            TaxAndCharge charge = new TaxAndCharge(context.getString(R.string.order_discount), item.getDiscount());
+            taxesnCgargesList.add(charge);
+        }
+        if (item.getTip() != 0.0 || item.getTip() != 0) {
+            TaxAndCharge charge = new TaxAndCharge(context.getString(R.string.order_tip), item.getTip());
+            taxesnCgargesList.add(charge);
+        }
+        {
+            Log.e(TAG, "\n\nonBindViewHolder: order id " + item.getId());
+            for (TaxAndCharge tax : taxesnCgargesList) {
+                Log.e(TAG, "onBindViewHolder: " + tax.getText() + " " + tax.getValue());
+            }
+        }
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             holder.ProductDate.setText(getDateFromTimestamp(item.getCreated_at()));
         } else holder.ProductDate.setText(item.getCreated_at());
