@@ -13,10 +13,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -140,15 +143,6 @@ public class ProductFragment extends Fragment {
             }
         });
 
-        completeorderbtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-                transaction.replace(R.id.fragmentnav, new CartFragment());
-                transaction.addToBackStack(null);
-                transaction.commit();
-            }
-        });
         final View rootLayout = root.findViewById(R.id.fram_product);
         KeyboardUtil.setKeyboardVisibilityListener(rootLayout, new KeyboardUtil.KeyboardVisibilityListener() {
             @Override
@@ -311,6 +305,39 @@ public class ProductFragment extends Fragment {
             allProductAdapter = new AllProductAdapter(getContext(), productList);
             recyclerView.setAdapter(allProductAdapter);
         }
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        completeorderbtn = view.findViewById(R.id.complete_order_btn);
+        completeorderbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    FragmentActivity activity = getActivity();
+                    if (activity != null) {
+                        View fragmentNavView = activity.findViewById(R.id.fragmentnav);
+                        if (fragmentNavView != null) {
+                            Log.d(TAG, "fragmentnav view found: " + fragmentNavView.toString());
+                            FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
+                            transaction.replace(R.id.fragmentnav, new CartFragment());
+                            transaction.addToBackStack(null);
+                            transaction.commit();
+                        } else {
+                            Log.e(TAG, "fragmentnav view not found");
+                        }
+                    } else {
+                        Log.e(TAG, "Activity is null, cannot perform fragment transaction");
+                    }
+                } catch (Exception e) {
+                    Log.e(TAG, "onClick: completeorderbtn " + e.getMessage());
+                    e.printStackTrace();
+                }
+            }
+        });
+
     }
 
     @Override
