@@ -37,87 +37,73 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:hint="@string/country"
-                app:boxStrokeColor="@color/active"
-                app:hintTextColor="@color/default_color">
+                android:layout_height="@dimen/_40sdp"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:background="@drawable/textview_design"
+                android:orientation="vertical">
 
-                <com.google.android.material.textfield.TextInputEditText
+                <androidx.appcompat.widget.AppCompatSpinner
                     android:id="@+id/edit_address_country"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:clickable="false"
-                    android:editable="false"
-                    android:focusable="false"
-                    android:text="@string/India"
-                    android:textColor="@color/textview_text_color"
-                    android:textSize="@dimen/hint_text_size" />
+                    android:layout_height="match_parent"
+                    android:dropDownVerticalOffset="0dp"
+                    android:padding="@dimen/_5sdp"
+                    android:spinnerMode="dropdown" />
 
-            </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
 
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:hint="@string/state"
-                app:boxStrokeColor="@color/active"
-                app:hintTextColor="@color/default_color">
+                android:layout_height="@dimen/_40sdp"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:background="@drawable/textview_design"
+                android:orientation="vertical">
 
-                <com.google.android.material.textfield.TextInputEditText
+                <androidx.appcompat.widget.AppCompatSpinner
                     android:id="@+id/edit_address_state"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:clickable="false"
-                    android:editable="false"
-                    android:focusable="false"
-                    android:text="@string/Bihar"
-                    android:textColor="@color/textview_text_color"
-                    android:textSize="@dimen/hint_text_size" />
+                    android:layout_height="match_parent"
+                    android:dropDownVerticalOffset="0dp"
+                    android:padding="@dimen/_5sdp"
+                    android:spinnerMode="dropdown" />
 
-            </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
 
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:hint="@string/city"
-                app:boxStrokeColor="@color/active"
-                app:hintTextColor="@color/default_color">
+                android:layout_height="@dimen/_40sdp"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:background="@drawable/textview_design"
+                android:orientation="vertical">
 
-                <com.google.android.material.textfield.TextInputEditText
+                <androidx.appcompat.widget.AppCompatSpinner
                     android:id="@+id/edit_address_city"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/textview_text_color"
-                    android:textSize="@dimen/hint_text_size" />
+                    android:layout_height="match_parent"
+                    android:dropDownVerticalOffset="0dp"
+                    android:padding="@dimen/_5sdp"
+                    android:spinnerMode="dropdown" />
 
-            </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
 
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:hint="@string/pincode"
-                app:boxStrokeColor="@color/active"
-                app:hintTextColor="@color/default_color">
+                android:layout_height="@dimen/_40sdp"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:background="@drawable/textview_design"
+                android:orientation="vertical">
 
-                <com.google.android.material.textfield.TextInputEditText
+                <androidx.appcompat.widget.AppCompatSpinner
                     android:id="@+id/edit_address_pincode"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="number"
-                    android:maxLength="6"
-                    android:textColor="@color/textview_text_color"
-                    android:textSize="@dimen/hint_text_size" />
+                    android:layout_height="match_parent"
+                    android:dropDownVerticalOffset="0dp"
+                    android:padding="@dimen/_5sdp"
+                    android:spinnerMode="dropdown" />
 
-            </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
 
         </LinearLayout>
 

@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
+import androidx.appcompat.widget.AppCompatSpinner;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.wits.grofast_user.Api.RetrofitService;
@@ -34,7 +35,8 @@ import retrofit2.Response;
 public class AddAddress extends AppCompatActivity {
 
     private AppCompatButton saveAddress;
-    private TextInputEditText address, country, state, city, pincode;
+    private TextInputEditText address;
+    AppCompatSpinner country, state, city, pincode;
     private final String TAG = "AddAddress";
     private UserActivitySession userActivitySession;
     ProgressBar progressBar;
@@ -62,10 +64,10 @@ public class AddAddress extends AppCompatActivity {
             public void onClick(View v) {
                 Context context = getApplicationContext();
                 String userAddress = address.getText().toString().trim();
-                String userCountry = country.getText().toString().trim();
-                String userState = state.getText().toString().trim();
-                String userCity = city.getText().toString().trim();
-                String userPincode = pincode.getText().toString().trim();
+                String userCountry = country.getSelectedItem().toString().trim();
+                String userState = state.getSelectedItem().toString().trim();
+                String userCity = city.getSelectedItem().toString().trim();
+                String userPincode = pincode.getSelectedItem().toString().trim();
 
                 if (validateAddress(userAddress, context) && validateCountry(userCountry, context) && validateState(userState, context) && validateCity(userCity, context) && validatePincode(userPincode, context)) {
                     addAddress(userAddress, userCountry, userState, userCity, userPincode);
