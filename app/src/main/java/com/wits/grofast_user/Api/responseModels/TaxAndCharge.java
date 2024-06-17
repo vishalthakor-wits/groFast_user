@@ -12,4 +12,9 @@ public class TaxAndCharge {
     public Float getValue() {
         return value;
     }
+
+    public TaxAndCharge(String text, Float value) {
+        this.text = text;
+        this.value = value;
+    }
 }

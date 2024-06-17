@@ -219,6 +219,7 @@
 
     <string name="product_description">Description:</string>
     <string name="product_related_item">Related Items:</string>
+    <string name="min_product_quantity">1</string>
 
 
     <!--    Wallet page-->
@@ -310,6 +311,14 @@
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="edit_profile_activity">Edit Profile</string>
+
+    <!--  Tax & Charges  -->
+
+    <string name="order_delevery_charges">Delevery Charges</string>
+    <string name="order_discount">Discount</string>
+    <string name="order_cgst">CGST</string>
+    <string name="order_sgst">SGST</string>
+    <string name="order_tip">Tip</string>
 
     <!-- Intent Keys -->
 

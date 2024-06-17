@@ -18,8 +18,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.wits.grofast_user.Api.responseModels.OrderItemModel;
 import com.wits.grofast_user.Api.responseModels.OrderModel;
 import com.wits.grofast_user.Api.responseModels.OrderStatusModel;
+import com.wits.grofast_user.Api.responseModels.TaxAndCharge;
 import com.wits.grofast_user.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class AllHistoryAdapter extends RecyclerView.Adapter<AllHistoryAdapter.ViewHolders> {
@@ -42,6 +44,31 @@ public class AllHistoryAdapter extends RecyclerView.Adapter<AllHistoryAdapter.Vi
     public void onBindViewHolder(@NonNull ViewHolders holder, int position) {
         OrderModel item = orderList.get(position);
         holder.ProductOrderId.setText("" + item.getId());
+        List<TaxAndCharge> taxesnCgargesList = new ArrayList<>();
+
+
+        if (item.getCgst() != 0.0 || item.getCgst() != 0) {
+            TaxAndCharge charge = new TaxAndCharge(context.getString(R.string.order_cgst), item.getCgst());
+            taxesnCgargesList.add(charge);
+        }
+        if (item.getSgst() != 0.0 || item.getSgst() != 0) {
+            TaxAndCharge charge = new TaxAndCharge(context.getString(R.string.order_sgst), item.getSgst());
+            taxesnCgargesList.add(charge);
+        }
+        if (item.getDelivery_charges() != 0.0 || item.getDelivery_charges() != 0) {
+            TaxAndCharge charge = new TaxAndCharge(context.getString(R.string.order_delevery_charges), item.getDelivery_charges());
+            taxesnCgargesList.add(charge);
+        }
+
+        if (item.getDiscount() != 0.0 || item.getDiscount() != 0) {
+            TaxAndCharge charge = new TaxAndCharge(context.getString(R.string.order_discount), item.getDiscount());
+            taxesnCgargesList.add(charge);
+        }
+        if (item.getTip() != 0.0 || item.getTip() != 0) {
+            TaxAndCharge charge = new TaxAndCharge(context.getString(R.string.order_tip), item.getTip());
+            taxesnCgargesList.add(charge);
+        }
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             holder.ProductDate.setText(getDateFromTimestamp(item.getCreated_at()));
         } else holder.ProductDate.setText(item.getCreated_at());
@@ -57,6 +84,10 @@ public class AllHistoryAdapter extends RecyclerView.Adapter<AllHistoryAdapter.Vi
         holder.recyclerView.setLayoutManager(layoutManager);
         holder.recyclerView.setAdapter(allInnerHistoryAdapter);
         holder.recyclerView.setTag(position);
+
+        TaxesChargesAdapter adapter = new TaxesChargesAdapter(context, taxesnCgargesList);
+        holder.chargesRecyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
+        holder.chargesRecyclerView.setAdapter(adapter);
     }
 
     @Override
@@ -67,7 +98,7 @@ public class AllHistoryAdapter extends RecyclerView.Adapter<AllHistoryAdapter.Vi
     public class ViewHolders extends RecyclerView.ViewHolder {
         TextView ProductOrderId, ProductStatus, ProductInvoice, ProductDate, ProductPrice;
         LinearLayout ProductReorder;
-        RecyclerView recyclerView;
+        RecyclerView recyclerView, chargesRecyclerView;
 
         public ViewHolders(@NonNull View itemView) {
             super(itemView);
@@ -78,6 +109,7 @@ public class AllHistoryAdapter extends RecyclerView.Adapter<AllHistoryAdapter.Vi
             ProductPrice = itemView.findViewById(R.id.history_product_price);
             ProductReorder = itemView.findViewById(R.id.history_product_reorder_layout);
             recyclerView = itemView.findViewById(R.id.history_product_inner_recycleview);
+            chargesRecyclerView = itemView.findViewById(R.id.order_history_taxes_and_charges_recyclerview);
             LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
             recyclerView.setLayoutManager(layoutManager);
         }

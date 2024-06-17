@@ -84,6 +84,11 @@ public class HomePage extends AppCompatActivity {
         notification = findViewById(R.id.notification_home);
         headerView = navigationView.getHeaderView(0);
 
+        userName = headerView.findViewById(R.id.user_name);
+        userPhoneNo = headerView.findViewById(R.id.user_phone_no);
+        userProfile = headerView.findViewById(R.id.user_profile);
+
+
         if (getIntent().getBooleanExtra("openHomeFragment", false)) {
             openProductFragment();
         }
@@ -200,6 +205,16 @@ public class HomePage extends AppCompatActivity {
                 return false;
             }
         });
+
+        View.OnClickListener profileClickListner = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(HomePage.this, EditProfile.class));
+            }
+        };
+
+        userName.setOnClickListener(profileClickListner);
+        userProfile.setOnClickListener(profileClickListner);
     }
 
 
@@ -281,9 +296,6 @@ public class HomePage extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        userName = headerView.findViewById(R.id.user_name);
-        userPhoneNo = headerView.findViewById(R.id.user_phone_no);
-        userProfile = headerView.findViewById(R.id.user_profile);
 
         userPhoneNo.setText(userDetailSession.getPhoneNo());
         String name = userDetailSession.getName();

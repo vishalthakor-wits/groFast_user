@@ -6,7 +6,7 @@ import java.util.List;
 
 public class OrderModel {
 
-    private double sgst;
+    private float sgst;
 
     private String country;
 
@@ -14,7 +14,7 @@ public class OrderModel {
 
     private String latitude;
 
-    private double discount;
+    private float discount;
 
     private String created_at;
 
@@ -23,7 +23,7 @@ public class OrderModel {
     @SerializedName("order_status")
     private OrderStatusModel orderStatus;
 
-    private Integer delivery_charges;
+    private float delivery_charges;
 
     private String updated_at;
 
@@ -31,7 +31,7 @@ public class OrderModel {
 
     private String receiver_name;
 
-    private Integer tip;
+    private float tip;
 
     private Integer id;
 
@@ -45,11 +45,11 @@ public class OrderModel {
 
     private String coupon;
 
-    private double cgst;
+    private float cgst;
 
     private String receiver_phone_no;
 
-    private double total_amount;
+    private float total_amount;
 
     private Integer customer_id;
 
@@ -58,7 +58,7 @@ public class OrderModel {
     @SerializedName("customer_order_items")
     private List<OrderItemModel> orderItems;
 
-    public double getSgst() {
+    public float getSgst() {
         return sgst;
     }
 
@@ -74,7 +74,7 @@ public class OrderModel {
         return latitude;
     }
 
-    public double getDiscount() {
+    public float getDiscount() {
         return discount;
     }
 
@@ -90,7 +90,7 @@ public class OrderModel {
         return orderStatus;
     }
 
-    public Integer getDelivery_charges() {
+    public float getDelivery_charges() {
         return delivery_charges;
     }
 
@@ -106,7 +106,7 @@ public class OrderModel {
         return receiver_name;
     }
 
-    public Integer getTip() {
+    public float getTip() {
         return tip;
     }
 
@@ -134,7 +134,7 @@ public class OrderModel {
         return coupon;
     }
 
-    public double getCgst() {
+    public float getCgst() {
         return cgst;
     }
 
@@ -142,7 +142,7 @@ public class OrderModel {
         return receiver_phone_no;
     }
 
-    public double getTotal_amount() {
+    public float getTotal_amount() {
         return total_amount;
     }
 
