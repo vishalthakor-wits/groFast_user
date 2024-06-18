@@ -1,8 +1,11 @@
 package com.wits.grofast_user.MainHomePage;
 
+import static com.wits.grofast_user.Api.RetrofitService.domain;
+
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -210,6 +213,13 @@ public class HomePage extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(HomePage.this, EditProfile.class));
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        drawerLayout.closeDrawer(GravityCompat.START);
+                    }
+                }, 500);
+
             }
         };
 
@@ -306,7 +316,7 @@ public class HomePage extends AppCompatActivity {
             userName.setTextColor(getResources().getColor(R.color.white));
         }
         userName.setText(name);
-        Glide.with(getApplicationContext()).load(userDetailSession.getImage()).placeholder(R.drawable.account).into(userProfile);
+        Glide.with(getApplicationContext()).load(domain + userDetailSession.getImage()).placeholder(R.drawable.account).into(userProfile);
 
     }
 

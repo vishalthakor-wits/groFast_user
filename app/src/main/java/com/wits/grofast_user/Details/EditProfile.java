@@ -1,5 +1,6 @@
 package com.wits.grofast_user.Details;
 
+import static com.wits.grofast_user.Api.RetrofitService.domain;
 import static com.wits.grofast_user.CommonUtilities.getPathFromUri;
 import static com.wits.grofast_user.CommonUtilities.handleApiError;
 import static com.wits.grofast_user.CommonUtilities.setEditTextListeners;
@@ -106,7 +107,7 @@ public class EditProfile extends AppCompatActivity {
         etName.setText(userDetailSession.getName());
         etEmail.setText(userDetailSession.getEmail());
         String image = userDetailSession.getImage();
-        Glide.with(getApplicationContext()).load(image).placeholder(defaultImage).into(showProfileImage);
+        Glide.with(getApplicationContext()).load(domain+image).placeholder(defaultImage).into(showProfileImage);
 
         if (Uri.parse(image).getLastPathSegment().equals("null")) {
             showAddProfileButton();
