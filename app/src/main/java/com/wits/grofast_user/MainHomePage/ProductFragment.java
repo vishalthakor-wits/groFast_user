@@ -248,11 +248,6 @@ public class ProductFragment extends Fragment {
 
                     allProductAdapter = new AllProductAdapter(getContext(), searchProductList);
                     recyclerView.setAdapter(allProductAdapter);
-
-                    Log.i(TAG, "onResponse: getProductByCategory message " + productResponse.getMessage());
-                    Log.i(TAG, "onResponse: total products " + paginatedResponse.getTotal());
-                    Log.i(TAG, "onResponse: fetched products " + paginatedResponse.getTo());
-                    Log.e(TAG, "onResponse: fragment Show all Product");
                 } else {
                     handleApiError(TAG, response, getContext());
                 }
@@ -283,11 +278,6 @@ public class ProductFragment extends Fragment {
                 try {
                     FragmentActivity activity = getActivity();
                     if (activity != null) {
-                        if (activity instanceof HomePage) {
-                            Log.e(TAG, "onClick: activity is instance of HomePage");
-                        } else if (activity instanceof ShowAllCategories) {
-                            Log.e(TAG, "onClick: activity is instance of ShowAllCategories");
-                        }
                         View fragmentNavView = activity.findViewById(R.id.fragmentnav);
                         if (fragmentNavView != null) {
                             Log.d(TAG, "fragmentnav view found: " + fragmentNavView.toString());

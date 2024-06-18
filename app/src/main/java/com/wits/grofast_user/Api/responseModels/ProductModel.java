@@ -7,7 +7,7 @@ import androidx.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 
-public class ProductModel implements Parcelable {
+public class ProductModel implements Parcelable{
     private String image;
 
     private Integer quantity;
@@ -20,7 +20,8 @@ public class ProductModel implements Parcelable {
 
     private Integer discount;
 
-    private Integer product_status;
+    @SerializedName("product_status")
+    private OrderStatusModel productStatus;
 
     private String product_code;
 
@@ -47,6 +48,7 @@ public class ProductModel implements Parcelable {
     @SerializedName("unit_id")
     private String unitName;
 
+
     protected ProductModel(Parcel in) {
         image = in.readString();
         if (in.readByte() == 0) {
@@ -65,11 +67,6 @@ public class ProductModel implements Parcelable {
             discount = null;
         } else {
             discount = in.readInt();
-        }
-        if (in.readByte() == 0) {
-            product_status = null;
-        } else {
-            product_status = in.readInt();
         }
         product_code = in.readString();
         uuid = in.readString();
@@ -145,10 +142,6 @@ public class ProductModel implements Parcelable {
         return discount;
     }
 
-    public Integer getProduct_status() {
-        return product_status;
-    }
-
     public String getProduct_code() {
         return product_code;
     }
@@ -201,6 +194,10 @@ public class ProductModel implements Parcelable {
         return per;
     }
 
+    public OrderStatusModel getProductStatus() {
+        return productStatus;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -228,12 +225,6 @@ public class ProductModel implements Parcelable {
         } else {
             dest.writeByte((byte) 1);
             dest.writeInt(discount);
-        }
-        if (product_status == null) {
-            dest.writeByte((byte) 0);
-        } else {
-            dest.writeByte((byte) 1);
-            dest.writeInt(product_status);
         }
         dest.writeString(product_code);
         dest.writeString(uuid);

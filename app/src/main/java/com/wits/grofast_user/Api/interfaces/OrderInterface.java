@@ -17,4 +17,7 @@ public interface OrderInterface {
 
     @POST("search-user-order")
     Call<OrderHistoryResponse> searchOrders(@Query("name") String couponCode);
+
+    @POST("user-reorder")
+    Call<OrderPlaceResponse> reOrder(@Query("orderId") int orderId);
 }

@@ -44,7 +44,6 @@ public class TaxesChargesAdapter extends RecyclerView.Adapter<TaxesChargesAdapte
 
     @Override
     public int getItemCount() {
-        Log.e(TAG, "getItemCount: " + taxAndCharges.size());
         return taxAndCharges.size();
     }
 
