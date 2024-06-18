@@ -1,5 +1,7 @@
 package com.wits.grofast_user.Adapter;
 
+import static com.wits.grofast_user.CommonUtilities.handleApiError;
+
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -13,15 +15,25 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.wits.grofast_user.Api.RetrofitService;
+import com.wits.grofast_user.Api.interfaces.AddressInterface;
+import com.wits.grofast_user.Api.responseClasses.LoginResponse;
 import com.wits.grofast_user.Api.responseModels.AddressModel;
 import com.wits.grofast_user.Details.EditAddress;
 import com.wits.grofast_user.R;
+import com.wits.grofast_user.session.UserActivitySession;
 
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ShowAllAddressAdapter extends RecyclerView.Adapter<ShowAllAddressAdapter.ViewHolders> {
     private List<AddressModel> addressList;
     private Context context;
+    private ShowAllAddressAdapter adapter;
+    private final String TAG = "ShowAllAddressAdapter";
 
     public ShowAllAddressAdapter(Context context, List<AddressModel> addressList) {
         this.context = context;
@@ -36,6 +48,7 @@ public class ShowAllAddressAdapter extends RecyclerView.Adapter<ShowAllAddressAd
 
     @Override
     public void onBindViewHolder(@NonNull ShowAllAddressAdapter.ViewHolders holder, int position) {
+        adapter = this;
         AddressModel item = addressList.get(position);
         String customerAddress = item.getAddress() + "," + item.getCity() + "," + item.getPin_code();
         holder.address.setText(customerAddress);
@@ -89,5 +102,25 @@ public class ShowAllAddressAdapter extends RecyclerView.Adapter<ShowAllAddressAd
             address = itemView.findViewById(R.id.all_address_address);
             edit = itemView.findViewById(R.id.all_address_edit);
         }
+    }
+
+    private void deleteAddress(int addressId) {
+        UserActivitySession userActivitySession = new UserActivitySession(context);
+        Call<LoginResponse> call = RetrofitService.getClient(userActivitySession.getToken()).create(AddressInterface.class).deleteCustomerAddress(addressId);
+
+        call.enqueue(new Callback<LoginResponse>() {
+            @Override
+            public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+                if (response.isSuccessful()) {
+                    adapter.notifyDataSetChanged();
+                }
+                handleApiError(TAG, response, context);
+            }
+
+            @Override
+            public void onFailure(Call<LoginResponse> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
     }
 }
