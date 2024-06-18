@@ -104,7 +104,7 @@ public class ShowAllAddressAdapter extends RecyclerView.Adapter<ShowAllAddressAd
         }
     }
 
-    private void deleteAddress(int addressId) {
+    private void deleteAddress(int addressId, int position) {
         UserActivitySession userActivitySession = new UserActivitySession(context);
         Call<LoginResponse> call = RetrofitService.getClient(userActivitySession.getToken()).create(AddressInterface.class).deleteCustomerAddress(addressId);
 
@@ -112,6 +112,7 @@ public class ShowAllAddressAdapter extends RecyclerView.Adapter<ShowAllAddressAd
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                 if (response.isSuccessful()) {
+                    addressList.remove(position);
                     adapter.notifyDataSetChanged();
                 }
                 handleApiError(TAG, response, context);

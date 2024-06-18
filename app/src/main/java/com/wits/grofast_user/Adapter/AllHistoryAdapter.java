@@ -1,8 +1,12 @@
 package com.wits.grofast_user.Adapter;
 
 import static com.wits.grofast_user.CommonUtilities.getDateFromTimestamp;
+import static com.wits.grofast_user.CommonUtilities.handleApiError;
 
+import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.view.LayoutInflater;
@@ -10,24 +14,38 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.wits.grofast_user.Api.RetrofitService;
+import com.wits.grofast_user.Api.interfaces.OrderInterface;
+import com.wits.grofast_user.Api.responseClasses.OrderHistoryResponse;
+import com.wits.grofast_user.Api.responseClasses.OrderPlaceResponse;
 import com.wits.grofast_user.Api.responseModels.OrderItemModel;
 import com.wits.grofast_user.Api.responseModels.OrderModel;
 import com.wits.grofast_user.Api.responseModels.OrderStatusModel;
 import com.wits.grofast_user.Api.responseModels.TaxAndCharge;
+import com.wits.grofast_user.MainHomePage.HomePage;
 import com.wits.grofast_user.R;
+import com.wits.grofast_user.session.UserActivitySession;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class AllHistoryAdapter extends RecyclerView.Adapter<AllHistoryAdapter.ViewHolders> {
     private List<OrderModel> orderList;
     private Context context;
     private final String TAG = "AllHistoryAdapter";
+    private AllHistoryAdapter adapter;
+    private UserActivitySession userActivitySession;
 
     public AllHistoryAdapter(Context context, List<OrderModel> orderList) {
         this.context = context;
@@ -41,7 +59,9 @@ public class AllHistoryAdapter extends RecyclerView.Adapter<AllHistoryAdapter.Vi
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolders holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolders holder, @SuppressLint("RecyclerView") int position) {
+        userActivitySession = new UserActivitySession(context);
+        adapter = this;
         OrderModel item = orderList.get(position);
         holder.ProductOrderId.setText("" + item.getId());
         List<TaxAndCharge> taxesnCgargesList = new ArrayList<>();
@@ -88,6 +108,13 @@ public class AllHistoryAdapter extends RecyclerView.Adapter<AllHistoryAdapter.Vi
         TaxesChargesAdapter adapter = new TaxesChargesAdapter(context, taxesnCgargesList);
         holder.chargesRecyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
         holder.chargesRecyclerView.setAdapter(adapter);
+
+        holder.ProductReorder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                reorder(item.getId());
+            }
+        });
     }
 
     @Override
@@ -113,5 +140,72 @@ public class AllHistoryAdapter extends RecyclerView.Adapter<AllHistoryAdapter.Vi
             LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
             recyclerView.setLayoutManager(layoutManager);
         }
+    }
+
+    private void reorder(int orderId) {
+        Call<OrderPlaceResponse> call = RetrofitService.getClient(userActivitySession.getToken()).create(OrderInterface.class).reOrder(orderId);
+
+        call.enqueue(new Callback<OrderPlaceResponse>() {
+            @Override
+            public void onResponse(Call<OrderPlaceResponse> call, Response<OrderPlaceResponse> response) {
+                if (response.isSuccessful()) {
+                    OrderPlaceDialog();
+                    Toast.makeText(context, "" + response.body().getMessage(), Toast.LENGTH_SHORT);
+                    loadOrderHistory();
+                }
+                handleApiError(TAG, response, context);
+            }
+
+            @Override
+            public void onFailure(Call<OrderPlaceResponse> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
+    }
+
+    private void loadOrderHistory() {
+        Call<OrderHistoryResponse> call = RetrofitService.getClient(userActivitySession.getToken()).create(OrderInterface.class).fetchOrderHistory();
+
+        call.enqueue(new Callback<OrderHistoryResponse>() {
+            @Override
+            public void onResponse(Call<OrderHistoryResponse> call, Response<OrderHistoryResponse> response) {
+                if (response.isSuccessful()) {
+                    OrderHistoryResponse orderHistoryResponse = response.body();
+                    orderList = orderHistoryResponse.getOrderList();
+
+                    adapter.notifyDataSetChanged();
+                } else handleApiError(TAG, response, context);
+            }
+
+            @Override
+            public void onFailure(Call<OrderHistoryResponse> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
+    }
+
+    private void OrderPlaceDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        View dialogView = LayoutInflater.from(context).inflate(R.layout.orderplacelayout, null);
+        builder.setView(dialogView);
+        AlertDialog dialog = builder.create();
+        dialog.setCanceledOnTouchOutside(false);
+
+        AppCompatButton continue_shopping = dialogView.findViewById(R.id.continue_shopping);
+        continue_shopping.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                Intent intent = new Intent(context, HomePage.class);
+                intent.putExtra("openHomeFragment", true);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(intent);
+            }
+        });
+
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawableResource(R.drawable.dailogbox_background);
+        }
+        dialog.show();
     }
 }
