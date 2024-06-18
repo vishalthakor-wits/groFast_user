@@ -1,8 +1,11 @@
 package com.wits.grofast_user.MainHomePage;
 
+import static com.wits.grofast_user.Api.RetrofitService.domain;
+
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -87,11 +90,6 @@ public class HomePage extends AppCompatActivity {
         userName = headerView.findViewById(R.id.user_name);
         userPhoneNo = headerView.findViewById(R.id.user_phone_no);
         userProfile = headerView.findViewById(R.id.user_profile);
-
-
-        if (getIntent().getBooleanExtra("openHomeFragment", false)) {
-            openProductFragment();
-        }
 
         menuBar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -210,6 +208,13 @@ public class HomePage extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(HomePage.this, EditProfile.class));
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        drawerLayout.closeDrawer(GravityCompat.START);
+                    }
+                }, 500);
+
             }
         };
 
@@ -297,6 +302,14 @@ public class HomePage extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
+        Intent intent = getIntent();
+        if (intent.hasExtra(getString(R.string.intent_key_category_name))) {
+            openProductFragment(intent.getStringExtra(getString(R.string.intent_key_category_name)));
+        }
+        if (intent.getBooleanExtra("openHomeFragment", false)) {
+            openProductFragment(null);
+        }
+
         userPhoneNo.setText(userDetailSession.getPhoneNo());
         String name = userDetailSession.getName();
         if (name == null || name.isEmpty()) {
@@ -306,8 +319,7 @@ public class HomePage extends AppCompatActivity {
             userName.setTextColor(getResources().getColor(R.color.white));
         }
         userName.setText(name);
-        Glide.with(getApplicationContext()).load(userDetailSession.getImage()).placeholder(R.drawable.account).into(userProfile);
-
+        Glide.with(getApplicationContext()).load(domain + userDetailSession.getImage()).placeholder(R.drawable.account).into(userProfile);
     }
 
     @Override
@@ -325,12 +337,19 @@ public class HomePage extends AppCompatActivity {
         }
     }
 
-    public void openProductFragment() {
-        HomeFragment homeFragment = new HomeFragment();
+    public void openProductFragment(String categoryName) {
+        ProductFragment productFragment = new ProductFragment();
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.fragmentnav, homeFragment);
+        if (categoryName != null) {
+            Bundle bundle = new Bundle();
+            bundle.putString(getString(R.string.intent_key_category_name), categoryName);
+            productFragment.setArguments(bundle);
+        }
+        fragmentTransaction.replace(R.id.fragmentnav, productFragment);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
+
+
 }

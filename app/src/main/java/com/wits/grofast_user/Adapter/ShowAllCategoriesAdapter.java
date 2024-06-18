@@ -2,7 +2,8 @@ package com.wits.grofast_user.Adapter;
 
 
 import android.content.Context;
-import android.os.Bundle;
+import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,12 +11,11 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.wits.grofast_user.Api.responseModels.CategoryModel;
-import com.wits.grofast_user.MainHomePage.ProductFragment;
+import com.wits.grofast_user.MainHomePage.HomePage;
 import com.wits.grofast_user.R;
 import com.wits.grofast_user.session.UserActivitySession;
 
@@ -28,17 +28,11 @@ public class ShowAllCategoriesAdapter extends RecyclerView.Adapter<ShowAllCatego
     private List<CategoryModel> categoryList;
     private Context context;
     private FragmentManager fragmentManager;
-    private OnCategoryClickListener listener;
 
-    public interface OnCategoryClickListener {
-        void onCategoryClick(CategoryModel category);
-    }
-
-    public ShowAllCategoriesAdapter(List<CategoryModel> categoryList, Context context, FragmentManager fragmentManager, OnCategoryClickListener listener) {
+    public ShowAllCategoriesAdapter(List<CategoryModel> categoryList, Context context, FragmentManager fragmentManager) {
         this.categoryList = categoryList;
         this.context = context;
         this.fragmentManager = fragmentManager;
-        this.listener = listener;
     }
 
     @NonNull
@@ -58,7 +52,11 @@ public class ShowAllCategoriesAdapter extends RecyclerView.Adapter<ShowAllCatego
             @Override
             public void onClick(View v) {
                 userActivitySession.setProductFetchIndicator(1);
-                listener.onCategoryClick(item);
+                Intent intent = new Intent(context, HomePage.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra(context.getString(R.string.intent_key_category_name), item.getCategory_name());
+                context.startActivity(intent);
             }
         });
     }

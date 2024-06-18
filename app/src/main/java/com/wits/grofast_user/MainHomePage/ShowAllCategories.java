@@ -10,9 +10,6 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -31,7 +28,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ShowAllCategories extends AppCompatActivity implements ShowAllCategoriesAdapter.OnCategoryClickListener {
+public class ShowAllCategories extends AppCompatActivity {
     RecyclerView recyclerView;
     ShowAllCategoriesAdapter showAllCategoriesAdapter;
     private List<CategoryModel> categoryList = new ArrayList<>();
@@ -82,7 +79,7 @@ public class ShowAllCategories extends AppCompatActivity implements ShowAllCateg
                 if (response.isSuccessful()) {
                     CategoryResponse categoryResponse = response.body();
                     categoryList = categoryResponse.getCategories();
-                    showAllCategoriesAdapter = new ShowAllCategoriesAdapter(categoryList, getApplicationContext(), getSupportFragmentManager(), ShowAllCategories.this);
+                    showAllCategoriesAdapter = new ShowAllCategoriesAdapter(categoryList, getApplicationContext(), getSupportFragmentManager());
                     recyclerView.setAdapter(showAllCategoriesAdapter);
                     Log.e(TAG, "onResponse: fragment Show all categories");
                 } else {
@@ -97,21 +94,6 @@ public class ShowAllCategories extends AppCompatActivity implements ShowAllCateg
         });
     }
 
-    @Override
-    public void onCategoryClick(CategoryModel category) {
-        ProductFragment productFragment = ProductFragment.newInstance(category.getCategory_name());
-        replaceFragment(productFragment);
-    }
-
-    private void replaceFragment(Fragment fragment) {
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.fragment, fragment);
-        findViewById(R.id.fragment).setVisibility(View.VISIBLE);
-        h.setVisibility(View.GONE);
-        recyclerView.setVisibility(View.GONE);
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
-    }
 
     @Override
     public void onBackPressed() {

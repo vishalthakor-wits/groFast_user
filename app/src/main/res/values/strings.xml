@@ -323,5 +323,6 @@
     <!-- Intent Keys -->
 
     <string name="intent_key_product_model">productDetails</string>
+    <string name="intent_key_category_name">categoryName</string>
 
 </resources>
