@@ -75,7 +75,7 @@ public class TopCategoriesAdapter extends RecyclerView.Adapter<TopCategoriesAdap
 
     private void openProducatFragment(CategoryModel item) {
         Bundle bundle = new Bundle();
-        bundle.putString("categoryName", item.getCategory_name());
+        bundle.putString(context.getString(R.string.intent_key_category_name), item.getCategory_name());
 
         // Create an instance of the second fragment
         ProductFragment productFragment = new ProductFragment();

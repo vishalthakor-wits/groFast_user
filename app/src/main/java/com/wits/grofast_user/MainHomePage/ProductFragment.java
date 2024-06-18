@@ -45,15 +45,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class ProductFragment extends Fragment {
-    private static final String ARG_CATEGORY_NAME = "categoryName";
-
-    public static ProductFragment newInstance(String categoryName) {
-        ProductFragment fragment = new ProductFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_CATEGORY_NAME, categoryName);
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     private boolean isCategoriesProductLoaded = false;
     private boolean isProductsLoaded = false;
@@ -103,7 +94,7 @@ public class ProductFragment extends Fragment {
 
         if (getArguments() != null) {
             searchQuery = getArguments().getString("searchParameter");
-            String category = getArguments().getString(ARG_CATEGORY_NAME);
+            String category = getArguments().getString(getString(R.string.intent_key_category_name));
 
             if (category != null) {
                 getProductByCategory(category);
@@ -111,10 +102,6 @@ public class ProductFragment extends Fragment {
                 searchView.setQuery(searchQuery, false);
                 searchProducts(searchQuery, 1);
             }
-
-            Log.e(TAG, "onCreateView: category " + category);
-            Log.e(TAG, "onCreateView: searchQuery " + searchQuery);
-
         } else {
             getProducts(1);
         }
@@ -172,10 +159,6 @@ public class ProductFragment extends Fragment {
 
                     allProductAdapter = new AllProductAdapter(getContext(), productList);
                     recyclerView.setAdapter(allProductAdapter);
-
-                    Log.i(TAG, "onResponse: getProducts message " + productResponse.getMessage());
-                    Log.i(TAG, "onResponse: total products " + paginatedResponse.getTotal());
-                    Log.i(TAG, "onResponse: fetched products " + paginatedResponse.getTo());
                     HidePageLoader();
                 } else {
                     if (isAdded()) handleApiError(TAG, response, getContext());
@@ -202,11 +185,6 @@ public class ProductFragment extends Fragment {
 
                     allProductAdapter = new AllProductAdapter(getContext(), productList);
                     recyclerView.setAdapter(allProductAdapter);
-
-                    Log.i(TAG, "onResponse: getProductByCategory message " + productResponse.getMessage());
-                    Log.i(TAG, "onResponse: total products " + paginatedResponse.getTotal());
-                    Log.i(TAG, "onResponse: fetched products " + paginatedResponse.getTo());
-                    Log.e(TAG, "onResponse: fragment Show all Product");
                 } else if (response.code() == 422) {
                     try {
                         String errorBodyString = response.errorBody().string();
@@ -275,19 +253,6 @@ public class ProductFragment extends Fragment {
                     Log.i(TAG, "onResponse: total products " + paginatedResponse.getTotal());
                     Log.i(TAG, "onResponse: fetched products " + paginatedResponse.getTo());
                     Log.e(TAG, "onResponse: fragment Show all Product");
-                } else if (response.code() == 422) {
-                    try {
-                        String errorBodyString = response.errorBody().string();
-                        Gson gson = new Gson();
-                        JsonObject errorBodyJson = gson.fromJson(errorBodyString, JsonObject.class);
-
-                        String errorMessage = errorBodyJson.has("errorMessage") ? errorBodyJson.get("errorMessage").getAsString() : "No errorMessage";
-                        String message = errorBodyJson.has("message") ? errorBodyJson.get("message").getAsString() : "No message";
-
-                        showNoProductMessage(message, errorMessage);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
                 } else {
                     handleApiError(TAG, response, getContext());
                 }
@@ -318,6 +283,11 @@ public class ProductFragment extends Fragment {
                 try {
                     FragmentActivity activity = getActivity();
                     if (activity != null) {
+                        if (activity instanceof HomePage) {
+                            Log.e(TAG, "onClick: activity is instance of HomePage");
+                        } else if (activity instanceof ShowAllCategories) {
+                            Log.e(TAG, "onClick: activity is instance of ShowAllCategories");
+                        }
                         View fragmentNavView = activity.findViewById(R.id.fragmentnav);
                         if (fragmentNavView != null) {
                             Log.d(TAG, "fragmentnav view found: " + fragmentNavView.toString());
