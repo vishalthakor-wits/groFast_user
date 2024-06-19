@@ -35,7 +35,6 @@ import com.wits.grofast_user.Details.MyAddress;
 import com.wits.grofast_user.Details.Notification;
 import com.wits.grofast_user.Details.NotificationSetting;
 import com.wits.grofast_user.Details.SettingsPage;
-import com.wits.grofast_user.Details.Support;
 import com.wits.grofast_user.Details.Wallet;
 import com.wits.grofast_user.Details.Wallethistory;
 import com.wits.grofast_user.Enums.FragmentEnum;
@@ -182,8 +181,6 @@ public class HomePage extends AppCompatActivity {
                     startActivity(new Intent(HomePage.this, EditProfile.class));
                 } else if (id == R.id.menu_my_address) {
                     startActivity(new Intent(HomePage.this, MyAddress.class));
-                } else if (id == R.id.menu_support) {
-                    startActivity(new Intent(HomePage.this, Support.class));
                 } else if (id == R.id.menu_logout) {
                     session.setLoginStaus(false);
                     session.clearSession();

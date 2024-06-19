@@ -10,7 +10,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/linear_padding"
+        android:layout_margin="@dimen/padding"
         android:orientation="vertical">
 
         <TextView
@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:text="@string/menu_language"
             android:textColor="@color/textview_text_color"
-            android:textSize="@dimen/hint_text_size"
+            android:textSize="@dimen/text_size"
             android:textStyle="bold" />
 
         <androidx.cardview.widget.CardView
@@ -35,13 +35,12 @@
                 android:orientation="vertical">
 
                 <LinearLayout
-                    android:id="@+id/language_card_content"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:gravity="center"
                     android:orientation="horizontal"
-                    android:padding="@dimen/_10sdp">
+                    android:layout_marginStart="@dimen/_5sdp">
 
                     <TextView
                         android:layout_width="match_parent"
@@ -49,9 +48,10 @@
                         android:layout_weight="1"
                         android:text="@string/menu_language_english"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/small_text" />
+                        android:textSize="@dimen/hint_text_size" />
 
                     <RadioButton
+                        android:id="@+id/language_english"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="end" />
@@ -68,9 +68,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:layout_marginStart="@dimen/_5sdp"
                     android:gravity="center"
-                    android:orientation="horizontal"
-                    android:padding="@dimen/_10sdp">
+                    android:orientation="horizontal">
 
                     <TextView
                         android:layout_width="match_parent"
@@ -78,9 +78,10 @@
                         android:layout_weight="1"
                         android:text="@string/menu_language_hindi"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/small_text" />
+                        android:textSize="@dimen/hint_text_size" />
 
                     <RadioButton
+                        android:id="@+id/language_hindi"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="end" />
@@ -98,7 +99,7 @@
             android:layout_weight="1"
             android:text="@string/settings_policy"
             android:textColor="@color/textview_text_color"
-            android:textSize="@dimen/hint_text_size"
+            android:textSize="@dimen/text_size"
             android:textStyle="bold" />
 
         <androidx.cardview.widget.CardView
@@ -128,12 +129,12 @@
                         android:layout_weight="1"
                         android:text="@string/privacy_policy"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/small_text" />
+                        android:textSize="@dimen/hint_text_size" />
 
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="end"
+                        android:layout_gravity="end|center"
                         android:src="@drawable/arrow_left" />
 
                 </LinearLayout>
@@ -158,12 +159,12 @@
                         android:layout_weight="1"
                         android:text="@string/settings_terms_and_conditions"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/small_text" />
+                        android:textSize="@dimen/hint_text_size" />
 
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="end"
+                        android:layout_gravity="end|center"
                         android:src="@drawable/arrow_left" />
 
                 </LinearLayout>
@@ -188,12 +189,12 @@
                         android:layout_weight="1"
                         android:text="@string/settings_content_policy"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/small_text" />
+                        android:textSize="@dimen/hint_text_size" />
 
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="end"
+                        android:layout_gravity="end|center"
                         android:src="@drawable/arrow_left" />
 
                 </LinearLayout>
@@ -218,12 +219,12 @@
                         android:layout_weight="1"
                         android:text="@string/settings_refund_policy"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/small_text" />
+                        android:textSize="@dimen/hint_text_size" />
 
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="end"
+                        android:layout_gravity="end|center"
                         android:src="@drawable/arrow_left" />
 
                 </LinearLayout>
@@ -248,12 +249,12 @@
                         android:layout_weight="1"
                         android:text="@string/cancelation_policy"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/small_text" />
+                        android:textSize="@dimen/hint_text_size" />
 
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="end"
+                        android:layout_gravity="end|center"
                         android:src="@drawable/arrow_left" />
 
                 </LinearLayout>
@@ -278,12 +279,12 @@
                         android:layout_weight="1"
                         android:text="@string/settings_delete_data_policy"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/small_text" />
+                        android:textSize="@dimen/hint_text_size" />
 
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="end"
+                        android:layout_gravity="end|center"
                         android:src="@drawable/arrow_left" />
 
                 </LinearLayout>
@@ -308,12 +309,12 @@
                         android:layout_weight="1"
                         android:text="@string/settings_delete_account_policy"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/small_text" />
+                        android:textSize="@dimen/hint_text_size" />
 
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="end"
+                        android:layout_gravity="end|center"
                         android:src="@drawable/arrow_left" />
 
                 </LinearLayout>
@@ -338,12 +339,12 @@
                         android:layout_weight="1"
                         android:text="@string/settings_report_policy"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/small_text" />
+                        android:textSize="@dimen/hint_text_size" />
 
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="end"
+                        android:layout_gravity="end|center"
                         android:src="@drawable/arrow_left" />
 
                 </LinearLayout>
@@ -368,12 +369,12 @@
                         android:layout_weight="1"
                         android:text="@string/settings_bsd_license_policy"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/small_text" />
+                        android:textSize="@dimen/hint_text_size" />
 
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="end"
+                        android:layout_gravity="end|center"
                         android:src="@drawable/arrow_left" />
 
                 </LinearLayout>
@@ -398,12 +399,12 @@
                         android:layout_weight="1"
                         android:text="@string/settings_infrigment_policy"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/small_text" />
+                        android:textSize="@dimen/hint_text_size" />
 
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="end"
+                        android:layout_gravity="end|center"
                         android:src="@drawable/arrow_left" />
 
                 </LinearLayout>
@@ -428,12 +429,12 @@
                         android:layout_weight="1"
                         android:text="@string/settings_grievance_policy"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/small_text" />
+                        android:textSize="@dimen/hint_text_size" />
 
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="end"
+                        android:layout_gravity="end|center"
                         android:src="@drawable/arrow_left" />
 
                 </LinearLayout>
@@ -449,7 +450,7 @@
             android:layout_weight="1"
             android:text="@string/settings_account"
             android:textColor="@color/textview_text_color"
-            android:textSize="@dimen/hint_text_size"
+            android:textSize="@dimen/text_size"
             android:textStyle="bold" />
 
         <androidx.cardview.widget.CardView
@@ -477,44 +478,15 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="@string/settings_deactivate_account"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/small_text" />
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="end"
-                        android:src="@drawable/arrow_left" />
-
-                </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/view_height"
-                    android:layout_marginTop="5dp"
-                    android:background="@color/line_color" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:orientation="horizontal"
-                    android:padding="@dimen/_10sdp">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
                         android:text="@string/settings_delete_account"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/small_text" />
+                        android:textSize="@dimen/hint_text_size" />
 
                     <ImageView
+                        android:id="@+id/delete_account"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="end"
+                        android:layout_gravity="end|center"
                         android:src="@drawable/arrow_left" />
 
                 </LinearLayout>

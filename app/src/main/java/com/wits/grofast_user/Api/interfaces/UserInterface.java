@@ -29,4 +29,7 @@ public interface UserInterface {
 
     @POST("update-phone-no")
     Call<LoginResponse> updateuserPhoneNo(@Query("phone_no") String phone_no);
+
+    @POST("delete-customer")
+    Call<LoginResponse> deleteaccount();
 }

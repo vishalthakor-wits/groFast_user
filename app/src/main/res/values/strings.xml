@@ -320,9 +320,11 @@
     <string name="order_sgst">SGST</string>
     <string name="order_tip">Tip</string>
     <string name="delete_address_confirmation">Delete Address</string>
-    <string name="are_you_sure_delete">Are you sure, you delete this address.</string>
+    <string name="are_you_sure_delete">Are you sure, you want to delete this address.</string>
     <string name="no">No</string>
     <string name="yes">Yes</string>
+    <string name="delete_account_confirmation">Delete Address</string>
+    <string name="are_you_sure_delete_account">Are you sure, you want to delete this account.</string>
 
     <!-- Intent Keys -->
 

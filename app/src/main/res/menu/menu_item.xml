@@ -54,11 +54,6 @@
         android:title="@string/menu_my_address" />
 
     <item
-        android:id="@+id/menu_support"
-        android:icon="@drawable/support"
-        android:title="@string/menu_support" />
-
-    <item
         android:id="@+id/menu_logout"
         android:icon="@drawable/baseline_logout_24"
         android:title="@string/menu_log_out" />
