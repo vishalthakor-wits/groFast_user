@@ -13,7 +13,6 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -22,11 +21,16 @@ import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatSpinner;
 
 import com.google.android.material.textfield.TextInputEditText;
+import com.wits.grofast_user.Adapter.CustomSpinnerAdapter;
+import com.wits.grofast_user.Api.Address.SpinnerModel;
 import com.wits.grofast_user.Api.RetrofitService;
 import com.wits.grofast_user.Api.interfaces.AddressInterface;
 import com.wits.grofast_user.Api.responseClasses.AddressAddResponse;
 import com.wits.grofast_user.R;
 import com.wits.grofast_user.session.UserActivitySession;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -36,7 +40,7 @@ public class AddAddress extends AppCompatActivity {
 
     private AppCompatButton saveAddress;
     private TextInputEditText address;
-    AppCompatSpinner country, state, city, pincode;
+    AppCompatSpinner countrySpinner, stateSpinner, citySpinner, pincodeSpinner;
     private final String TAG = "AddAddress";
     private UserActivitySession userActivitySession;
     ProgressBar progressBar;
@@ -51,11 +55,16 @@ public class AddAddress extends AppCompatActivity {
 
         userActivitySession = new UserActivitySession(getApplicationContext());
         address = findViewById(R.id.add_address_address);
-        country = findViewById(R.id.add_address_country);
-        state = findViewById(R.id.add_address_state);
-        city = findViewById(R.id.add_address_city);
-        pincode = findViewById(R.id.add_address_pincode);
+        countrySpinner = findViewById(R.id.add_address_country);
+        stateSpinner = findViewById(R.id.add_address_state);
+        citySpinner = findViewById(R.id.add_address_city);
+        pincodeSpinner = findViewById(R.id.add_address_pincode);
         progressBar=findViewById(R.id.loader_save_address);
+
+        setCountrySpinnerValues();
+        setStateSpinnerValues();
+        setCitySpinnerValues();
+        setPincodeSpinnerValues();
 
         saveAddress = findViewById(R.id.add_address_save_button);
 
@@ -64,13 +73,20 @@ public class AddAddress extends AppCompatActivity {
             public void onClick(View v) {
                 Context context = getApplicationContext();
                 String userAddress = address.getText().toString().trim();
-                String userCountry = country.getSelectedItem().toString().trim();
-                String userState = state.getSelectedItem().toString().trim();
-                String userCity = city.getSelectedItem().toString().trim();
-                String userPincode = pincode.getSelectedItem().toString().trim();
+                SpinnerModel userCountryModel = (SpinnerModel) countrySpinner.getSelectedItem();
+                SpinnerModel userStateModel = (SpinnerModel) stateSpinner.getSelectedItem();
+                SpinnerModel userCityModel = (SpinnerModel) citySpinner.getSelectedItem();
+                SpinnerModel userPincodeModel = (SpinnerModel) pincodeSpinner.getSelectedItem();
 
-                if (validateAddress(userAddress, context) && validateCountry(userCountry, context) && validateState(userState, context) && validateCity(userCity, context) && validatePincode(userPincode, context)) {
-                    addAddress(userAddress, userCountry, userState, userCity, userPincode);
+                {
+                    Log.e(TAG, "onClick: saveAddress userAddress : " + userAddress);
+                    Log.e(TAG, "onClick: saveAddress     country : " + userCountryModel.getName());
+                    Log.e(TAG, "onClick: saveAddress       state : " + userStateModel.getName());
+                    Log.e(TAG, "onClick: saveAddress        city : " + userCityModel.getName());
+                    Log.e(TAG, "onClick: saveAddress     pincode : " + userPincodeModel.getName());
+                }
+                if (validateAddress(userAddress, context) && validateCountry(userCountryModel.getName(), context) && validateState(userStateModel.getName(), context) && validateCity(userCityModel.getName(), context) && validatePincode(userPincodeModel.getName(), context)) {
+                    addAddress(userAddress, userCountryModel.getName(), userStateModel.getName(), userCityModel.getName(), userPincodeModel.getName());
                 }
             }
         });
@@ -108,4 +124,43 @@ public class AddAddress extends AppCompatActivity {
         });
     }
 
+    private void setCountrySpinnerValues() {
+        List<SpinnerModel> spinnerCountryList = new ArrayList<>();
+
+        for (int i = 1; i <= 5; i++) {
+            spinnerCountryList.add(new SpinnerModel("India " + i, i));
+        }
+        CustomSpinnerAdapter spinnerAdapter = new CustomSpinnerAdapter(getApplicationContext(), spinnerCountryList, R.string.spinner_select_country);
+        countrySpinner.setAdapter(spinnerAdapter);
+    }
+
+    private void setStateSpinnerValues() {
+        List<SpinnerModel> spinnerStateList = new ArrayList<>();
+
+        for (int i = 1; i <= 5; i++) {
+            spinnerStateList.add(new SpinnerModel("Gujarat " + i, i));
+        }
+        CustomSpinnerAdapter spinnerAdapter = new CustomSpinnerAdapter(getApplicationContext(), spinnerStateList, R.string.spinner_select_state);
+        stateSpinner.setAdapter(spinnerAdapter);
+    }
+
+    private void setCitySpinnerValues() {
+        List<SpinnerModel> spinnerCityList = new ArrayList<>();
+
+        for (int i = 1; i <= 5; i++) {
+            spinnerCityList.add(new SpinnerModel("Bharuch " + i, i));
+        }
+        CustomSpinnerAdapter spinnerAdapter = new CustomSpinnerAdapter(getApplicationContext(), spinnerCityList, R.string.spinner_select_city);
+        citySpinner.setAdapter(spinnerAdapter);
+    }
+
+    private void setPincodeSpinnerValues() {
+        List<SpinnerModel> spinnerPincodeList = new ArrayList<>();
+
+        for (int i = 1; i <= 5; i++) {
+            spinnerPincodeList.add(new SpinnerModel("39205" + i, i));
+        }
+        CustomSpinnerAdapter spinnerAdapter = new CustomSpinnerAdapter(getApplicationContext(), spinnerPincodeList, R.string.spinner_select_pincode);
+        pincodeSpinner.setAdapter(spinnerAdapter);
+    }
 }

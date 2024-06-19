@@ -1,6 +1,6 @@
-package com.wits.grofast_user.address;
+package com.wits.grofast_user.Api.Address;
 
-public class AddressSpinnerModel {
+public class SpinnerModel {
     private String name;
 
     private int id;
@@ -13,11 +13,11 @@ public class AddressSpinnerModel {
         return id;
     }
 
-    public AddressSpinnerModel(String name, int id) {
+    public SpinnerModel(String name, int id) {
         this.name = name;
         this.id = id;
     }
 
-    public AddressSpinnerModel() {
+    public SpinnerModel() {
     }
 }

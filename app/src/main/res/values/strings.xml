@@ -325,4 +325,10 @@
     <string name="intent_key_product_model">productDetails</string>
     <string name="intent_key_category_name">categoryName</string>
 
+    <!-- Spinner Hints -->
+
+    <string name="spinner_select_country">select country</string>
+    <string name="spinner_select_state">select state</string>
+    <string name="spinner_select_city">select city</string>
+    <string name="spinner_select_pincode">select pincode</string>
 </resources>
