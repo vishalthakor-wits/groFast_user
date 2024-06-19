@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -81,7 +82,7 @@ public class ShowAllAddressAdapter extends RecyclerView.Adapter<ShowAllAddressAd
                                 context.startActivity(in);
                                 break;
                             case 1:
-                                deleteAddress(item.getId(), position);
+                                showDeleteConfirmationDialog(context, item, position);
                                 break;
                         }
                     }
@@ -104,6 +105,37 @@ public class ShowAllAddressAdapter extends RecyclerView.Adapter<ShowAllAddressAd
             edit = itemView.findViewById(R.id.all_address_edit);
         }
     }
+
+    private void showDeleteConfirmationDialog(Context context, AddressModel item, int position) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle(context.getString(R.string.delete_address_confirmation));
+        builder.setMessage(context.getString(R.string.are_you_sure_delete));
+
+        View dialogButtonsView = LayoutInflater.from(context).inflate(R.layout.confirmdeleteaddress, null);
+        builder.setView(dialogButtonsView);
+
+        // Find the buttons in the custom layout
+        Button btnNo = dialogButtonsView.findViewById(R.id.btnNo);
+        Button btnYes = dialogButtonsView.findViewById(R.id.btnYes);
+        AlertDialog dialog = builder.create();
+        btnNo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        btnYes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                deleteAddress(item.getId(), position);
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+    }
+
 
     private void deleteAddress(int addressId, int position) {
         UserActivitySession userActivitySession = new UserActivitySession(context);

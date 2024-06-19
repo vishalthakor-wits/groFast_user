@@ -319,6 +319,10 @@
     <string name="order_cgst">CGST</string>
     <string name="order_sgst">SGST</string>
     <string name="order_tip">Tip</string>
+    <string name="delete_address_confirmation">Delete Address</string>
+    <string name="are_you_sure_delete">Are you sure, you delete this address.</string>
+    <string name="no">No</string>
+    <string name="yes">Yes</string>
 
     <!-- Intent Keys -->
 
