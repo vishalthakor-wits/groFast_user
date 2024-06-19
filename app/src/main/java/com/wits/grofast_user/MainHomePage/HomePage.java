@@ -108,12 +108,6 @@ public class HomePage extends AppCompatActivity {
             }
         });
 
-//        textview_set_location.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                openlocationDialogbox();
-//            }
-//        });
         final View rootLayout = findViewById(R.id.drawerlayout1);
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
 

@@ -32,10 +32,6 @@ public class UserActivitySession {
 
     public void setProductFetchIndicator(int value) {
         editor.putInt("productFetchIndicator", value).apply();
-
-//        0 -> fetchAllProducts
-//        1 -> fetchProductsByCategory
-//        2 -> searchProducts
     }
 
     public int getProductFetchIndicator() {
