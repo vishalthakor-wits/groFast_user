@@ -7,47 +7,39 @@ import androidx.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 
-public class ProductModel implements Parcelable{
-    private String image;
+public class ProductModel implements Parcelable {
+    public static final Creator<ProductModel> CREATOR = new Creator<ProductModel>() {
+        @Override
+        public ProductModel createFromParcel(Parcel in) {
+            return new ProductModel(in);
+        }
 
-    private Integer quantity;
-
-    private Integer stock_status;
-
-    private String product_detail;
-
-    private String name;
-
-    private Integer discount;
-
+        @Override
+        public ProductModel[] newArray(int size) {
+            return new ProductModel[size];
+        }
+    };
+    private final String image;
+    private final Integer quantity;
+    private final Integer stock_status;
+    private final String product_detail;
+    private final String name;
+    private final Integer discount;
     @SerializedName("product_status")
     private OrderStatusModel productStatus;
-
-    private String product_code;
-
-    private String uuid;
-
-    private Integer tax_id;
-
-    private Integer final_price;
-
-    private Integer category_id;
-
-    private Integer price;
-
-    private Integer return_policy;
-
-    private String commission;
-
-    private Integer id;
-
-    private int per;
-
-    private Integer supplier_id;
-
+    private final String product_code;
+    private final String uuid;
+    private final Integer tax_id;
+    private final Integer final_price;
+    private final Integer category_id;
+    private final Integer price;
+    private final Integer return_policy;
+    private final String commission;
+    private final Integer id;
+    private final int per;
+    private final Integer supplier_id;
     @SerializedName("unit_id")
-    private String unitName;
-
+    private final String unitName;
 
     protected ProductModel(Parcel in) {
         image = in.readString();
@@ -109,18 +101,6 @@ public class ProductModel implements Parcelable{
         }
         unitName = in.readString();
     }
-
-    public static final Creator<ProductModel> CREATOR = new Creator<ProductModel>() {
-        @Override
-        public ProductModel createFromParcel(Parcel in) {
-            return new ProductModel(in);
-        }
-
-        @Override
-        public ProductModel[] newArray(int size) {
-            return new ProductModel[size];
-        }
-    };
 
     public String getImage() {
         return image;

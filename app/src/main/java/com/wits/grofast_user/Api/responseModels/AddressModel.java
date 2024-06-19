@@ -7,23 +7,26 @@ import androidx.annotation.NonNull;
 
 public class AddressModel implements Parcelable {
 
-    private Integer id;
+    public static final Creator<AddressModel> CREATOR = new Creator<AddressModel>() {
+        @Override
+        public AddressModel createFromParcel(Parcel in) {
+            return new AddressModel(in);
+        }
 
-    private Integer customer_id;
-
-    private String country;
-
-    private String state;
-
-    private String city;
-
-    private String pin_code;
-
-    private String address;
-
-    private String latitude;
-
-    private String longitude;
+        @Override
+        public AddressModel[] newArray(int size) {
+            return new AddressModel[size];
+        }
+    };
+    private final Integer id;
+    private final Integer customer_id;
+    private final String country;
+    private final String state;
+    private final String city;
+    private final String pin_code;
+    private final String address;
+    private final String latitude;
+    private final String longitude;
 
     protected AddressModel(Parcel in) {
         if (in.readByte() == 0) {
@@ -44,18 +47,6 @@ public class AddressModel implements Parcelable {
         latitude = in.readString();
         longitude = in.readString();
     }
-
-    public static final Creator<AddressModel> CREATOR = new Creator<AddressModel>() {
-        @Override
-        public AddressModel createFromParcel(Parcel in) {
-            return new AddressModel(in);
-        }
-
-        @Override
-        public AddressModel[] newArray(int size) {
-            return new AddressModel[size];
-        }
-    };
 
     public Integer getId() {
         return id;

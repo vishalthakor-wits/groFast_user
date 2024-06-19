@@ -1,8 +1,5 @@
 package com.wits.grofast_user.Api.responseModels;
 
-import java.lang.Integer;
-import java.lang.String;
-
 public class CategoryModel {
     private String image;
 

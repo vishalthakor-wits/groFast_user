@@ -4,7 +4,7 @@ public class CouponModel {
     private Integer id;
     private String uuid;
     private String name;
-    private  String description;
+    private String description;
     private String code;
     private String from;
     private String to;
