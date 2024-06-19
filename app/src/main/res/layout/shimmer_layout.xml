@@ -25,4 +25,5 @@
                 <include layout="@layout/shimmer_item_history" />
             </LinearLayout>
         </ScrollView>
+
 </com.facebook.shimmer.ShimmerFrameLayout>
