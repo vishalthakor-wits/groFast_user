@@ -5,6 +5,7 @@ import static com.wits.grofast_user.CommonUtilities.handleApiError;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,12 +23,14 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.wits.grofast_user.Adapter.AllProductAdapter;
+import com.wits.grofast_user.Adapter.BannerAdapter;
 import com.wits.grofast_user.Api.RetrofitService;
 import com.wits.grofast_user.Api.interfaces.ProductInerface;
 import com.wits.grofast_user.Api.paginatedResponses.ProductPaginatedRes;
@@ -38,6 +41,7 @@ import com.wits.grofast_user.R;
 import com.wits.grofast_user.session.UserActivitySession;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import retrofit2.Call;
@@ -48,7 +52,7 @@ public class ProductFragment extends Fragment {
 
     private boolean isCategoriesProductLoaded = false;
     private boolean isProductsLoaded = false;
-    RecyclerView recyclerView;
+    RecyclerView recyclerView, bannerrecycleview;
     AllProductAdapter allProductAdapter;
     private List<ProductModel> productList = new ArrayList<>();
     private List<ProductModel> searchProductList = new ArrayList<>();
@@ -63,6 +67,10 @@ public class ProductFragment extends Fragment {
     private SearchView searchView;
     private ImageView searchIcon;
     private String searchQuery;
+    private List<Integer> bannerImages;
+    private int currentBannerPosition = 0;
+    private Handler handler = new Handler();
+    BannerAdapter bannerAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -82,6 +90,14 @@ public class ProductFragment extends Fragment {
         no_product_layout = root.findViewById(R.id.no_product_layout);
         no_product_text = root.findViewById(R.id.no_product_text1);
         no_product_text2 = root.findViewById(R.id.no_product_text2);
+        //Banner Recycleview
+        bannerrecycleview =root.findViewById(R.id.product_page_banner_recycleview);
+        bannerImages = Arrays.asList(R.drawable.banner1, R.drawable.banner2, R.drawable.banner3);
+        bannerAdapter = new BannerAdapter(getContext(), bannerImages);
+        bannerrecycleview.setAdapter(bannerAdapter);
+        bannerrecycleview.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, true));
+        startAutoScroll();
+
 
         searchView = root.findViewById(R.id.product_search_view);
         searchIcon = root.findViewById(R.id.product_search_icon);
@@ -144,6 +160,19 @@ public class ProductFragment extends Fragment {
 
 
         return root;
+    }
+
+    private void startAutoScroll() {
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (currentBannerPosition == bannerAdapter.getItemCount()) {
+                    currentBannerPosition = 0;
+                }
+                bannerrecycleview.smoothScrollToPosition(currentBannerPosition++);
+                handler.postDelayed(this, 2000);
+            }
+        }, 2000);
     }
 
     private void getProducts(int page) {
