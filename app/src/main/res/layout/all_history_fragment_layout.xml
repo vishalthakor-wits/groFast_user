@@ -168,6 +168,14 @@
 
                 </LinearLayout>
 
+                <ProgressBar
+                    android:id="@+id/reorder_progress_bar"
+                    android:layout_width="@dimen/_25sdp"
+                    android:layout_height="@dimen/_25sdp"
+                    android:elevation="@dimen/_2sdp"
+                    android:layout_marginRight="@dimen/_10sdp"
+                    android:visibility="gone" />
+
 
             </LinearLayout>
 

@@ -9,10 +9,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,6 +23,8 @@ import androidx.appcompat.widget.AppCompatButton;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.wits.grofast_user.Api.RetrofitService;
 import com.wits.grofast_user.Api.interfaces.OrderInterface;
 import com.wits.grofast_user.Api.responseClasses.OrderHistoryResponse;
@@ -112,7 +116,8 @@ public class AllHistoryAdapter extends RecyclerView.Adapter<AllHistoryAdapter.Vi
         holder.ProductReorder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                reorder(item.getId());
+                startProgress(holder);
+                reorder(item.getId(), holder);
             }
         });
     }
@@ -126,6 +131,7 @@ public class AllHistoryAdapter extends RecyclerView.Adapter<AllHistoryAdapter.Vi
         TextView ProductOrderId, ProductStatus, ProductInvoice, ProductDate, ProductPrice;
         LinearLayout ProductReorder;
         RecyclerView recyclerView, chargesRecyclerView;
+        ProgressBar reorderProgress;
 
         public ViewHolders(@NonNull View itemView) {
             super(itemView);
@@ -137,27 +143,46 @@ public class AllHistoryAdapter extends RecyclerView.Adapter<AllHistoryAdapter.Vi
             ProductReorder = itemView.findViewById(R.id.history_product_reorder_layout);
             recyclerView = itemView.findViewById(R.id.history_product_inner_recycleview);
             chargesRecyclerView = itemView.findViewById(R.id.order_history_taxes_and_charges_recyclerview);
+            reorderProgress = itemView.findViewById(R.id.reorder_progress_bar);
+
+
             LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
             recyclerView.setLayoutManager(layoutManager);
+
         }
     }
 
-    private void reorder(int orderId) {
+    private void reorder(int orderId, ViewHolders holder) {
         Call<OrderPlaceResponse> call = RetrofitService.getClient(userActivitySession.getToken()).create(OrderInterface.class).reOrder(orderId);
 
         call.enqueue(new Callback<OrderPlaceResponse>() {
             @Override
             public void onResponse(Call<OrderPlaceResponse> call, Response<OrderPlaceResponse> response) {
+                stopProgress(holder);
                 if (response.isSuccessful()) {
-                    OrderPlaceDialog();
+                    orderPlaceDialog();
                     Toast.makeText(context, "" + response.body().getMessage(), Toast.LENGTH_SHORT);
                     loadOrderHistory();
                 }
-                handleApiError(TAG, response, context);
+                try {
+                    String errorBodyString = response.errorBody().string();
+                    Gson gson = new Gson();
+                    JsonObject errorBodyJson = gson.fromJson(errorBodyString, JsonObject.class);
+
+                    String message = errorBodyJson.has("message") ? errorBodyJson.get("message").getAsString() : "";
+                    String errorMessage = errorBodyJson.has("errorMessage") ? errorBodyJson.get("errorMessage").getAsString() : "";
+
+                    orderFailDialog(message);
+                } catch (Exception e) {
+                    Log.e(TAG, "handleApiError: error " + e.getMessage());
+                    e.printStackTrace();
+                }
+
             }
 
             @Override
             public void onFailure(Call<OrderPlaceResponse> call, Throwable t) {
+                stopProgress(holder);
                 t.printStackTrace();
             }
         });
@@ -184,7 +209,7 @@ public class AllHistoryAdapter extends RecyclerView.Adapter<AllHistoryAdapter.Vi
         });
     }
 
-    private void OrderPlaceDialog() {
+    private void orderPlaceDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         View dialogView = LayoutInflater.from(context).inflate(R.layout.orderplacelayout, null);
         builder.setView(dialogView);
@@ -207,5 +232,46 @@ public class AllHistoryAdapter extends RecyclerView.Adapter<AllHistoryAdapter.Vi
             dialog.getWindow().setBackgroundDrawableResource(R.drawable.dailogbox_background);
         }
         dialog.show();
+    }
+
+    private void orderFailDialog(String message) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        View dialogView = LayoutInflater.from(context).inflate(R.layout.order_fail_layout, null);
+        builder.setView(dialogView);
+        AlertDialog dialog = builder.create();
+        dialog.setCanceledOnTouchOutside(false);
+
+        TextView messageTextView, errorMessageTextView;
+        messageTextView = dialogView.findViewById(R.id.order_failure_message);
+        errorMessageTextView = dialogView.findViewById(R.id.order_failure_error_message);
+
+        AppCompatButton continue_shopping = dialogView.findViewById(R.id.continue_shopping);
+
+        messageTextView.setText(message);
+        continue_shopping.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                Intent intent = new Intent(context, HomePage.class);
+                intent.putExtra("openHomeFragment", true);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(intent);
+            }
+        });
+
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawableResource(R.drawable.dailogbox_background);
+        }
+        dialog.show();
+    }
+
+    private void startProgress(ViewHolders holder) {
+        holder.reorderProgress.setVisibility(View.VISIBLE);
+        holder.ProductReorder.setVisibility(View.GONE);
+    }
+
+    private void stopProgress(ViewHolders holder) {
+        holder.ProductReorder.setVisibility(View.VISIBLE);
+        holder.reorderProgress.setVisibility(View.GONE);
     }
 }
