@@ -32,9 +32,12 @@ import com.google.gson.JsonObject;
 import com.wits.grofast_user.Adapter.AllProductAdapter;
 import com.wits.grofast_user.Adapter.BannerAdapter;
 import com.wits.grofast_user.Api.RetrofitService;
+import com.wits.grofast_user.Api.interfaces.BannerInterface;
 import com.wits.grofast_user.Api.interfaces.ProductInerface;
 import com.wits.grofast_user.Api.paginatedResponses.ProductPaginatedRes;
+import com.wits.grofast_user.Api.responseClasses.BannerResponse;
 import com.wits.grofast_user.Api.responseClasses.ProductResponse;
+import com.wits.grofast_user.Api.responseModels.BannerModel;
 import com.wits.grofast_user.Api.responseModels.ProductModel;
 import com.wits.grofast_user.KeyboardUtil;
 import com.wits.grofast_user.R;
@@ -67,7 +70,6 @@ public class ProductFragment extends Fragment {
     private SearchView searchView;
     private ImageView searchIcon;
     private String searchQuery;
-    private List<Integer> bannerImages;
     private int currentBannerPosition = 0;
     private Handler handler = new Handler();
     BannerAdapter bannerAdapter;
@@ -90,14 +92,11 @@ public class ProductFragment extends Fragment {
         no_product_layout = root.findViewById(R.id.no_product_layout);
         no_product_text = root.findViewById(R.id.no_product_text1);
         no_product_text2 = root.findViewById(R.id.no_product_text2);
-        //Banner Recycleview
-        bannerrecycleview =root.findViewById(R.id.product_page_banner_recycleview);
-        bannerImages = Arrays.asList(R.drawable.banner1, R.drawable.banner2, R.drawable.banner3);
-        bannerAdapter = new BannerAdapter(getContext(), bannerImages);
-        bannerrecycleview.setAdapter(bannerAdapter);
-        bannerrecycleview.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, true));
-        startAutoScroll();
 
+        //Banner Recycleview
+        bannerrecycleview = root.findViewById(R.id.product_page_banner_recycleview);
+        bannerrecycleview.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+        getbanner();
 
         searchView = root.findViewById(R.id.product_search_view);
         searchIcon = root.findViewById(R.id.product_search_icon);
@@ -160,6 +159,29 @@ public class ProductFragment extends Fragment {
 
 
         return root;
+    }
+
+    private void getbanner() {
+        Call<BannerResponse> call = RetrofitService.getClient(userActivitySession.getToken()).create(BannerInterface.class).fetchbanner();
+        call.enqueue(new Callback<BannerResponse>() {
+            @Override
+            public void onResponse(Call<BannerResponse> call, Response<BannerResponse> response) {
+                if (response.isSuccessful()) {
+                    List<BannerModel> banners = response.body().getBanners();
+                    bannerAdapter = new BannerAdapter(getContext(), banners);
+                    bannerrecycleview.setAdapter(bannerAdapter);
+                    bannerAdapter.notifyDataSetChanged();
+                    startAutoScroll();
+                } else {
+                    handleApiError(TAG, response, getContext());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<BannerResponse> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
     }
 
     private void startAutoScroll() {

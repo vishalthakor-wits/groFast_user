@@ -2,6 +2,7 @@ package com.wits.grofast_user.Adapter;
 
 import static com.wits.grofast_user.CommonUtilities.handleApiError;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -56,16 +57,16 @@ public class ShowAllAddressAdapter extends RecyclerView.Adapter<ShowAllAddressAd
         holder.edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                showEditDeleteDialog(item, position);
-                Intent in = new Intent(context, EditAddress.class);
-                in.putExtra("address", item);
-                in.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                context.startActivity(in);
+                Context context = v.getContext();
+                if (!(context instanceof Activity) || ((Activity) context).isFinishing()) {
+                    return;
+                }
+                showEditDeleteDialog(context, item, position);
             }
         });
     }
 
-    private void showEditDeleteDialog(AddressModel item, int position) {
+    private void showEditDeleteDialog(Context context, AddressModel item, int position) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(context.getString(R.string.Choose_an_action));
         builder.setItems(new CharSequence[]
@@ -80,7 +81,7 @@ public class ShowAllAddressAdapter extends RecyclerView.Adapter<ShowAllAddressAd
                                 context.startActivity(in);
                                 break;
                             case 1:
-//                                deleteAddress(item, position);
+                                deleteAddress(item.getId(), position);
                                 break;
                         }
                     }
