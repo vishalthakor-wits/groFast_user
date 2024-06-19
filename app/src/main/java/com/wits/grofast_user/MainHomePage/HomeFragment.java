@@ -4,6 +4,7 @@ import static com.wits.grofast_user.CommonUtilities.handleApiError;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,9 +17,11 @@ import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.facebook.shimmer.ShimmerFrameLayout;
+import com.wits.grofast_user.Adapter.BannerAdapter;
 import com.wits.grofast_user.Adapter.HomeViewProductAdapter;
 import com.wits.grofast_user.Adapter.TopCategoriesAdapter;
 import com.wits.grofast_user.Api.RetrofitService;
@@ -32,6 +35,7 @@ import com.wits.grofast_user.R;
 import com.wits.grofast_user.session.UserActivitySession;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import retrofit2.Call;
@@ -40,7 +44,7 @@ import retrofit2.Response;
 
 public class HomeFragment extends Fragment {
 
-    RecyclerView top_stores_recycleview, product_recycleview;
+    RecyclerView top_stores_recycleview, product_recycleview,bannerrecycleview;
     TopCategoriesAdapter topStoreAdapter;
     HomeViewProductAdapter productAdapter;
     private List<HomeCategoryModel> categoryList = new ArrayList<>();
@@ -53,10 +57,13 @@ public class HomeFragment extends Fragment {
     private boolean isProductsLoaded = false;
     private final String TAG = "HomeFragment";
     private UserActivitySession userActivitySession;
-
     private ImageView searchIcon;
     private String searchQuery;
     private SearchView searchView;
+    private List<Integer> bannerImages;
+    private int currentBannerPosition = 0;
+    private Handler handler = new Handler();
+    BannerAdapter bannerAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -76,7 +83,16 @@ public class HomeFragment extends Fragment {
         searchView = root.findViewById(R.id.home_product_search_view);
         searchIcon = root.findViewById(R.id.home_product_search_icon);
 
+        
         ShowPageLoader();
+
+        //Banner Recycleview
+        bannerrecycleview =root.findViewById(R.id.home_page_banner_recycleview);
+        bannerImages = Arrays.asList(R.drawable.banner1, R.drawable.banner2, R.drawable.banner3);
+        bannerAdapter = new BannerAdapter(getContext(), bannerImages);
+        bannerrecycleview.setAdapter(bannerAdapter);
+        bannerrecycleview.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, true));
+        startAutoScroll();
 
         //Top Stores Item
         layoutManager = new GridLayoutManager(getContext(), 4);
@@ -125,6 +141,19 @@ public class HomeFragment extends Fragment {
         });
 
         return root;
+    }
+
+    private void startAutoScroll() {
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (currentBannerPosition == bannerAdapter.getItemCount()) {
+                    currentBannerPosition = 0;
+                }
+                bannerrecycleview.smoothScrollToPosition(currentBannerPosition++);
+                handler.postDelayed(this, 2000);
+            }
+        }, 2000);
     }
 
     private void loadFragment(Fragment fragment) {
