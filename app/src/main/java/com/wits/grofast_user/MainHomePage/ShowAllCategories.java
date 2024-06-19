@@ -3,6 +3,7 @@ package com.wits.grofast_user.MainHomePage;
 import static com.wits.grofast_user.CommonUtilities.handleApiError;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -10,13 +11,19 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.wits.grofast_user.Adapter.BannerAdapter;
 import com.wits.grofast_user.Adapter.ShowAllCategoriesAdapter;
 import com.wits.grofast_user.Api.RetrofitService;
+import com.wits.grofast_user.Api.interfaces.BannerInterface;
 import com.wits.grofast_user.Api.interfaces.CategoryInterface;
+import com.wits.grofast_user.Api.responseClasses.BannerResponse;
 import com.wits.grofast_user.Api.responseClasses.CategoryResponse;
+import com.wits.grofast_user.Api.responseModels.BannerModel;
 import com.wits.grofast_user.Api.responseModels.CategoryModel;
 import com.wits.grofast_user.R;
 import com.wits.grofast_user.session.UserActivitySession;
@@ -29,13 +36,17 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class ShowAllCategories extends AppCompatActivity {
-    RecyclerView recyclerView;
+    RecyclerView recyclerView, bannerrecycleview;
     ShowAllCategoriesAdapter showAllCategoriesAdapter;
     private List<CategoryModel> categoryList = new ArrayList<>();
     private GridLayoutManager layoutManager;
     private UserActivitySession userActivitySession;
     private final String TAG = "ShowAllCategories";
-    LinearLayout loader, alldata, h;
+    LinearLayout loader, h;
+    NestedScrollView alldata;
+    private int currentBannerPosition = 0;
+    private Handler handler = new Handler();
+    BannerAdapter bannerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +67,49 @@ public class ShowAllCategories extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
         loader.setVisibility(View.VISIBLE);
         alldata.setVisibility(View.GONE);
+
+        //Banner Recycleview
+        bannerrecycleview = findViewById(R.id.categories_page_banner_recycleview);
+        bannerrecycleview.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
+        getbanner();
+
         getAllCategories();
+    }
+
+    private void getbanner() {
+        Call<BannerResponse> call = RetrofitService.getClient(userActivitySession.getToken()).create(BannerInterface.class).fetchbanner();
+        call.enqueue(new Callback<BannerResponse>() {
+            @Override
+            public void onResponse(Call<BannerResponse> call, Response<BannerResponse> response) {
+                if (response.isSuccessful()) {
+                    List<BannerModel> banners = response.body().getBanners();
+                    bannerAdapter = new BannerAdapter(getApplicationContext(), banners);
+                    bannerrecycleview.setAdapter(bannerAdapter);
+                    bannerAdapter.notifyDataSetChanged();
+                    startAutoScroll();
+                } else {
+                    handleApiError(TAG, response, getApplicationContext());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<BannerResponse> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
+    }
+
+    private void startAutoScroll() {
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (currentBannerPosition == bannerAdapter.getItemCount()) {
+                    currentBannerPosition = 0;
+                }
+                bannerrecycleview.smoothScrollToPosition(currentBannerPosition++);
+                handler.postDelayed(this, 2000);
+            }
+        }, 2000);
     }
 
     @Override
@@ -93,7 +146,6 @@ public class ShowAllCategories extends AppCompatActivity {
             }
         });
     }
-
 
     @Override
     public void onBackPressed() {
