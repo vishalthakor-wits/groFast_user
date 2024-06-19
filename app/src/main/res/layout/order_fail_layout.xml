@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:background="@color/Login_theme"
@@ -12,21 +13,22 @@
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:layout_gravity="center"
-        android:src="@drawable/baseline_check_circle_outline_24"/>
+        app:tint="@color/expired"
+        android:src="@drawable/reorder_cancel_icon"/>
 
     <TextView
+        android:id="@+id/order_failure_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/thank_you"
         android:textColor="@color/white"
         android:layout_marginTop="20dp"
         android:textSize="@dimen/text_size"/>
 
 
     <TextView
+        android:id="@+id/order_failure_error_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/thank_you_name"
         android:textColor="@color/white"
         android:layout_marginTop="10dp"
         android:textSize="@dimen/hint_text_size"/>
@@ -43,7 +45,5 @@
         android:layout_marginTop="30dp"
         android:textAllCaps="false"
         android:textStyle="bold" />
-
-
 
 </LinearLayout>
