@@ -3,13 +3,15 @@ package com.wits.grofast_user.Api.responseClasses;
 import com.google.gson.annotations.SerializedName;
 import com.wits.grofast_user.Api.responseModels.BannerModel;
 
-public class BannerFetchResponse {
+import java.util.List;
+
+public class BannerResponse {
     private String message;
 
     private Integer status;
 
     @SerializedName("banners")
-    private BannerModel banners;
+    private List<BannerModel> banners;
 
     public String getMessage() {
         return message;
@@ -19,7 +21,7 @@ public class BannerFetchResponse {
         return status;
     }
 
-    public BannerModel getBanners() {
+    public List<BannerModel> getBanners() {
         return banners;
     }
 }

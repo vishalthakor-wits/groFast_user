@@ -9,15 +9,17 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.wits.grofast_user.Api.responseModels.BannerModel;
 import com.wits.grofast_user.R;
 
 import java.util.List;
 
 public class BannerAdapter extends RecyclerView.Adapter<BannerAdapter.ViewHolders> {
-    private List<Integer> bannerImages;
+    private List<BannerModel> bannerImages;
     private Context context;
 
-    public BannerAdapter(Context context, List<Integer> bannerImages) {
+    public BannerAdapter(Context context, List<BannerModel> bannerImages) {
         this.context = context;
         this.bannerImages = bannerImages;
     }
@@ -31,8 +33,10 @@ public class BannerAdapter extends RecyclerView.Adapter<BannerAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull BannerAdapter.ViewHolders holder, int position) {
-        int bannerImage = bannerImages.get(position);
-        holder.imageView.setImageResource(bannerImage);
+        String imageUrl = bannerImages.get(position).getImage();
+        Glide.with(context)
+                .load(imageUrl)
+                .into(holder.imageView);
     }
 
     @Override

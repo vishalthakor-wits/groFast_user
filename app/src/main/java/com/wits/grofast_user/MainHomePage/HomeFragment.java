@@ -25,10 +25,13 @@ import com.wits.grofast_user.Adapter.BannerAdapter;
 import com.wits.grofast_user.Adapter.HomeViewProductAdapter;
 import com.wits.grofast_user.Adapter.TopCategoriesAdapter;
 import com.wits.grofast_user.Api.RetrofitService;
+import com.wits.grofast_user.Api.interfaces.BannerInterface;
 import com.wits.grofast_user.Api.interfaces.CategoryInterface;
 import com.wits.grofast_user.Api.interfaces.ProductInerface;
+import com.wits.grofast_user.Api.responseClasses.BannerResponse;
 import com.wits.grofast_user.Api.responseClasses.HomeCategoryResponse;
 import com.wits.grofast_user.Api.responseClasses.HomeProductResponse;
+import com.wits.grofast_user.Api.responseModels.BannerModel;
 import com.wits.grofast_user.Api.responseModels.HomeCategoryModel;
 import com.wits.grofast_user.Api.responseModels.HomeProductModel;
 import com.wits.grofast_user.R;
@@ -60,7 +63,6 @@ public class HomeFragment extends Fragment {
     private ImageView searchIcon;
     private String searchQuery;
     private SearchView searchView;
-    private List<Integer> bannerImages;
     private int currentBannerPosition = 0;
     private Handler handler = new Handler();
     BannerAdapter bannerAdapter;
@@ -87,12 +89,11 @@ public class HomeFragment extends Fragment {
         ShowPageLoader();
 
         //Banner Recycleview
-        bannerrecycleview =root.findViewById(R.id.home_page_banner_recycleview);
-        bannerImages = Arrays.asList(R.drawable.banner1, R.drawable.banner2, R.drawable.banner3);
-        bannerAdapter = new BannerAdapter(getContext(), bannerImages);
-        bannerrecycleview.setAdapter(bannerAdapter);
-        bannerrecycleview.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, true));
-        startAutoScroll();
+        bannerrecycleview = root.findViewById(R.id.home_page_banner_recycleview);
+        bannerrecycleview.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+        getbanner();
+
+
 
         //Top Stores Item
         layoutManager = new GridLayoutManager(getContext(), 4);
@@ -141,6 +142,29 @@ public class HomeFragment extends Fragment {
         });
 
         return root;
+    }
+
+    private void getbanner() {
+        Call<BannerResponse> call = RetrofitService.getClient(userActivitySession.getToken()).create(BannerInterface.class).fetchbanner();
+        call.enqueue(new Callback<BannerResponse>() {
+            @Override
+            public void onResponse(Call<BannerResponse> call, Response<BannerResponse> response) {
+                if (response.isSuccessful()) {
+                    List<BannerModel> banners = response.body().getBanners();
+                    bannerAdapter = new BannerAdapter(getContext(), banners);
+                    bannerrecycleview.setAdapter(bannerAdapter);
+                    bannerAdapter.notifyDataSetChanged();
+                    startAutoScroll();
+                } else {
+                    handleApiError(TAG, response, getContext());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<BannerResponse> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
     }
 
     private void startAutoScroll() {
