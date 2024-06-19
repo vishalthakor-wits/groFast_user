@@ -2,8 +2,13 @@ package com.wits.grofast_user.Api.responseModels;
 
 public class TaxAndCharge {
 
-    private String text;
-    private Float value;
+    private final String text;
+    private final Float value;
+
+    public TaxAndCharge(String text, Float value) {
+        this.text = text;
+        this.value = value;
+    }
 
     public String getText() {
         return text;
@@ -11,10 +16,5 @@ public class TaxAndCharge {
 
     public Float getValue() {
         return value;
-    }
-
-    public TaxAndCharge(String text, Float value) {
-        this.text = text;
-        this.value = value;
     }
 }
