@@ -1,6 +1,6 @@
 package com.wits.grofast_user.Api.interfaces;
 
-import com.wits.grofast_user.Api.Address.CountryModel;
+import com.wits.grofast_user.Api.responseModels.SpinnerItemModel;
 import com.wits.grofast_user.Api.responseClasses.AddressAddResponse;
 import com.wits.grofast_user.Api.responseClasses.AddressFetchResponse;
 import com.wits.grofast_user.Api.responseClasses.LoginResponse;
@@ -23,6 +23,6 @@ public interface AddressInterface {
     Call<LoginResponse> deleteCustomerAddress(@Query("address_id") int addressId);
 
     @GET("fetch-country-list")
-    Call<List<CountryModel>> getCountries();
+    Call<List<SpinnerItemModel>> getCountries();
 
 }

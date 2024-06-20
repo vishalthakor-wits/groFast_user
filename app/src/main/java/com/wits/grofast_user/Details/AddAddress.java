@@ -22,7 +22,7 @@ import androidx.appcompat.widget.AppCompatSpinner;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.wits.grofast_user.Adapter.CustomSpinnerAdapter;
-import com.wits.grofast_user.Api.Address.SpinnerModel;
+import com.wits.grofast_user.Api.responseModels.CustomSpinnerModel;
 import com.wits.grofast_user.Api.RetrofitService;
 import com.wits.grofast_user.Api.interfaces.AddressInterface;
 import com.wits.grofast_user.Api.responseClasses.AddressAddResponse;
@@ -73,10 +73,10 @@ public class AddAddress extends AppCompatActivity {
             public void onClick(View v) {
                 Context context = getApplicationContext();
                 String userAddress = address.getText().toString().trim();
-                SpinnerModel userCountryModel = (SpinnerModel) countrySpinner.getSelectedItem();
-                SpinnerModel userStateModel = (SpinnerModel) stateSpinner.getSelectedItem();
-                SpinnerModel userCityModel = (SpinnerModel) citySpinner.getSelectedItem();
-                SpinnerModel userPincodeModel = (SpinnerModel) pincodeSpinner.getSelectedItem();
+                CustomSpinnerModel userCountryModel = (CustomSpinnerModel) countrySpinner.getSelectedItem();
+                CustomSpinnerModel userStateModel = (CustomSpinnerModel) stateSpinner.getSelectedItem();
+                CustomSpinnerModel userCityModel = (CustomSpinnerModel) citySpinner.getSelectedItem();
+                CustomSpinnerModel userPincodeModel = (CustomSpinnerModel) pincodeSpinner.getSelectedItem();
 
                 {
                     Log.e(TAG, "onClick: saveAddress userAddress : " + userAddress);
@@ -125,40 +125,40 @@ public class AddAddress extends AppCompatActivity {
     }
 
     private void setCountrySpinnerValues() {
-        List<SpinnerModel> spinnerCountryList = new ArrayList<>();
+        List<CustomSpinnerModel> spinnerCountryList = new ArrayList<>();
 
         for (int i = 1; i <= 5; i++) {
-            spinnerCountryList.add(new SpinnerModel("India " + i, i));
+            spinnerCountryList.add(new CustomSpinnerModel("India " + i, i));
         }
         CustomSpinnerAdapter spinnerAdapter = new CustomSpinnerAdapter(getApplicationContext(), spinnerCountryList, R.string.spinner_select_country);
         countrySpinner.setAdapter(spinnerAdapter);
     }
 
     private void setStateSpinnerValues() {
-        List<SpinnerModel> spinnerStateList = new ArrayList<>();
+        List<CustomSpinnerModel> spinnerStateList = new ArrayList<>();
 
         for (int i = 1; i <= 5; i++) {
-            spinnerStateList.add(new SpinnerModel("Gujarat " + i, i));
+            spinnerStateList.add(new CustomSpinnerModel("Gujarat " + i, i));
         }
         CustomSpinnerAdapter spinnerAdapter = new CustomSpinnerAdapter(getApplicationContext(), spinnerStateList, R.string.spinner_select_state);
         stateSpinner.setAdapter(spinnerAdapter);
     }
 
     private void setCitySpinnerValues() {
-        List<SpinnerModel> spinnerCityList = new ArrayList<>();
+        List<CustomSpinnerModel> spinnerCityList = new ArrayList<>();
 
         for (int i = 1; i <= 5; i++) {
-            spinnerCityList.add(new SpinnerModel("Bharuch " + i, i));
+            spinnerCityList.add(new CustomSpinnerModel("Bharuch " + i, i));
         }
         CustomSpinnerAdapter spinnerAdapter = new CustomSpinnerAdapter(getApplicationContext(), spinnerCityList, R.string.spinner_select_city);
         citySpinner.setAdapter(spinnerAdapter);
     }
 
     private void setPincodeSpinnerValues() {
-        List<SpinnerModel> spinnerPincodeList = new ArrayList<>();
+        List<CustomSpinnerModel> spinnerPincodeList = new ArrayList<>();
 
         for (int i = 1; i <= 5; i++) {
-            spinnerPincodeList.add(new SpinnerModel("39205" + i, i));
+            spinnerPincodeList.add(new CustomSpinnerModel("39205" + i, i));
         }
         CustomSpinnerAdapter spinnerAdapter = new CustomSpinnerAdapter(getApplicationContext(), spinnerPincodeList, R.string.spinner_select_pincode);
         pincodeSpinner.setAdapter(spinnerAdapter);
