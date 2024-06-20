@@ -13,6 +13,12 @@
         android:padding="10dp">
 
         <LinearLayout
+            android:id="@+id/address_update_linear_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -122,6 +128,24 @@
             android:textColor="@color/button_text_color"
             android:textSize="@dimen/button_text_size" />
 
+        <ProgressBar
+            android:id="@+id/loader_update_address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/padding"
+            android:gravity="center"
+            android:visibility="gone" />
+        </LinearLayout>
+
+        <include
+            android:id="@+id/shimmer_layout_update_address"
+            layout="@layout/shimmer_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone" />
     </LinearLayout>
+
 
 </androidx.core.widget.NestedScrollView>

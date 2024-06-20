@@ -78,7 +78,6 @@ public class AddAddress extends AppCompatActivity {
         saveAddress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Context context = getApplicationContext();
                 String userAddress = address.getText().toString().trim();
                 CustomSpinnerModel userCountryModel = (CustomSpinnerModel) countrySpinner.getSelectedItem();
                 CustomSpinnerModel userStateModel = (CustomSpinnerModel) stateSpinner.getSelectedItem();
@@ -119,6 +118,8 @@ public class AddAddress extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<AddressAddResponse> call, Throwable t) {
+                progressBar.setVisibility(View.GONE);
+                saveAddress.setVisibility(View.VISIBLE);
                 t.printStackTrace();
             }
         });
@@ -155,6 +156,17 @@ public class AddAddress extends AppCompatActivity {
                         countrySpinnerList.add(new CustomSpinnerModel(model.getName(), model.getId()));
                     }
                     countryAdapter.notifyDataSetChanged();
+
+//                    CLEAR LOWER SPINNER LIST IF UPPER LIST IS EMPTY
+                    if (countryList.isEmpty()) {
+                        stateSpinnerList.clear();
+                        citySpinnerList.clear();
+                        pincodeSpinnerList.clear();
+
+                        stateAdapter.notifyDataSetChanged();
+                        cityAdapter.notifyDataSetChanged();
+                        pincodeAdapter.notifyDataSetChanged();
+                    }
                 }
             }
 
@@ -179,6 +191,15 @@ public class AddAddress extends AppCompatActivity {
                         stateSpinnerList.add(new CustomSpinnerModel(model.getName(), model.getId()));
                     }
                     stateAdapter.notifyDataSetChanged();
+
+//                    CLEAR LOWER SPINNER LIST IF UPPER LIST IS EMPTY
+                    if (stateList.isEmpty()) {
+                        citySpinnerList.clear();
+                        pincodeSpinnerList.clear();
+
+                        cityAdapter.notifyDataSetChanged();
+                        pincodeAdapter.notifyDataSetChanged();
+                    }
                 }
             }
 
@@ -203,6 +224,12 @@ public class AddAddress extends AppCompatActivity {
                         citySpinnerList.add(new CustomSpinnerModel(model.getName(), model.getId()));
                     }
                     cityAdapter.notifyDataSetChanged();
+
+//                    CLEAR LOWER SPINNER LIST IF UPPER LIST IS EMPTY
+                    if (cityList.isEmpty()) {
+                        pincodeSpinnerList.clear();
+                        pincodeAdapter.notifyDataSetChanged();
+                    }
                 }
             }
 

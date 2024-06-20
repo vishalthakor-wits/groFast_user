@@ -34,4 +34,7 @@ public interface AddressInterface {
     @POST("fetch-pincode-list")
     Call<List<SpinnerItemModel>> getPincodes(@Query("cityId") int cityId);
 
+    @POST("customer-address-update")
+    Call<LoginResponse> updateCustomreAddress(@Query("address_id") int addressId, @Query("address") String address, @Query("country") String country, @Query("state") String state, @Query("city") String city, @Query("pin_code") String pincode);
+
 }
