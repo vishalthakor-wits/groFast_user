@@ -24,10 +24,13 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import com.wits.grofast_user.Api.RetrofitService;
 import com.wits.grofast_user.Api.interfaces.OtpInterface;
 import com.wits.grofast_user.Api.responseClasses.LoginResponse;
+import com.wits.grofast_user.Api.responseClasses.NotificationResponse;
 import com.wits.grofast_user.Api.responseClasses.OtpVerifyResponse;
+import com.wits.grofast_user.Api.responseModels.NotificationModel;
 import com.wits.grofast_user.Api.responseModels.UserModel;
 import com.wits.grofast_user.MainHomePage.HomePage;
-import com.wits.grofast_user.Notification.FCMInterface;
+import com.wits.grofast_user.Notification.NotificationInterface;
+import com.wits.grofast_user.session.NotificationSession;
 import com.wits.grofast_user.session.UserActivitySession;
 import com.wits.grofast_user.session.UserDetailSession;
 
@@ -44,7 +47,8 @@ public class OtpPage extends AppCompatActivity {
     String TAG = "OtpPage";
     LinearLayout loadingOverlay;
     private UserActivitySession userActivitySession;
-    private Call<Void> call;
+    UserDetailSession userDetailSession;
+    NotificationSession notificationSession;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,9 +60,8 @@ public class OtpPage extends AppCompatActivity {
 
         userActivitySession = new UserActivitySession(getApplicationContext());
         loadingOverlay = findViewById(R.id.loading_overlay);
-
-        UserActivitySession session = new UserActivitySession(getApplicationContext());
-        UserDetailSession userDetailSession = new UserDetailSession(getApplicationContext());
+        userDetailSession = new UserDetailSession(getApplicationContext());
+        notificationSession = new NotificationSession(getApplicationContext());
 
         Intent intent = getIntent();
         if (intent != null) {
@@ -83,52 +86,7 @@ public class OtpPage extends AppCompatActivity {
         Continue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(getApplicationContext(), HomePage.class);
-                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                enteredOtp = digit1.getText().toString().trim() + digit2.getText().toString().trim() + digit3.getText().toString().trim() + digit4.getText().toString().trim();
-                Log.e(TAG, "onCreate: enteredOtp " + enteredOtp);
-
-                if (isOtpValid()) {
-                    loadingOverlay.setVisibility(View.VISIBLE);
-                    Integer userOtp = Integer.parseInt(enteredOtp);
-                    Call<OtpVerifyResponse> call = RetrofitService.getUnAuthorizedClient().create(OtpInterface.class).verifyOtp(receivedPhone, userOtp);
-                    call.enqueue(new Callback<OtpVerifyResponse>() {
-                        @Override
-                        public void onResponse(Call<OtpVerifyResponse> call, Response<OtpVerifyResponse> response) {
-                            loadingOverlay.setVisibility(View.GONE);
-                            if (response.isSuccessful()) {
-                                OtpVerifyResponse otpVerifyResponse = response.body();
-                                UserModel userModel = otpVerifyResponse.getUser();
-
-                                Log.e(TAG, "id " + userModel.getId());
-                                Log.e(TAG, "phone no " + userModel.getPhone_no());
-                                session.setLoginStaus(true);
-                                session.setToken(otpVerifyResponse.getAccessToken());
-
-                                userDetailSession.setUserId(userModel.getId());
-                                userDetailSession.setName(userModel.getName());
-                                userDetailSession.setEmail(userModel.getEmail());
-                                userDetailSession.setPhoneNo(userModel.getPhone_no());
-                                userDetailSession.setGender(userModel.getGender());
-                                userDetailSession.setImage(userModel.getImage());
-                                userDetailSession.setUuid(userModel.getUuid());
-                                userDetailSession.setWalletStatus(userModel.getWalletStatus());
-
-                                saveFcmToServer();
-                                startActivity(i);
-                            } else {
-                                handleApiError(TAG, response, getApplicationContext());
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<OtpVerifyResponse> call, Throwable t) {
-                            t.printStackTrace();
-                        }
-                    });
-                } else {
-                    showToastAndFocus(getString(R.string.toast_message_enter_otp), digit1);
-                }
+                otpVerify();
             }
         });
         resend.setOnClickListener(new View.OnClickListener() {
@@ -167,6 +125,56 @@ public class OtpPage extends AppCompatActivity {
         });
 
     }
+
+    private void otpVerify() {
+        Intent i = new Intent(getApplicationContext(), HomePage.class);
+        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        enteredOtp = digit1.getText().toString().trim() + digit2.getText().toString().trim() + digit3.getText().toString().trim() + digit4.getText().toString().trim();
+        Log.e(TAG, "onCreate: enteredOtp " + enteredOtp);
+
+        if (isOtpValid()) {
+            loadingOverlay.setVisibility(View.VISIBLE);
+            Integer userOtp = Integer.parseInt(enteredOtp);
+            Call<OtpVerifyResponse> call = RetrofitService.getUnAuthorizedClient().create(OtpInterface.class).verifyOtp(receivedPhone, userOtp);
+            call.enqueue(new Callback<OtpVerifyResponse>() {
+                @Override
+                public void onResponse(Call<OtpVerifyResponse> call, Response<OtpVerifyResponse> response) {
+                    loadingOverlay.setVisibility(View.GONE);
+                    if (response.isSuccessful()) {
+                        OtpVerifyResponse otpVerifyResponse = response.body();
+                        UserModel userModel = otpVerifyResponse.getUser();
+
+                        Log.e(TAG, "id " + userModel.getId());
+                        Log.e(TAG, "phone no " + userModel.getPhone_no());
+                        userActivitySession.setLoginStaus(true);
+                        userActivitySession.setToken(otpVerifyResponse.getAccessToken());
+                        userDetailSession.setUserId(userModel.getId());
+                        userDetailSession.setName(userModel.getName());
+                        userDetailSession.setEmail(userModel.getEmail());
+                        userDetailSession.setPhoneNo(userModel.getPhone_no());
+                        userDetailSession.setGender(userModel.getGender());
+                        userDetailSession.setImage(userModel.getImage());
+                        userDetailSession.setUuid(userModel.getUuid());
+                        userDetailSession.setWalletStatus(userModel.getWalletStatus());
+
+                        saveFcmToServer();
+                        notificationFetch();
+                        startActivity(i);
+                    } else {
+                        handleApiError(TAG, response, getApplicationContext());
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<OtpVerifyResponse> call, Throwable t) {
+                    t.printStackTrace();
+                }
+            });
+        } else {
+            showToastAndFocus(getString(R.string.toast_message_enter_otp), digit1);
+        }
+    }
+
 
     private boolean isOtpValid() {
         boolean valid = true;
@@ -211,7 +219,7 @@ public class OtpPage extends AppCompatActivity {
             }
 
             // Get the FCM token
-            Call<Void> call = RetrofitService.getClient(userActivitySession.getToken()).create(FCMInterface.class).storeFcmtoServer(task.getResult());
+            Call<Void> call = RetrofitService.getClient(userActivitySession.getToken()).create(NotificationInterface.class).storeFcmtoServer(task.getResult());
             Log.e(TAG, "onResponse: fcm token " + task.getResult());
 
             call.enqueue(new Callback<Void>() {
@@ -227,6 +235,38 @@ public class OtpPage extends AppCompatActivity {
                     t.printStackTrace();
                 }
             });
+        });
+    }
+
+    private void notificationFetch() {
+        Call<NotificationResponse> call1 = RetrofitService.getClient(userActivitySession.getToken()).create(NotificationInterface.class).notificationFetch();
+        call1.enqueue(new Callback<NotificationResponse>() {
+            @Override
+            public void onResponse(Call<NotificationResponse> call, Response<NotificationResponse> response) {
+                if (response.isSuccessful()) {
+                    NotificationResponse notification = response.body();
+                    NotificationModel notificationModel = notification.getNotificationModel();
+
+                    Log.e(TAG, "onResponse: Notification message" + notification.getMessage());
+                    Log.e(TAG, "onResponse: Notification status" + notification.getStatus());
+
+                    notificationSession.setEnableAll(notificationModel.getEnable_all());
+                    notificationSession.setPushNotification(notificationModel.getPush_notification());
+                    notificationSession.setNewsLetterEmailNotification(notificationModel.getNewsletter_email());
+                    notificationSession.setPromoOfferEmail(notificationModel.getPromo_offer_email());
+                    notificationSession.setPromoOfferPush(notificationModel.getPromo_offer_push());
+                    notificationSession.setsocialNotificationEmail(notificationModel.getSocial_notification_email());
+                    notificationSession.setsocialNotificationPush(notificationModel.getSocial_notification_push());
+
+                    Log.e(TAG, "onResponse: enable all " + notificationModel.getEnable_all());
+                }
+                handleApiError(TAG, response, getApplicationContext());
+            }
+
+            @Override
+            public void onFailure(Call<NotificationResponse> call, Throwable t) {
+                t.printStackTrace();
+            }
         });
     }
 
