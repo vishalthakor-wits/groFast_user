@@ -1,6 +1,7 @@
 package com.wits.grofast_user.MainHomePage;
 
 import static com.wits.grofast_user.Api.RetrofitService.domain;
+import static com.wits.grofast_user.CommonUtilities.handleApiError;
 
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -14,6 +15,7 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -29,6 +31,9 @@ import com.bumptech.glide.Glide;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.wits.grofast_user.Adapter.AddLocationSerachResultAdapter;
+import com.wits.grofast_user.Api.RetrofitService;
+import com.wits.grofast_user.Api.interfaces.UserInterface;
+import com.wits.grofast_user.Api.responseClasses.LoginResponse;
 import com.wits.grofast_user.Details.Coupon;
 import com.wits.grofast_user.Details.EditProfile;
 import com.wits.grofast_user.Details.MyAddress;
@@ -51,6 +56,9 @@ import java.util.List;
 import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class HomePage extends AppCompatActivity {
     private BottomNavigationView bottomNavigationView;
@@ -65,6 +73,8 @@ public class HomePage extends AppCompatActivity {
     private CircleImageView userProfile;
     private View headerView;
     private UserDetailSession userDetailSession;
+    UserActivitySession useractivitysession;
+    CartDetailSession cartDetailSession;
     private final String TAG = "HomePage";
 
     @Override
@@ -75,8 +85,8 @@ public class HomePage extends AppCompatActivity {
         getSupportActionBar().hide();
         setContentView(R.layout.activity_home_page);
 
-        UserActivitySession session = new UserActivitySession(getApplicationContext());
-        CartDetailSession cartDetailSession = new CartDetailSession(getApplicationContext());
+        useractivitysession = new UserActivitySession(getApplicationContext());
+        cartDetailSession = new CartDetailSession(getApplicationContext());
         userDetailSession = new UserDetailSession(getApplicationContext());
 
         drawerLayout = findViewById(R.id.drawerlayout1);
@@ -182,13 +192,7 @@ public class HomePage extends AppCompatActivity {
                 } else if (id == R.id.menu_my_address) {
                     startActivity(new Intent(HomePage.this, MyAddress.class));
                 } else if (id == R.id.menu_logout) {
-                    session.setLoginStaus(false);
-                    session.clearSession();
-                    userDetailSession.clearSession();
-                    cartDetailSession.clearSession();
-                    Intent i = new Intent(getApplicationContext(), MainActivity.class);
-                    i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(i);
+                    LogOut();
                 }
                 drawerLayout.closeDrawer(GravityCompat.START);
                 return false;
@@ -342,5 +346,33 @@ public class HomePage extends AppCompatActivity {
         fragmentTransaction.commit();
     }
 
+    private void LogOut() {
+        Call<LoginResponse> call = RetrofitService.getClient(useractivitysession.getToken()).create(UserInterface.class).logout();
+        call.enqueue(new Callback<LoginResponse>() {
+            @Override
+            public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+                if (response.isSuccessful()) {
+                    LoginResponse loginResponse = response.body();
+                    if (loginResponse != null) {
+                        Log.e(TAG, "onResponse: log out message " + loginResponse.getMessage());
+                        useractivitysession.setLoginStaus(false);
+                        useractivitysession.clearSession();
+                        userDetailSession.clearSession();
+                        cartDetailSession.clearSession();
+                        Intent i = new Intent(getApplicationContext(), MainActivity.class);
+                        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(i);
+                        Toast.makeText(HomePage.this, "" + loginResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+                handleApiError(TAG, response, getApplicationContext());
+            }
+
+            @Override
+            public void onFailure(Call<LoginResponse> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
+    }
 
 }
