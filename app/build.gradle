@@ -54,4 +54,8 @@ dependencies {
 
     //Responsive Design
     implementation 'com.intuit.sdp:sdp-android:1.1.1'
+
+    //firebase
+    implementation platform("com.google.firebase:firebase-bom:33.1.0")
+    implementation ("com.google.firebase:firebase-analytics")
 }

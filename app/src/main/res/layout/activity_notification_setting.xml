@@ -34,7 +34,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/notification_1_heading"
+                        android:text="@string/notification_2_heading"
                         android:textColor="@color/textview_text_color"
                         android:textSize="@dimen/hint_text_size"
                         android:textStyle="bold" />
@@ -43,14 +43,13 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="3dp"
-                        android:text="@string/notification_1_sub_heading"
-                        android:textColor="@color/default_color"
+                        android:text="@string/notification_2_sub_heading"
                         android:textSize="@dimen/small_text" />
 
                 </LinearLayout>
 
                 <Switch
-                    android:id="@+id/switchPushNotifications"
+                    android:id="@+id/switchEnableAll"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center" />
@@ -80,7 +79,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/notification_2_heading"
+                        android:text="@string/notification_1_heading"
                         android:textColor="@color/textview_text_color"
                         android:textSize="@dimen/hint_text_size"
                         android:textStyle="bold" />
@@ -89,13 +88,14 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="3dp"
-                        android:text="@string/notification_2_sub_heading"
+                        android:text="@string/notification_1_sub_heading"
+                        android:textColor="@color/default_color"
                         android:textSize="@dimen/small_text" />
 
                 </LinearLayout>
 
                 <Switch
-                    android:id="@+id/switchEnableAll"
+                    android:id="@+id/switchPushNotifications"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center" />
@@ -334,6 +334,7 @@
                     </LinearLayout>
 
                     <Switch
+                        android:id="@+id/socialemailnotification"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
 
@@ -370,6 +371,7 @@
                     </LinearLayout>
 
                     <Switch
+                        android:id="@+id/socialpushnotification"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
                 </LinearLayout>

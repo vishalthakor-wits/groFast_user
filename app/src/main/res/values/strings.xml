@@ -152,7 +152,7 @@
     <string name="All_offer_details_name">Offer Detail</string>
     <string name="wallet_page_name">Wallet</string>
     <string name="payment_page_name">Payment Details</string>
-    <string name="notification_setting_page_name">Notification Preferences</string>
+    <string name="notification_setting_page_name">Notification Setting</string>
     <string name="notification_page_name">Notification</string>
     <string name="show_all_categories_page_name">Categories</string>
 
