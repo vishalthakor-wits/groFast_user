@@ -41,6 +41,9 @@ public class EditAddress extends AppCompatActivity {
     private final List<CustomSpinnerModel> citySpinnerList = new ArrayList<>();
     private final List<CustomSpinnerModel> pincodeSpinnerList = new ArrayList<>();
 
+    private List<SpinnerItemModel> countryList, stateList, cityList, pincodeList;
+    private boolean isPincodesLoaded = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,7 +77,7 @@ public class EditAddress extends AppCompatActivity {
 
             fetchListsOnSpinnerSelection();
 
-            fetchCountries(addressModel.getCountry());
+            fetchCountries();
         }
     }
 
@@ -93,7 +96,7 @@ public class EditAddress extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (!countrySpinnerList.isEmpty()) {
                     CustomSpinnerModel model = countrySpinnerList.get(position - 1);
-                    fetchStates(model.getId(), addressModel.getState());
+                    fetchStates(model.getId());
                 }
             }
 
@@ -108,7 +111,7 @@ public class EditAddress extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (!stateSpinnerList.isEmpty()) {
                     CustomSpinnerModel model = stateSpinnerList.get(position - 1);
-                    fetchCities(model.getId(), addressModel.getCity());
+                    fetchCities(model.getId());
                 }
             }
 
@@ -123,7 +126,7 @@ public class EditAddress extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (!citySpinnerList.isEmpty()) {
                     CustomSpinnerModel model = citySpinnerList.get(position - 1);
-                    fetchPincodes(model.getId(), addressModel.getPin_code());
+                    fetchPincodes(model.getId());
                 }
             }
 
@@ -147,7 +150,7 @@ public class EditAddress extends AppCompatActivity {
         pincodeSpinner.setAdapter(pincodeAdapter);
     }
 
-    private void fetchCountries(String countryName) {
+    private void fetchCountries() {
 
         Call<List<SpinnerItemModel>> call = RetrofitService.getClient(userActivitySession.getToken()).create(AddressInterface.class).getCountries();
 
@@ -155,23 +158,34 @@ public class EditAddress extends AppCompatActivity {
             @Override
             public void onResponse(Call<List<SpinnerItemModel>> call, Response<List<SpinnerItemModel>> response) {
                 if (response.isSuccessful()) {
-                    List<SpinnerItemModel> countryList = response.body();
+                    countryList = response.body();
                     countrySpinnerList.clear();
                     for (SpinnerItemModel model : countryList) {
                         countrySpinnerList.add(new CustomSpinnerModel(model.getName(), model.getId()));
                     }
                     countryAdapter.notifyDataSetChanged();
 
-                    //CODE TO SET SELECTED ITEM ON SPINNER
+//                    SET SELECTED SPINNER ITEM IN CUSTOM SPINNER
                     {
                         int position = 1;
                         for (CustomSpinnerModel model : countrySpinnerList) {
-                            if (model.getName().equals(countryName)) {
+                            if (model.getName().equals(addressModel.getCountry())) {
                                 countrySpinner.setSelection(position);
                                 break;
                             }
                             position++;
                         }
+                    }
+
+//                    CLEAR LOWER SPINNER LIST IF UPPER LIST IS EMPTY
+                    if (countryList.isEmpty()) {
+                        stateSpinnerList.clear();
+                        citySpinnerList.clear();
+                        pincodeSpinnerList.clear();
+
+                        stateAdapter.notifyDataSetChanged();
+                        cityAdapter.notifyDataSetChanged();
+                        pincodeAdapter.notifyDataSetChanged();
                     }
                 }
             }
@@ -183,7 +197,7 @@ public class EditAddress extends AppCompatActivity {
         });
     }
 
-    private void fetchStates(int countryId, String stateName) {
+    private void fetchStates(int countryId) {
 
         Call<List<SpinnerItemModel>> call = RetrofitService.getClient(userActivitySession.getToken()).create(AddressInterface.class).getStates(countryId);
 
@@ -191,23 +205,32 @@ public class EditAddress extends AppCompatActivity {
             @Override
             public void onResponse(Call<List<SpinnerItemModel>> call, Response<List<SpinnerItemModel>> response) {
                 if (response.isSuccessful()) {
-                    List<SpinnerItemModel> stateList = response.body();
+                    stateList = response.body();
                     stateSpinnerList.clear();
                     for (SpinnerItemModel model : stateList) {
                         stateSpinnerList.add(new CustomSpinnerModel(model.getName(), model.getId()));
                     }
                     stateAdapter.notifyDataSetChanged();
 
-                    //CODE TO SET SELECTED ITEM ON SPINNER
+//                    SET SELECTED SPINNER ITEM IN CUSTOM SPINNER
                     {
                         int position = 1;
                         for (CustomSpinnerModel model : stateSpinnerList) {
-                            if (model.getName().equals(stateName)) {
+                            if (model.getName().equals(addressModel.getState())) {
                                 stateSpinner.setSelection(position);
                                 break;
                             }
                             position++;
                         }
+                    }
+
+//                    CLEAR LOWER SPINNER LIST IF UPPER LIST IS EMPTY
+                    if (stateList.isEmpty()) {
+                        citySpinnerList.clear();
+                        pincodeSpinnerList.clear();
+
+                        cityAdapter.notifyDataSetChanged();
+                        pincodeAdapter.notifyDataSetChanged();
                     }
                 }
             }
@@ -219,7 +242,7 @@ public class EditAddress extends AppCompatActivity {
         });
     }
 
-    private void fetchCities(int stateId, String cityName) {
+    private void fetchCities(int stateId) {
 
         Call<List<SpinnerItemModel>> call = RetrofitService.getClient(userActivitySession.getToken()).create(AddressInterface.class).getCities(stateId);
 
@@ -227,23 +250,29 @@ public class EditAddress extends AppCompatActivity {
             @Override
             public void onResponse(Call<List<SpinnerItemModel>> call, Response<List<SpinnerItemModel>> response) {
                 if (response.isSuccessful()) {
-                    List<SpinnerItemModel> cityList = response.body();
+                    cityList = response.body();
                     citySpinnerList.clear();
                     for (SpinnerItemModel model : cityList) {
                         citySpinnerList.add(new CustomSpinnerModel(model.getName(), model.getId()));
                     }
                     cityAdapter.notifyDataSetChanged();
 
-                    //CODE TO SET SELECTED ITEM ON SPINNER
+//                    SET SELECTED SPINNER ITEM IN CUSTOM SPINNER
                     {
                         int position = 1;
                         for (CustomSpinnerModel model : citySpinnerList) {
-                            if (model.getName().equals(cityName)) {
+                            if (model.getName().equals(addressModel.getCity())) {
                                 citySpinner.setSelection(position);
                                 break;
                             }
                             position++;
                         }
+                    }
+
+//                    CLEAR LOWER SPINNER LIST IF UPPER LIST IS EMPTY
+                    if (cityList.isEmpty()) {
+                        pincodeSpinnerList.clear();
+                        pincodeAdapter.notifyDataSetChanged();
                     }
                 }
             }
@@ -255,7 +284,7 @@ public class EditAddress extends AppCompatActivity {
         });
     }
 
-    private void fetchPincodes(int cityId, String pincode) {
+    private void fetchPincodes(int cityId) {
 
         Call<List<SpinnerItemModel>> call = RetrofitService.getClient(userActivitySession.getToken()).create(AddressInterface.class).getPincodes(cityId);
 
@@ -263,18 +292,18 @@ public class EditAddress extends AppCompatActivity {
             @Override
             public void onResponse(Call<List<SpinnerItemModel>> call, Response<List<SpinnerItemModel>> response) {
                 if (response.isSuccessful()) {
-                    List<SpinnerItemModel> pincodeList = response.body();
+                    pincodeList = response.body();
                     pincodeSpinnerList.clear();
                     for (SpinnerItemModel model : pincodeList) {
                         pincodeSpinnerList.add(new CustomSpinnerModel(model.getCode(), model.getId()));
                     }
                     pincodeAdapter.notifyDataSetChanged();
 
-                    //CODE TO SET SELECTED ITEM ON SPINNER
+//                    SET SELECTED SPINNER ITEM IN CUSTOM SPINNER
                     {
                         int position = 1;
                         for (CustomSpinnerModel model : pincodeSpinnerList) {
-                            if (model.getName().equals(pincode)) {
+                            if (model.getName().equals(addressModel.getPin_code())) {
                                 pincodeSpinner.setSelection(position);
                                 break;
                             }
