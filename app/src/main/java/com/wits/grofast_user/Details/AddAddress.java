@@ -155,6 +155,17 @@ public class AddAddress extends AppCompatActivity {
                         countrySpinnerList.add(new CustomSpinnerModel(model.getName(), model.getId()));
                     }
                     countryAdapter.notifyDataSetChanged();
+
+//                    CLEAR LOWER SPINNER LIST IF UPPER LIST IS EMPTY
+                    if (countryList.isEmpty()) {
+                        stateSpinnerList.clear();
+                        citySpinnerList.clear();
+                        pincodeSpinnerList.clear();
+
+                        stateAdapter.notifyDataSetChanged();
+                        cityAdapter.notifyDataSetChanged();
+                        pincodeAdapter.notifyDataSetChanged();
+                    }
                 }
             }
 
@@ -179,6 +190,15 @@ public class AddAddress extends AppCompatActivity {
                         stateSpinnerList.add(new CustomSpinnerModel(model.getName(), model.getId()));
                     }
                     stateAdapter.notifyDataSetChanged();
+
+//                    CLEAR LOWER SPINNER LIST IF UPPER LIST IS EMPTY
+                    if (stateList.isEmpty()) {
+                        citySpinnerList.clear();
+                        pincodeSpinnerList.clear();
+
+                        cityAdapter.notifyDataSetChanged();
+                        pincodeAdapter.notifyDataSetChanged();
+                    }
                 }
             }
 
@@ -203,6 +223,12 @@ public class AddAddress extends AppCompatActivity {
                         citySpinnerList.add(new CustomSpinnerModel(model.getName(), model.getId()));
                     }
                     cityAdapter.notifyDataSetChanged();
+
+//                    CLEAR LOWER SPINNER LIST IF UPPER LIST IS EMPTY
+                    if (cityList.isEmpty()) {
+                        pincodeSpinnerList.clear();
+                        pincodeAdapter.notifyDataSetChanged();
+                    }
                 }
             }
 
