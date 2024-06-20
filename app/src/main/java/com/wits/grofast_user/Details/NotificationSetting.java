@@ -162,6 +162,8 @@ public class NotificationSetting extends AppCompatActivity {
                     NotificationResponse notificationResponse = response.body();
                     Log.e(TAG, "message " + notificationResponse.getMessage());
                     Toast.makeText(NotificationSetting.this, "" + notificationResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                    finish();
+                    startActivity(getIntent());
                 } else {
                     handleApiError(TAG, response, getApplicationContext());
                 }
