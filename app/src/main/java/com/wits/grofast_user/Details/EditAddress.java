@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -18,6 +19,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatSpinner;
 
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.textfield.TextInputEditText;
 import com.wits.grofast_user.Adapter.CustomSpinnerAdapter;
 import com.wits.grofast_user.Api.RetrofitService;
@@ -52,6 +54,8 @@ public class EditAddress extends AppCompatActivity {
     private List<SpinnerItemModel> countryList, stateList, cityList, pincodeList;
     private AppCompatButton updateAddress;
     private ProgressBar progressBar;
+    private LinearLayout linearLayout;
+    private ShimmerFrameLayout shimmerFrameLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +65,9 @@ public class EditAddress extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.outline_arrow_back_24);
         setContentView(R.layout.activity_edit_address);
+
+        linearLayout = findViewById(R.id.address_update_linear_layout);
+        shimmerFrameLayout = findViewById(R.id.shimmer_layout_update_address);
 
         userActivitySession = new UserActivitySession(getApplicationContext());
         Intent intent = getIntent();
@@ -73,6 +80,8 @@ public class EditAddress extends AppCompatActivity {
         pincodeSpinner = findViewById(R.id.edit_address_pincode);
         progressBar=findViewById(R.id.loader_update_address);
 
+        startProgressBar();
+
         if (intent.hasExtra("address")) {
             addressModel = intent.getParcelableExtra("address");
             address.setText(addressModel.getAddress());
@@ -81,7 +90,6 @@ public class EditAddress extends AppCompatActivity {
             fetchListsOnSpinnerSelection();
             fetchCountries();
         }
-
         updateAddress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -96,6 +104,11 @@ public class EditAddress extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
     }
 
     @Override
@@ -170,7 +183,6 @@ public class EditAddress extends AppCompatActivity {
     private void fetchCountries() {
 
         Call<List<SpinnerItemModel>> call = RetrofitService.getClient(userActivitySession.getToken()).create(AddressInterface.class).getCountries();
-
         call.enqueue(new Callback<List<SpinnerItemModel>>() {
             @Override
             public void onResponse(Call<List<SpinnerItemModel>> call, Response<List<SpinnerItemModel>> response) {
@@ -196,6 +208,7 @@ public class EditAddress extends AppCompatActivity {
 
 //                    CLEAR LOWER SPINNER LIST IF UPPER LIST IS EMPTY
                     if (countryList.isEmpty()) {
+                        stopProgressBar();
                         stateSpinnerList.clear();
                         citySpinnerList.clear();
                         pincodeSpinnerList.clear();
@@ -215,9 +228,8 @@ public class EditAddress extends AppCompatActivity {
     }
 
     private void fetchStates(int countryId) {
-
+        startProgressBar();
         Call<List<SpinnerItemModel>> call = RetrofitService.getClient(userActivitySession.getToken()).create(AddressInterface.class).getStates(countryId);
-
         call.enqueue(new Callback<List<SpinnerItemModel>>() {
             @Override
             public void onResponse(Call<List<SpinnerItemModel>> call, Response<List<SpinnerItemModel>> response) {
@@ -243,6 +255,7 @@ public class EditAddress extends AppCompatActivity {
 
 //                    CLEAR LOWER SPINNER LIST IF UPPER LIST IS EMPTY
                     if (stateList.isEmpty()) {
+                        stopProgressBar();
                         citySpinnerList.clear();
                         pincodeSpinnerList.clear();
 
@@ -260,9 +273,8 @@ public class EditAddress extends AppCompatActivity {
     }
 
     private void fetchCities(int stateId) {
-
+        startProgressBar();
         Call<List<SpinnerItemModel>> call = RetrofitService.getClient(userActivitySession.getToken()).create(AddressInterface.class).getCities(stateId);
-
         call.enqueue(new Callback<List<SpinnerItemModel>>() {
             @Override
             public void onResponse(Call<List<SpinnerItemModel>> call, Response<List<SpinnerItemModel>> response) {
@@ -288,6 +300,8 @@ public class EditAddress extends AppCompatActivity {
 
 //                    CLEAR LOWER SPINNER LIST IF UPPER LIST IS EMPTY
                     if (cityList.isEmpty()) {
+                        stopProgressBar();
+
                         pincodeSpinnerList.clear();
                         pincodeAdapter.notifyDataSetChanged();
                     }
@@ -302,12 +316,12 @@ public class EditAddress extends AppCompatActivity {
     }
 
     private void fetchPincodes(int cityId) {
-
+        startProgressBar();
         Call<List<SpinnerItemModel>> call = RetrofitService.getClient(userActivitySession.getToken()).create(AddressInterface.class).getPincodes(cityId);
-
         call.enqueue(new Callback<List<SpinnerItemModel>>() {
             @Override
             public void onResponse(Call<List<SpinnerItemModel>> call, Response<List<SpinnerItemModel>> response) {
+                stopProgressBar();
                 if (response.isSuccessful()) {
                     pincodeList = response.body();
                     pincodeSpinnerList.clear();
@@ -343,14 +357,12 @@ public class EditAddress extends AppCompatActivity {
     }
 
     private void updateCustomerAddress(int addressId, String address, String country, String state, String city, String pincode) {
-        progressBar.setVisibility(View.VISIBLE);
-        updateAddress.setVisibility(View.GONE);
+        startProgressBar();
         Call<LoginResponse> call = RetrofitService.getClient(userActivitySession.getToken()).create(AddressInterface.class).updateCustomreAddress(addressId, address, country, state, city, pincode);
         call.enqueue(new Callback<LoginResponse>() {
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
-                progressBar.setVisibility(View.GONE);
-                updateAddress.setVisibility(View.VISIBLE);
+                stopProgressBar();
                 if (response.isSuccessful()) {
                     LoginResponse addressUpdateResponse = response.body();
                     Toast.makeText(getApplicationContext(), "" + addressUpdateResponse.getMessage(), Toast.LENGTH_SHORT).show();
@@ -360,10 +372,20 @@ public class EditAddress extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<LoginResponse> call, Throwable t) {
-                progressBar.setVisibility(View.GONE);
-                updateAddress.setVisibility(View.VISIBLE);
+                stopProgressBar();
                 t.printStackTrace();
             }
         });
     }
+
+    private void startProgressBar() {
+        progressBar.setVisibility(View.VISIBLE);
+        updateAddress.setVisibility(View.GONE);
+    }
+
+    private void stopProgressBar() {
+        progressBar.setVisibility(View.GONE);
+        updateAddress.setVisibility(View.VISIBLE);
+    }
+
 }
