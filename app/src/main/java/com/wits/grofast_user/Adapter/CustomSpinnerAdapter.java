@@ -10,20 +10,20 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.wits.grofast_user.Api.Address.SpinnerModel;
+import com.wits.grofast_user.Api.responseModels.CustomSpinnerModel;
 import com.wits.grofast_user.R;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class CustomSpinnerAdapter extends ArrayAdapter<SpinnerModel> {
+public class CustomSpinnerAdapter extends ArrayAdapter<CustomSpinnerModel> {
     private final LayoutInflater mInflater;
-    List<SpinnerModel> spinnerItemList = new ArrayList<>();
+    List<CustomSpinnerModel> spinnerItemList = new ArrayList<>();
     private final Context mContext;
     private final int mResource;
     private final int hintId;
 
-    public CustomSpinnerAdapter(@NonNull Context context, @NonNull List<SpinnerModel> spinnerItemList, int hintStringId) {
+    public CustomSpinnerAdapter(@NonNull Context context, @NonNull List<CustomSpinnerModel> spinnerItemList, int hintStringId) {
         super(context, androidx.appcompat.R.layout.support_simple_spinner_dropdown_item, spinnerItemList);
         this.mInflater = LayoutInflater.from(context);
         this.spinnerItemList = spinnerItemList;
@@ -38,7 +38,7 @@ public class CustomSpinnerAdapter extends ArrayAdapter<SpinnerModel> {
     }
 
     @Override
-    public SpinnerModel getItem(int position) {
+    public CustomSpinnerModel getItem(int position) {
         // Return null if the position is the first item (hint)
         return position == 0 ? null : spinnerItemList.get(position - 1);
     }
