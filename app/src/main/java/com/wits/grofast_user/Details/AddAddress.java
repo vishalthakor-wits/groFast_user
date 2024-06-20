@@ -2,10 +2,7 @@ package com.wits.grofast_user.Details;
 
 import static com.wits.grofast_user.CommonUtilities.handleApiError;
 import static com.wits.grofast_user.CommonUtilities.validateAddress;
-import static com.wits.grofast_user.CommonUtilities.validateCity;
-import static com.wits.grofast_user.CommonUtilities.validateCountry;
-import static com.wits.grofast_user.CommonUtilities.validatePincode;
-import static com.wits.grofast_user.CommonUtilities.validateState;
+import static com.wits.grofast_user.CommonUtilities.validateCustomSpinner;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -22,10 +19,10 @@ import androidx.appcompat.widget.AppCompatSpinner;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.wits.grofast_user.Adapter.CustomSpinnerAdapter;
-import com.wits.grofast_user.Api.responseModels.CustomSpinnerModel;
 import com.wits.grofast_user.Api.RetrofitService;
 import com.wits.grofast_user.Api.interfaces.AddressInterface;
 import com.wits.grofast_user.Api.responseClasses.AddressAddResponse;
+import com.wits.grofast_user.Api.responseModels.CustomSpinnerModel;
 import com.wits.grofast_user.R;
 import com.wits.grofast_user.session.UserActivitySession;
 
@@ -78,14 +75,7 @@ public class AddAddress extends AppCompatActivity {
                 CustomSpinnerModel userCityModel = (CustomSpinnerModel) citySpinner.getSelectedItem();
                 CustomSpinnerModel userPincodeModel = (CustomSpinnerModel) pincodeSpinner.getSelectedItem();
 
-                {
-                    Log.e(TAG, "onClick: saveAddress userAddress : " + userAddress);
-                    Log.e(TAG, "onClick: saveAddress     country : " + userCountryModel.getName());
-                    Log.e(TAG, "onClick: saveAddress       state : " + userStateModel.getName());
-                    Log.e(TAG, "onClick: saveAddress        city : " + userCityModel.getName());
-                    Log.e(TAG, "onClick: saveAddress     pincode : " + userPincodeModel.getName());
-                }
-                if (validateAddress(userAddress, context) && validateCountry(userCountryModel.getName(), context) && validateState(userStateModel.getName(), context) && validateCity(userCityModel.getName(), context) && validatePincode(userPincodeModel.getName(), context)) {
+                if (validateAddress(userAddress, getApplicationContext()) && validateSpinners()) {
                     addAddress(userAddress, userCountryModel.getName(), userStateModel.getName(), userCityModel.getName(), userPincodeModel.getName());
                 }
             }
@@ -162,5 +152,10 @@ public class AddAddress extends AppCompatActivity {
         }
         CustomSpinnerAdapter spinnerAdapter = new CustomSpinnerAdapter(getApplicationContext(), spinnerPincodeList, R.string.spinner_select_pincode);
         pincodeSpinner.setAdapter(spinnerAdapter);
+    }
+
+    private boolean validateSpinners() {
+        Context context = getApplicationContext();
+        return (validateCustomSpinner(countrySpinner, context, R.string.spinner_select_country) && validateCustomSpinner(stateSpinner, context, R.string.spinner_select_state) && validateCustomSpinner(citySpinner, context, R.string.spinner_select_city) && validateCustomSpinner(pincodeSpinner, context, R.string.spinner_select_pincode));
     }
 }

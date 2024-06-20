@@ -20,10 +20,12 @@ import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.widget.AppCompatButton;
+import androidx.appcompat.widget.AppCompatSpinner;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.wits.grofast_user.Api.responseModels.CustomSpinnerModel;
 import com.wits.grofast_user.session.UserDetailSession;
 
 import java.text.ParseException;
@@ -350,5 +352,15 @@ public class CommonUtilities {
         return istDateTime.format(timeFormatter);
     }
 
+
+    public static boolean validateCustomSpinner(AppCompatSpinner spinner, Context context, int messageId) {
+        CustomSpinnerModel spinnerModel = (CustomSpinnerModel) spinner.getSelectedItem();
+
+        if (spinnerModel == null) {
+            Toast.makeText(context, "" + context.getString(messageId), Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
+    }
 
 }
