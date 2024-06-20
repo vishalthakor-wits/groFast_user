@@ -29,9 +29,9 @@ public interface AddressInterface {
     Call<List<SpinnerItemModel>> getStates(@Query("countryId") int countryId);
 
     @POST("fetch-city-list")
-    Call<List<SpinnerItemModel>> getCities(@Query("stateId") int countryId);
+    Call<List<SpinnerItemModel>> getCities(@Query("stateId") int stateId);
 
     @POST("fetch-pincode-list")
-    Call<List<SpinnerItemModel>> getPincodes(@Query("cityId") int countryId);
+    Call<List<SpinnerItemModel>> getPincodes(@Query("cityId") int cityId);
 
 }

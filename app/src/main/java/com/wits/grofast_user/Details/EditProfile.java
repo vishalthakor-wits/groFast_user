@@ -109,9 +109,9 @@ public class EditProfile extends AppCompatActivity {
         String image = userDetailSession.getImage();
         Glide.with(getApplicationContext()).load(domain+image).placeholder(defaultImage).into(showProfileImage);
 
-        if (Uri.parse(image).getLastPathSegment().equals("null")) {
-            showAddProfileButton();
-        } else showEditProfileButton();
+        if (image != null) {
+            showEditProfileButton();
+        } else showAddProfileButton();
 
         switch (userDetailSession.getGender()) {
             case "Male":
