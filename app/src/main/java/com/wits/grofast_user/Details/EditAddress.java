@@ -74,7 +74,7 @@ public class EditAddress extends AppCompatActivity {
 
             fetchListsOnSpinnerSelection();
 
-            fetchCountries();
+            fetchCountries(addressModel.getCountry());
         }
     }
 
@@ -93,7 +93,7 @@ public class EditAddress extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (!countrySpinnerList.isEmpty()) {
                     CustomSpinnerModel model = countrySpinnerList.get(position - 1);
-                    fetchStates(model.getId());
+                    fetchStates(model.getId(), addressModel.getState());
                 }
             }
 
@@ -108,7 +108,7 @@ public class EditAddress extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (!stateSpinnerList.isEmpty()) {
                     CustomSpinnerModel model = stateSpinnerList.get(position - 1);
-                    fetchCities(model.getId());
+                    fetchCities(model.getId(), addressModel.getCity());
                 }
             }
 
@@ -123,7 +123,7 @@ public class EditAddress extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (!citySpinnerList.isEmpty()) {
                     CustomSpinnerModel model = citySpinnerList.get(position - 1);
-                    fetchPincodes(model.getId());
+                    fetchPincodes(model.getId(), addressModel.getPin_code());
                 }
             }
 
@@ -147,7 +147,7 @@ public class EditAddress extends AppCompatActivity {
         pincodeSpinner.setAdapter(pincodeAdapter);
     }
 
-    private void fetchCountries() {
+    private void fetchCountries(String countryName) {
 
         Call<List<SpinnerItemModel>> call = RetrofitService.getClient(userActivitySession.getToken()).create(AddressInterface.class).getCountries();
 
@@ -161,6 +161,18 @@ public class EditAddress extends AppCompatActivity {
                         countrySpinnerList.add(new CustomSpinnerModel(model.getName(), model.getId()));
                     }
                     countryAdapter.notifyDataSetChanged();
+
+                    //CODE TO SET SELECTED ITEM ON SPINNER
+                    {
+                        int position = 1;
+                        for (CustomSpinnerModel model : countrySpinnerList) {
+                            if (model.getName().equals(countryName)) {
+                                countrySpinner.setSelection(position);
+                                break;
+                            }
+                            position++;
+                        }
+                    }
                 }
             }
 
@@ -171,7 +183,7 @@ public class EditAddress extends AppCompatActivity {
         });
     }
 
-    private void fetchStates(int countryId) {
+    private void fetchStates(int countryId, String stateName) {
 
         Call<List<SpinnerItemModel>> call = RetrofitService.getClient(userActivitySession.getToken()).create(AddressInterface.class).getStates(countryId);
 
@@ -185,6 +197,18 @@ public class EditAddress extends AppCompatActivity {
                         stateSpinnerList.add(new CustomSpinnerModel(model.getName(), model.getId()));
                     }
                     stateAdapter.notifyDataSetChanged();
+
+                    //CODE TO SET SELECTED ITEM ON SPINNER
+                    {
+                        int position = 1;
+                        for (CustomSpinnerModel model : stateSpinnerList) {
+                            if (model.getName().equals(stateName)) {
+                                stateSpinner.setSelection(position);
+                                break;
+                            }
+                            position++;
+                        }
+                    }
                 }
             }
 
@@ -195,7 +219,7 @@ public class EditAddress extends AppCompatActivity {
         });
     }
 
-    private void fetchCities(int stateId) {
+    private void fetchCities(int stateId, String cityName) {
 
         Call<List<SpinnerItemModel>> call = RetrofitService.getClient(userActivitySession.getToken()).create(AddressInterface.class).getCities(stateId);
 
@@ -209,6 +233,18 @@ public class EditAddress extends AppCompatActivity {
                         citySpinnerList.add(new CustomSpinnerModel(model.getName(), model.getId()));
                     }
                     cityAdapter.notifyDataSetChanged();
+
+                    //CODE TO SET SELECTED ITEM ON SPINNER
+                    {
+                        int position = 1;
+                        for (CustomSpinnerModel model : citySpinnerList) {
+                            if (model.getName().equals(cityName)) {
+                                citySpinner.setSelection(position);
+                                break;
+                            }
+                            position++;
+                        }
+                    }
                 }
             }
 
@@ -219,7 +255,7 @@ public class EditAddress extends AppCompatActivity {
         });
     }
 
-    private void fetchPincodes(int cityId) {
+    private void fetchPincodes(int cityId, String pincode) {
 
         Call<List<SpinnerItemModel>> call = RetrofitService.getClient(userActivitySession.getToken()).create(AddressInterface.class).getPincodes(cityId);
 
@@ -233,6 +269,18 @@ public class EditAddress extends AppCompatActivity {
                         pincodeSpinnerList.add(new CustomSpinnerModel(model.getCode(), model.getId()));
                     }
                     pincodeAdapter.notifyDataSetChanged();
+
+                    //CODE TO SET SELECTED ITEM ON SPINNER
+                    {
+                        int position = 1;
+                        for (CustomSpinnerModel model : pincodeSpinnerList) {
+                            if (model.getName().equals(pincode)) {
+                                pincodeSpinner.setSelection(position);
+                                break;
+                            }
+                            position++;
+                        }
+                    }
                 }
             }
 
