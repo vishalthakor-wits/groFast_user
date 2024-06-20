@@ -6,8 +6,6 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
-import android.widget.Spinner;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatSpinner;
@@ -24,7 +22,9 @@ public class EditAddress extends AppCompatActivity {
     private final String TAG = "EditAddress";
 
     private TextInputEditText address ;
-    AppCompatSpinner state, country, spinCity, spinPincode;
+    AppCompatSpinner spinState, spinCountry, spinCity, spinPincode;
+    private List<String> countryList = new ArrayList<>();
+    private List<String> stateList = new ArrayList<>();
     private List<String> cityList = new ArrayList<>();
     private List<String> pincodeList = new ArrayList<>();
 
@@ -39,8 +39,8 @@ public class EditAddress extends AppCompatActivity {
 
         Intent intent = getIntent();
         address = findViewById(R.id.edit_address_address);
-        country = findViewById(R.id.edit_address_country);
-        state = findViewById(R.id.edit_address_state);
+        spinCountry = findViewById(R.id.edit_address_country);
+        spinState = findViewById(R.id.edit_address_state);
 
         spinCity = findViewById(R.id.edit_address_city);
         spinPincode = findViewById(R.id.edit_address_pincode);
@@ -57,15 +57,24 @@ public class EditAddress extends AppCompatActivity {
 
             address.setText(addressModel.getAddress());
 
+            countryList.add(addressModel.getCountry());
+            stateList.add(addressModel.getState());
             cityList.add(addressModel.getCity());
             pincodeList.add(addressModel.getPin_code());
 
+
+            ArrayAdapter<String> countryAdapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_item, countryList);
+            ArrayAdapter<String> stateAdapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_item, stateList);
             ArrayAdapter<String> cityAdapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_item, cityList);
             ArrayAdapter<String> pincodeAdapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_item, pincodeList);
 
+            countryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            stateAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             cityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             pincodeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
+            spinCountry.setAdapter(countryAdapter);
+            spinState.setAdapter(stateAdapter);
             spinCity.setAdapter(cityAdapter);
             spinPincode.setAdapter(pincodeAdapter);
         }
