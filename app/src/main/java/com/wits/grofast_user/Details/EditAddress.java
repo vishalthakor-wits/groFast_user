@@ -4,29 +4,42 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.WindowManager;
-import android.widget.ArrayAdapter;
+import android.widget.AdapterView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatSpinner;
 
 import com.google.android.material.textfield.TextInputEditText;
+import com.wits.grofast_user.Adapter.CustomSpinnerAdapter;
+import com.wits.grofast_user.Api.RetrofitService;
+import com.wits.grofast_user.Api.interfaces.AddressInterface;
 import com.wits.grofast_user.Api.responseModels.AddressModel;
+import com.wits.grofast_user.Api.responseModels.CustomSpinnerModel;
+import com.wits.grofast_user.Api.responseModels.SpinnerItemModel;
 import com.wits.grofast_user.R;
+import com.wits.grofast_user.session.UserActivitySession;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class EditAddress extends AppCompatActivity {
     private AddressModel addressModel;
     private final String TAG = "EditAddress";
-
+    private UserActivitySession userActivitySession;
     private TextInputEditText address ;
-    AppCompatSpinner spinState, spinCountry, spinCity, spinPincode;
-    private List<String> countryList = new ArrayList<>();
-    private List<String> stateList = new ArrayList<>();
-    private List<String> cityList = new ArrayList<>();
-    private List<String> pincodeList = new ArrayList<>();
+    AppCompatSpinner stateSpinner, countrySpinner, citySpinner, pincodeSpinner;
+
+    private CustomSpinnerAdapter countryAdapter, stateAdapter, cityAdapter, pincodeAdapter;
+    private final List<CustomSpinnerModel> countrySpinnerList = new ArrayList<>();
+    private final List<CustomSpinnerModel> stateSpinnerList = new ArrayList<>();
+    private final List<CustomSpinnerModel> citySpinnerList = new ArrayList<>();
+    private final List<CustomSpinnerModel> pincodeSpinnerList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,13 +50,14 @@ public class EditAddress extends AppCompatActivity {
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.outline_arrow_back_24);
         setContentView(R.layout.activity_edit_address);
 
+        userActivitySession = new UserActivitySession(getApplicationContext());
         Intent intent = getIntent();
         address = findViewById(R.id.edit_address_address);
-        spinCountry = findViewById(R.id.edit_address_country);
-        spinState = findViewById(R.id.edit_address_state);
+        countrySpinner = findViewById(R.id.edit_address_country);
+        stateSpinner = findViewById(R.id.edit_address_state);
 
-        spinCity = findViewById(R.id.edit_address_city);
-        spinPincode = findViewById(R.id.edit_address_pincode);
+        citySpinner = findViewById(R.id.edit_address_city);
+        pincodeSpinner = findViewById(R.id.edit_address_pincode);
 
         if (intent.hasExtra("address")) {
             addressModel = intent.getParcelableExtra("address");
@@ -54,29 +68,13 @@ public class EditAddress extends AppCompatActivity {
                 Log.e(TAG, "onCreate: City    : " + addressModel.getCity());
                 Log.e(TAG, "onCreate: Pincode : " + addressModel.getPin_code());
             }
-
             address.setText(addressModel.getAddress());
 
-            countryList.add(addressModel.getCountry());
-            stateList.add(addressModel.getState());
-            cityList.add(addressModel.getCity());
-            pincodeList.add(addressModel.getPin_code());
+            setSpinnerAdapters();
 
+            fetchListsOnSpinnerSelection();
 
-            ArrayAdapter<String> countryAdapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_item, countryList);
-            ArrayAdapter<String> stateAdapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_item, stateList);
-            ArrayAdapter<String> cityAdapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_item, cityList);
-            ArrayAdapter<String> pincodeAdapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_item, pincodeList);
-
-            countryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            stateAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            cityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            pincodeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-            spinCountry.setAdapter(countryAdapter);
-            spinState.setAdapter(stateAdapter);
-            spinCity.setAdapter(cityAdapter);
-            spinPincode.setAdapter(pincodeAdapter);
+            fetchCountries();
         }
     }
 
@@ -89,4 +87,159 @@ public class EditAddress extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    private void fetchListsOnSpinnerSelection() {
+        countrySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (!countrySpinnerList.isEmpty()) {
+                    CustomSpinnerModel model = countrySpinnerList.get(position - 1);
+                    fetchStates(model.getId());
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        stateSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (!stateSpinnerList.isEmpty()) {
+                    CustomSpinnerModel model = stateSpinnerList.get(position - 1);
+                    fetchCities(model.getId());
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        citySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (!citySpinnerList.isEmpty()) {
+                    CustomSpinnerModel model = citySpinnerList.get(position - 1);
+                    fetchPincodes(model.getId());
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+    }
+
+    private void setSpinnerAdapters() {
+        countryAdapter = new CustomSpinnerAdapter(getApplicationContext(), countrySpinnerList, R.string.spinner_select_country);
+        stateAdapter = new CustomSpinnerAdapter(getApplicationContext(), stateSpinnerList, R.string.spinner_select_state);
+        cityAdapter = new CustomSpinnerAdapter(getApplicationContext(), citySpinnerList, R.string.spinner_select_city);
+        pincodeAdapter = new CustomSpinnerAdapter(getApplicationContext(), pincodeSpinnerList, R.string.spinner_select_pincode);
+
+        countrySpinner.setAdapter(countryAdapter);
+        stateSpinner.setAdapter(stateAdapter);
+        citySpinner.setAdapter(cityAdapter);
+        pincodeSpinner.setAdapter(pincodeAdapter);
+    }
+
+    private void fetchCountries() {
+
+        Call<List<SpinnerItemModel>> call = RetrofitService.getClient(userActivitySession.getToken()).create(AddressInterface.class).getCountries();
+
+        call.enqueue(new Callback<List<SpinnerItemModel>>() {
+            @Override
+            public void onResponse(Call<List<SpinnerItemModel>> call, Response<List<SpinnerItemModel>> response) {
+                if (response.isSuccessful()) {
+                    List<SpinnerItemModel> countryList = response.body();
+                    countrySpinnerList.clear();
+                    for (SpinnerItemModel model : countryList) {
+                        countrySpinnerList.add(new CustomSpinnerModel(model.getName(), model.getId()));
+                    }
+                    countryAdapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<SpinnerItemModel>> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
+    }
+
+    private void fetchStates(int countryId) {
+
+        Call<List<SpinnerItemModel>> call = RetrofitService.getClient(userActivitySession.getToken()).create(AddressInterface.class).getStates(countryId);
+
+        call.enqueue(new Callback<List<SpinnerItemModel>>() {
+            @Override
+            public void onResponse(Call<List<SpinnerItemModel>> call, Response<List<SpinnerItemModel>> response) {
+                if (response.isSuccessful()) {
+                    List<SpinnerItemModel> stateList = response.body();
+                    stateSpinnerList.clear();
+                    for (SpinnerItemModel model : stateList) {
+                        stateSpinnerList.add(new CustomSpinnerModel(model.getName(), model.getId()));
+                    }
+                    stateAdapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<SpinnerItemModel>> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
+    }
+
+    private void fetchCities(int stateId) {
+
+        Call<List<SpinnerItemModel>> call = RetrofitService.getClient(userActivitySession.getToken()).create(AddressInterface.class).getCities(stateId);
+
+        call.enqueue(new Callback<List<SpinnerItemModel>>() {
+            @Override
+            public void onResponse(Call<List<SpinnerItemModel>> call, Response<List<SpinnerItemModel>> response) {
+                if (response.isSuccessful()) {
+                    List<SpinnerItemModel> cityList = response.body();
+                    citySpinnerList.clear();
+                    for (SpinnerItemModel model : cityList) {
+                        citySpinnerList.add(new CustomSpinnerModel(model.getName(), model.getId()));
+                    }
+                    cityAdapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<SpinnerItemModel>> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
+    }
+
+    private void fetchPincodes(int cityId) {
+
+        Call<List<SpinnerItemModel>> call = RetrofitService.getClient(userActivitySession.getToken()).create(AddressInterface.class).getPincodes(cityId);
+
+        call.enqueue(new Callback<List<SpinnerItemModel>>() {
+            @Override
+            public void onResponse(Call<List<SpinnerItemModel>> call, Response<List<SpinnerItemModel>> response) {
+                if (response.isSuccessful()) {
+                    List<SpinnerItemModel> pincodeList = response.body();
+                    pincodeSpinnerList.clear();
+                    for (SpinnerItemModel model : pincodeList) {
+                        pincodeSpinnerList.add(new CustomSpinnerModel(model.getCode(), model.getId()));
+                    }
+                    pincodeAdapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<SpinnerItemModel>> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
+    }
 }
