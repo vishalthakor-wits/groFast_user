@@ -15,7 +15,15 @@ public interface NotificationInterface {
     @GET("customer-notification-fetch")
     Call<NotificationResponse> notificationFetch();
 
-    @GET("customer-notification-setting")
-    Call<NotificationResponse> notificationsetting();
+    @POST("customer-notification-setting")
+    Call<NotificationResponse> notificationsetting(
+            @Query("enable_all") Integer enable_all,
+            @Query("push_notification") Integer push_notification,
+            @Query("newsletter_email") Integer newsletter_email,
+            @Query("promo_offer_email") Integer promo_offer_email,
+            @Query("promo_offer_push") Integer promo_offer_push,
+            @Query("social_notification_email") Integer social_notification_email,
+            @Query("social_notification_email") Integer social_notification_push
+    );
 
 }
