@@ -32,4 +32,7 @@ public interface UserInterface {
 
     @POST("delete-customer")
     Call<LoginResponse> deleteaccount();
+
+    @POST("customer-logout")
+    Call<LoginResponse> logout();
 }
