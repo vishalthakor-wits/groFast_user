@@ -78,7 +78,6 @@ public class AddAddress extends AppCompatActivity {
         saveAddress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Context context = getApplicationContext();
                 String userAddress = address.getText().toString().trim();
                 CustomSpinnerModel userCountryModel = (CustomSpinnerModel) countrySpinner.getSelectedItem();
                 CustomSpinnerModel userStateModel = (CustomSpinnerModel) stateSpinner.getSelectedItem();
@@ -119,6 +118,8 @@ public class AddAddress extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<AddressAddResponse> call, Throwable t) {
+                progressBar.setVisibility(View.GONE);
+                saveAddress.setVisibility(View.VISIBLE);
                 t.printStackTrace();
             }
         });

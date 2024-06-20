@@ -1,20 +1,28 @@
 package com.wits.grofast_user.Details;
 
+import static com.wits.grofast_user.CommonUtilities.handleApiError;
+import static com.wits.grofast_user.CommonUtilities.validateAddress;
+import static com.wits.grofast_user.CommonUtilities.validateCustomSpinner;
+
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatSpinner;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.wits.grofast_user.Adapter.CustomSpinnerAdapter;
 import com.wits.grofast_user.Api.RetrofitService;
 import com.wits.grofast_user.Api.interfaces.AddressInterface;
+import com.wits.grofast_user.Api.responseClasses.LoginResponse;
 import com.wits.grofast_user.Api.responseModels.AddressModel;
 import com.wits.grofast_user.Api.responseModels.CustomSpinnerModel;
 import com.wits.grofast_user.Api.responseModels.SpinnerItemModel;
@@ -42,7 +50,8 @@ public class EditAddress extends AppCompatActivity {
     private final List<CustomSpinnerModel> pincodeSpinnerList = new ArrayList<>();
 
     private List<SpinnerItemModel> countryList, stateList, cityList, pincodeList;
-    private boolean isPincodesLoaded = false;
+    private AppCompatButton updateAddress;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,27 +67,35 @@ public class EditAddress extends AppCompatActivity {
         address = findViewById(R.id.edit_address_address);
         countrySpinner = findViewById(R.id.edit_address_country);
         stateSpinner = findViewById(R.id.edit_address_state);
+        updateAddress = findViewById(R.id.all_address_edit);
 
         citySpinner = findViewById(R.id.edit_address_city);
         pincodeSpinner = findViewById(R.id.edit_address_pincode);
+        progressBar=findViewById(R.id.loader_update_address);
 
         if (intent.hasExtra("address")) {
             addressModel = intent.getParcelableExtra("address");
-            {
-                Log.e(TAG, "onCreate: Address : " + addressModel.getAddress());
-                Log.e(TAG, "onCreate: Country : " + addressModel.getCountry());
-                Log.e(TAG, "onCreate: State   : " + addressModel.getState());
-                Log.e(TAG, "onCreate: City    : " + addressModel.getCity());
-                Log.e(TAG, "onCreate: Pincode : " + addressModel.getPin_code());
-            }
             address.setText(addressModel.getAddress());
 
             setSpinnerAdapters();
-
             fetchListsOnSpinnerSelection();
-
             fetchCountries();
         }
+
+        updateAddress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                String userAddress = address.getText().toString().trim();
+                CustomSpinnerModel userCountryModel = (CustomSpinnerModel) countrySpinner.getSelectedItem();
+                CustomSpinnerModel userStateModel = (CustomSpinnerModel) stateSpinner.getSelectedItem();
+                CustomSpinnerModel userCityModel = (CustomSpinnerModel) citySpinner.getSelectedItem();
+                CustomSpinnerModel userPincodeModel = (CustomSpinnerModel) pincodeSpinner.getSelectedItem();
+                if (validateAddress(address.getText().toString().trim(), getApplicationContext()) && validateSpinners()) {
+                    updateCustomerAddress(addressModel.getId(), userAddress, userCountryModel.getName(), userStateModel.getName(), userCityModel.getName(), userPincodeModel.getName());
+                }
+            }
+        });
     }
 
     @Override
@@ -315,6 +332,36 @@ public class EditAddress extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<List<SpinnerItemModel>> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
+    }
+
+    private boolean validateSpinners() {
+        Context context = getApplicationContext();
+        return (validateCustomSpinner(countrySpinner, context, R.string.spinner_select_country) && validateCustomSpinner(stateSpinner, context, R.string.spinner_select_state) && validateCustomSpinner(citySpinner, context, R.string.spinner_select_city) && validateCustomSpinner(pincodeSpinner, context, R.string.spinner_select_pincode));
+    }
+
+    private void updateCustomerAddress(int addressId, String address, String country, String state, String city, String pincode) {
+        progressBar.setVisibility(View.VISIBLE);
+        updateAddress.setVisibility(View.GONE);
+        Call<LoginResponse> call = RetrofitService.getClient(userActivitySession.getToken()).create(AddressInterface.class).updateCustomreAddress(addressId, address, country, state, city, pincode);
+        call.enqueue(new Callback<LoginResponse>() {
+            @Override
+            public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+                progressBar.setVisibility(View.GONE);
+                updateAddress.setVisibility(View.VISIBLE);
+                if (response.isSuccessful()) {
+                    LoginResponse addressUpdateResponse = response.body();
+                    Toast.makeText(getApplicationContext(), "" + addressUpdateResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                    finish();
+                } else handleApiError(TAG, response, getApplicationContext());
+            }
+
+            @Override
+            public void onFailure(Call<LoginResponse> call, Throwable t) {
+                progressBar.setVisibility(View.GONE);
+                updateAddress.setVisibility(View.VISIBLE);
                 t.printStackTrace();
             }
         });
