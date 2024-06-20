@@ -1,9 +1,9 @@
 package com.wits.grofast_user.Api.interfaces;
 
-import com.wits.grofast_user.Api.responseModels.SpinnerItemModel;
 import com.wits.grofast_user.Api.responseClasses.AddressAddResponse;
 import com.wits.grofast_user.Api.responseClasses.AddressFetchResponse;
 import com.wits.grofast_user.Api.responseClasses.LoginResponse;
+import com.wits.grofast_user.Api.responseModels.SpinnerItemModel;
 
 import java.util.List;
 
@@ -24,5 +24,14 @@ public interface AddressInterface {
 
     @GET("fetch-country-list")
     Call<List<SpinnerItemModel>> getCountries();
+
+    @POST("fetch-state-list")
+    Call<List<SpinnerItemModel>> getStates(@Query("countryId") int countryId);
+
+    @POST("fetch-city-list")
+    Call<List<SpinnerItemModel>> getCities(@Query("stateId") int countryId);
+
+    @POST("fetch-pincode-list")
+    Call<List<SpinnerItemModel>> getPincodes(@Query("cityId") int countryId);
 
 }
