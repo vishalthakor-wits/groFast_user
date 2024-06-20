@@ -113,15 +113,12 @@
     <string name="settings_policy">Policy</string>
     <string name="settings_privacy_policy">Privacy policy</string>
     <string name="settings_terms_and_conditions">Terms and conditions</string>
-    <string name="settings_content_policy">Content policy</string>
     <string name="settings_refund_policy">Refund policy</string>
     <string name="settings_cancellation_policy">Cancellation policy</string>
     <string name="settings_delete_data_policy">Delete data policy</string>
     <string name="settings_delete_account_policy">Delete account policy</string>
     <string name="settings_report_policy">Report policy</string>
-    <string name="settings_infrigment_policy">Infrigment policy</string>
-    <string name="settings_grievance_policy">Grievance policy</string>
-    <string name="settings_bsd_license_policy">BSD license</string>
+
 
     <!--    Home Fragment-->
 
@@ -337,4 +334,16 @@
     <string name="spinner_select_state">select state</string>
     <string name="spinner_select_city">select city</string>
     <string name="spinner_select_pincode">select pincode</string>
+
+    <!-- Links -->
+    <string name="privancy_policy_link">https://grofast.in/privacy-policy</string>
+    <string name="term_and_condition_link">https://grofast.in/terms-and-conditions</string>
+    <string name="delete_data_policy_link">https://grofast.in/data-delete</string>
+    <string name="delete_Account_policy_link">https://grofast.in/account-delete</string>
+
+    <string name="refund_policy_link">https://grofast.in/privacy-policy</string>
+    <string name="cancellation_policy_link">https://grofast.in/privacy-policy</string>
+    <string name="report_policy_link">https://grofast.in/privacy-policy</string>
+
+
 </resources>

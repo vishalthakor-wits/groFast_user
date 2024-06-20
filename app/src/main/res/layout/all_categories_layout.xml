@@ -8,8 +8,8 @@
     <androidx.cardview.widget.CardView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/_3sdp"
         android:layout_gravity="center"
+        android:layout_margin="@dimen/_3sdp"
         android:gravity="center"
         app:cardBackgroundColor="@color/white"
         app:cardCornerRadius="@dimen/card_corners"
@@ -31,12 +31,12 @@
                 android:id="@+id/all_categories_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Hello h"
-             android:layout_gravity="center"
+                android:layout_gravity="center"
+                android:layout_marginTop="5dp"
                 android:gravity="center"
+                android:text="Hello h"
                 android:textColor="@color/textview_text_color"
-                android:textSize="@dimen/small_text"
-                android:layout_marginTop="5dp"/>
+                android:textSize="@dimen/small_text" />
 
         </LinearLayout>
 

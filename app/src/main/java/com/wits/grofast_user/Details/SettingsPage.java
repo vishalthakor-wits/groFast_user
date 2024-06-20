@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
@@ -21,6 +22,13 @@ import com.wits.grofast_user.Api.RetrofitService;
 import com.wits.grofast_user.Api.interfaces.UserInterface;
 import com.wits.grofast_user.Api.responseClasses.LoginResponse;
 import com.wits.grofast_user.MainActivity;
+import com.wits.grofast_user.Policy.CancellationPolicy;
+import com.wits.grofast_user.Policy.DeleteAccountPolicy;
+import com.wits.grofast_user.Policy.DeleteDataPolicy;
+import com.wits.grofast_user.Policy.PrivacyPolicyActivity;
+import com.wits.grofast_user.Policy.RefundPolicy;
+import com.wits.grofast_user.Policy.ReportPolicy;
+import com.wits.grofast_user.Policy.TermsConditionPolicy;
 import com.wits.grofast_user.R;
 import com.wits.grofast_user.session.CartDetailSession;
 import com.wits.grofast_user.session.UserActivitySession;
@@ -31,8 +39,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class SettingsPage extends AppCompatActivity {
-    RadioButton hindi_rd, englosh_rd;
-    ImageView delete_account;
+    RadioButton englosh_rd;
+    LinearLayout delete_account, privacy_policy, terms_condition_policy, delete_data_policy, delete_account_policy, refund_policy, cancellation_policy, report_policy;
     UserActivitySession userActivitySession;
     UserDetailSession userDetailSession;
     CartDetailSession cartDetailSession;
@@ -46,10 +54,17 @@ public class SettingsPage extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.outline_arrow_back_24);
         setContentView(R.layout.activity_settings_page);
-        hindi_rd = findViewById(R.id.language_hindi);
+
         englosh_rd = findViewById(R.id.language_english);
         englosh_rd.setChecked(true);
         delete_account = findViewById(R.id.delete_account);
+        privacy_policy = findViewById(R.id.privacy_policy);
+        terms_condition_policy = findViewById(R.id.terms_condition__policy);
+        delete_data_policy = findViewById(R.id.delete_data_policy);
+        delete_account_policy = findViewById(R.id.delete_account_policy);
+        refund_policy = findViewById(R.id.refund_policy);
+        cancellation_policy = findViewById(R.id.cancellation_policy);
+        report_policy = findViewById(R.id.report_policy);
 
         userActivitySession = new UserActivitySession(this);
         userDetailSession = new UserDetailSession(this);
@@ -59,6 +74,62 @@ public class SettingsPage extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 DeleteAccountConfirmation();
+            }
+        });
+
+        privacy_policy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SettingsPage.this, PrivacyPolicyActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        terms_condition_policy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent in = new Intent(getApplicationContext(), TermsConditionPolicy.class);
+                startActivity(in);
+            }
+        });
+
+        delete_data_policy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent in = new Intent(getApplicationContext(), DeleteDataPolicy.class);
+                startActivity(in);
+            }
+        });
+
+        delete_account_policy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent in = new Intent(getApplicationContext(), DeleteAccountPolicy.class);
+                startActivity(in);
+            }
+        });
+
+        refund_policy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent in = new Intent(getApplicationContext(), RefundPolicy.class);
+                startActivity(in);
+            }
+        });
+
+        cancellation_policy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent in = new Intent(getApplicationContext(), CancellationPolicy.class);
+                startActivity(in);
+            }
+        });
+
+        report_policy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent in = new Intent(getApplicationContext(), ReportPolicy.class);
+                startActivity(in);
             }
         });
     }

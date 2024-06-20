@@ -1,22 +1,26 @@
 package com.wits.grofast_user.Details;
 
+import static com.wits.grofast_user.CommonUtilities.handleApiError;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
 import android.widget.Switch;
+import android.widget.Toast;
 
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.wits.grofast_user.Api.RetrofitService;
 import com.wits.grofast_user.Api.responseClasses.NotificationResponse;
 import com.wits.grofast_user.Api.responseModels.NotificationModel;
 import com.wits.grofast_user.Notification.NotificationInterface;
 import com.wits.grofast_user.R;
-import com.wits.grofast_user.session.NotificationSession;
 import com.wits.grofast_user.session.UserActivitySession;
-import com.wits.grofast_user.session.UserDetailSession;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -25,9 +29,11 @@ import retrofit2.Response;
 public class NotificationSetting extends AppCompatActivity {
     @SuppressLint("UseSwitchCompatOrMaterialCode")
     Switch enableAll, push, newsletter, promoemail, promopush, socialemail, socialpush;
-    NotificationSession notificationSession;
     UserActivitySession userActivitySession;
     private static String TAG = "NotificationSetting";
+    private boolean isInitialSetup = true;
+    ShimmerFrameLayout shimmerFrameLayout;
+    LinearLayout view;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +44,6 @@ public class NotificationSetting extends AppCompatActivity {
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.outline_arrow_back_24);
         setContentView(R.layout.activity_notification_setting);
 
-        notificationSession = new NotificationSession(getApplicationContext());
         userActivitySession = new UserActivitySession(getApplicationContext());
         enableAll = findViewById(R.id.switchEnableAll);
         push = findViewById(R.id.switchPushNotifications);
@@ -47,76 +52,138 @@ public class NotificationSetting extends AppCompatActivity {
         promopush = findViewById(R.id.switchPushPromos);
         socialemail = findViewById(R.id.socialemailnotification);
         socialpush = findViewById(R.id.socialpushnotification);
-
-
-        // Set switch states based on session values
-        enableAll.setChecked(notificationSession.getEnableAll() == 1);
-        push.setChecked(notificationSession.getPushNotification() == 1);
-        newsletter.setChecked(notificationSession.getNewsLetterEmailNotification() == 1);
-        promoemail.setChecked(notificationSession.getPromoOfferEmail() == 1);
-        promopush.setChecked(notificationSession.getpromoOfferPush() == 1);
-        socialemail.setChecked(notificationSession.getsocialNotificationEmail() == 1);
-        socialpush.setChecked(notificationSession.getsocialNotificationPush() == 1);
-
-        setSwitchListeners();
+        shimmerFrameLayout = findViewById(R.id.shimmer_layout_notification_setting);
+        view = findViewById(R.id.view_all_notification_setting);
+        ShowPageLoader();
+        setUpListeners();
+        notificationFetch();
 
     }
 
-    private void setSwitchListeners() {
-        enableAll.setOnCheckedChangeListener((buttonView, isChecked) -> updateNotificationSetting("enable_all", isChecked));
-        push.setOnCheckedChangeListener((buttonView, isChecked) -> updateNotificationSetting("push_notification", isChecked));
-        newsletter.setOnCheckedChangeListener((buttonView, isChecked) -> updateNotificationSetting("newsletter_email", isChecked));
-        promoemail.setOnCheckedChangeListener((buttonView, isChecked) -> updateNotificationSetting("promo_offer_email", isChecked));
-        promopush.setOnCheckedChangeListener((buttonView, isChecked) -> updateNotificationSetting("promo_offer_push", isChecked));
-        socialemail.setOnCheckedChangeListener((buttonView, isChecked) -> updateNotificationSetting("social_notification_email", isChecked));
-        socialpush.setOnCheckedChangeListener((buttonView, isChecked) -> updateNotificationSetting("social_notification_push", isChecked));
-    }
-
-    private void updateNotificationSetting(String setting, boolean isChecked) {
-        switch (setting) {
-            case "enable_all":
-                notificationSession.setEnableAll(isChecked ? 1 : 0);
-                break;
-            case "push_notification":
-                notificationSession.setPushNotification(isChecked ? 1 : 0);
-                break;
-            case "newsletter_email":
-                notificationSession.setNewsLetterEmailNotification(isChecked ? 1 : 0);
-                break;
-            case "promo_offer_email":
-                notificationSession.setPromoOfferEmail(isChecked ? 1 : 0);
-                break;
-            case "promo_offer_push":
-                notificationSession.setPromoOfferPush(isChecked ? 1 : 0);
-                break;
-            case "social_notification_email":
-                notificationSession.setsocialNotificationEmail(isChecked ? 1 : 0);
-                break;
-            case "social_notification_push":
-                notificationSession.setsocialNotificationPush(isChecked ? 1 : 0);
-                break;
-        }
-
-        // Make the API call to update the settings
-        Call<NotificationResponse> call = RetrofitService.getClient(userActivitySession.getToken())
-                .create(NotificationInterface.class)
-                .notificationsetting();
-        call.enqueue(new Callback<NotificationResponse>() {
+    private void notificationFetch() {
+        Call<NotificationResponse> call1 = RetrofitService.getClient(userActivitySession.getToken()).create(NotificationInterface.class).notificationFetch();
+        call1.enqueue(new Callback<NotificationResponse>() {
             @Override
             public void onResponse(Call<NotificationResponse> call, Response<NotificationResponse> response) {
+                HidePageLoader();
                 if (response.isSuccessful()) {
-                    NotificationResponse notificationResponse = response.body();
-                    NotificationModel notificationModel = notificationResponse.getNotificationModel();
-                    Log.e(TAG, "onResponse: Update Notification message " + notificationResponse.getMessage());
-                    Log.e(TAG, "onResponse: Update enable all  " + notificationModel.getEnable_all());
+                    NotificationResponse notification = response.body();
+                    NotificationModel notificationModel = notification.getNotificationModel();
+                    Log.e(TAG, "onResponse: Notification message" + notification.getMessage());
+                    Log.e(TAG, "onResponse: Notification status" + notification.getStatus());
+                    Log.e(TAG, "onResponse: enable all " + notificationModel.getEnable_all());
+
+                    enableAll.setChecked(notificationModel.getEnable_all() == 1);
+                    push.setChecked(notificationModel.getPush_notification() == 1);
+                    newsletter.setChecked(notificationModel.getNewsletter_email() == 1);
+                    promoemail.setChecked(notificationModel.getPromo_offer_email() == 1);
+                    promopush.setChecked(notificationModel.getPromo_offer_push() == 1);
+                    socialemail.setChecked(notificationModel.getSocial_notification_email() == 1);
+                    socialpush.setChecked(notificationModel.getSocial_notification_push() == 1);
+
+                    isInitialSetup = false; // Initial setup complete
+                } else {
+                    handleApiError(TAG, response, getApplicationContext());
                 }
             }
 
             @Override
             public void onFailure(Call<NotificationResponse> call, Throwable t) {
-                Log.e(TAG, "Error updating notification setting: " + t.getMessage());
+                t.printStackTrace();
             }
         });
+    }
+
+    private void setUpListeners() {
+        enableAll.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (!isInitialSetup) sendNotificationUpdate("enable_all", isChecked ? 1 : 0);
+        });
+        push.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (!isInitialSetup) sendNotificationUpdate("push_notification", isChecked ? 1 : 0);
+        });
+        newsletter.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (!isInitialSetup) sendNotificationUpdate("newsletter_email", isChecked ? 1 : 0);
+        });
+        promoemail.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (!isInitialSetup) sendNotificationUpdate("promo_offer_email", isChecked ? 1 : 0);
+        });
+        promopush.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (!isInitialSetup) sendNotificationUpdate("promo_offer_push", isChecked ? 1 : 0);
+        });
+        socialemail.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (!isInitialSetup)
+                sendNotificationUpdate("social_notification_email", isChecked ? 1 : 0);
+        });
+        socialpush.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (!isInitialSetup)
+                sendNotificationUpdate("social_notification_push", isChecked ? 1 : 0);
+        });
+    }
+
+    private void sendNotificationUpdate(String setting, int value) {
+        Integer enable_all = null;
+        Integer push_notification = null;
+        Integer newsletter_email = null;
+        Integer promo_offer_email = null;
+        Integer promo_offer_push = null;
+        Integer social_notification_email = null;
+        Integer social_notification_push = null;
+
+        switch (setting) {
+            case "enable_all":
+                enable_all = value;
+                break;
+            case "push_notification":
+                push_notification = value;
+                break;
+            case "newsletter_email":
+                newsletter_email = value;
+                break;
+            case "promo_offer_email":
+                promo_offer_email = value;
+                break;
+            case "promo_offer_push":
+                promo_offer_push = value;
+                break;
+            case "social_notification_email":
+                social_notification_email = value;
+                break;
+            case "social_notification_push":
+                social_notification_push = value;
+                break;
+        }
+
+        Call<NotificationResponse> call = RetrofitService.getClient(userActivitySession.getToken()).create(NotificationInterface.class).notificationsetting(enable_all, push_notification, newsletter_email, promo_offer_email, promo_offer_push, social_notification_email, social_notification_push);
+        call.enqueue(new Callback<NotificationResponse>() {
+            @Override
+            public void onResponse(Call<NotificationResponse> call, Response<NotificationResponse> response) {
+                HidePageLoader();
+                if (response.isSuccessful()) {
+                    NotificationResponse notificationResponse = response.body();
+                    Log.e(TAG, "message " + notificationResponse.getMessage());
+                    Toast.makeText(NotificationSetting.this, "" + notificationResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                } else {
+                    handleApiError(TAG, response, getApplicationContext());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<NotificationResponse> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
+    }
+
+    private void ShowPageLoader() {
+        shimmerFrameLayout.startShimmer();
+        shimmerFrameLayout.setVisibility(View.VISIBLE);
+        view.setVisibility(View.GONE);
+    }
+
+    private void HidePageLoader() {
+        shimmerFrameLayout.setVisibility(View.GONE);
+        shimmerFrameLayout.stopShimmer();
+        view.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -127,5 +194,4 @@ public class NotificationSetting extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
 }

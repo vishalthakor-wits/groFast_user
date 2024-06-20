@@ -30,7 +30,6 @@ import com.wits.grofast_user.Api.responseModels.NotificationModel;
 import com.wits.grofast_user.Api.responseModels.UserModel;
 import com.wits.grofast_user.MainHomePage.HomePage;
 import com.wits.grofast_user.Notification.NotificationInterface;
-import com.wits.grofast_user.session.NotificationSession;
 import com.wits.grofast_user.session.UserActivitySession;
 import com.wits.grofast_user.session.UserDetailSession;
 
@@ -48,7 +47,6 @@ public class OtpPage extends AppCompatActivity {
     LinearLayout loadingOverlay;
     private UserActivitySession userActivitySession;
     UserDetailSession userDetailSession;
-    NotificationSession notificationSession;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +59,6 @@ public class OtpPage extends AppCompatActivity {
         userActivitySession = new UserActivitySession(getApplicationContext());
         loadingOverlay = findViewById(R.id.loading_overlay);
         userDetailSession = new UserDetailSession(getApplicationContext());
-        notificationSession = new NotificationSession(getApplicationContext());
 
         Intent intent = getIntent();
         if (intent != null) {
@@ -158,7 +155,6 @@ public class OtpPage extends AppCompatActivity {
                         userDetailSession.setWalletStatus(userModel.getWalletStatus());
 
                         saveFcmToServer();
-                        notificationFetch();
                         startActivity(i);
                     } else {
                         handleApiError(TAG, response, getApplicationContext());
@@ -237,37 +233,4 @@ public class OtpPage extends AppCompatActivity {
             });
         });
     }
-
-    private void notificationFetch() {
-        Call<NotificationResponse> call1 = RetrofitService.getClient(userActivitySession.getToken()).create(NotificationInterface.class).notificationFetch();
-        call1.enqueue(new Callback<NotificationResponse>() {
-            @Override
-            public void onResponse(Call<NotificationResponse> call, Response<NotificationResponse> response) {
-                if (response.isSuccessful()) {
-                    NotificationResponse notification = response.body();
-                    NotificationModel notificationModel = notification.getNotificationModel();
-
-                    Log.e(TAG, "onResponse: Notification message" + notification.getMessage());
-                    Log.e(TAG, "onResponse: Notification status" + notification.getStatus());
-
-                    notificationSession.setEnableAll(notificationModel.getEnable_all());
-                    notificationSession.setPushNotification(notificationModel.getPush_notification());
-                    notificationSession.setNewsLetterEmailNotification(notificationModel.getNewsletter_email());
-                    notificationSession.setPromoOfferEmail(notificationModel.getPromo_offer_email());
-                    notificationSession.setPromoOfferPush(notificationModel.getPromo_offer_push());
-                    notificationSession.setsocialNotificationEmail(notificationModel.getSocial_notification_email());
-                    notificationSession.setsocialNotificationPush(notificationModel.getSocial_notification_push());
-
-                    Log.e(TAG, "onResponse: enable all " + notificationModel.getEnable_all());
-                }
-                handleApiError(TAG, response, getApplicationContext());
-            }
-
-            @Override
-            public void onFailure(Call<NotificationResponse> call, Throwable t) {
-                t.printStackTrace();
-            }
-        });
     }
-
-}
