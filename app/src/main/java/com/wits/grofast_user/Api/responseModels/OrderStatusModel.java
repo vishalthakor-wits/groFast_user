@@ -1,7 +1,8 @@
 package com.wits.grofast_user.Api.responseModels;
 
-public class OrderStatusModel {
+import java.io.Serializable;
 
+public class OrderStatusModel implements Serializable {
     private String label;
     private String color;
 
@@ -12,4 +13,5 @@ public class OrderStatusModel {
     public String getColor() {
         return color;
     }
+
 }

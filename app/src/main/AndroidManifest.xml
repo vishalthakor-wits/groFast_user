@@ -21,6 +21,9 @@
         android:theme="@style/Theme.Grofast_user"
         tools:targetApi="31">
         <activity
+            android:name=".Details.OrderCancel"
+            android:exported="false" />
+        <activity
             android:name=".Policy.ReportPolicy"
             android:exported="false" />
         <activity

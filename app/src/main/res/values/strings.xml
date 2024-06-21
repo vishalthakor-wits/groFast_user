@@ -180,6 +180,7 @@
     <string name="reorder_button">Reorder</string>
     <string name="return_button">Return</string>
     <string name="cancel_button">Cancel</string>
+    <string name="cancel_order_button">Cancel Order</string>
     <string name="edit_button">Edit</string>
 
 
@@ -336,6 +337,9 @@
     <string name="spinner_select_state">select state</string>
     <string name="spinner_select_city">select city</string>
     <string name="spinner_select_pincode">select pincode</string>
+    <string name="spinner_select_reason">Select reason for cancellation</string>
+    <string name="reason_for_cancellation">Could you tell us a reason for cancelling?</string>
+    <string name="tell_us">Tell us why are you cancelling.</string>
 
     <!-- Links -->
     <string name="privancy_policy_link">https://grofast.in/privacy-policy</string>
@@ -347,5 +351,16 @@
     <string name="cancellation_policy_link">https://grofast.in/privacy-policy</string>
     <string name="report_policy_link">https://grofast.in/privacy-policy</string>
 
+    <!-- Order Cancel -->
+    <string name="order_detail">Order Detail</string>
+    <string name="reason_for_cancellation_text">Reason for cancellation</string>
+    <string name="r1">Wrong contact number entered</string>
+    <string name="r2">Expected delivery time is too long</string>
+    <string name="r3">Purchased product from somewhere else</string>
+    <string name="r4">Product not required anymore</string>
+    <string name="r5">Ordered by mistake</string>
+    <string name="r6">Wrong address selected</string>
+    <string name="r7">Product price has reduced</string>
+    <string name="r8">Other</string>
 
 </resources>
