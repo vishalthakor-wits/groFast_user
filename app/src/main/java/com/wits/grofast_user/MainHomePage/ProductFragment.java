@@ -4,6 +4,7 @@ import static android.view.View.GONE;
 import static com.wits.grofast_user.CommonUtilities.handleApiError;
 
 import android.annotation.SuppressLint;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -12,13 +13,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.SearchView;
-import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
@@ -44,7 +45,6 @@ import com.wits.grofast_user.R;
 import com.wits.grofast_user.session.UserActivitySession;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import retrofit2.Call;
@@ -60,7 +60,7 @@ public class ProductFragment extends Fragment {
     private List<ProductModel> productList = new ArrayList<>();
     private List<ProductModel> searchProductList = new ArrayList<>();
     private GridLayoutManager layoutManager;
-    NestedScrollView show_data;
+    ScrollView show_data;
     private final String TAG = "ProductFragment";
     private UserActivitySession userActivitySession;
     AppCompatButton completeorderbtn;
@@ -72,7 +72,15 @@ public class ProductFragment extends Fragment {
     private String searchQuery;
     private int currentBannerPosition = 0;
     private Handler handler = new Handler();
+
     BannerAdapter bannerAdapter;
+
+    private boolean isLoading = false;
+    private int currentPage = 1;
+    private int visibleThreshold = 4;
+    private int lastPage = 1;
+    private final int apiDelay = 2000;
+    private Call<ProductResponse> call;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -118,7 +126,8 @@ public class ProductFragment extends Fragment {
                 searchProducts(searchQuery, 1);
             }
         } else {
-            getProducts(1);
+            call = RetrofitService.getClient(userActivitySession.getToken()).create(ProductInerface.class).fetchProducts(currentPage);
+            getProducts(call);
         }
 
         searchView.setOnQueryTextListener(new androidx.appcompat.widget.SearchView.OnQueryTextListener() {
@@ -157,6 +166,30 @@ public class ProductFragment extends Fragment {
             }
         });
 
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                int totalItemCount = layoutManager.getItemCount();
+                int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
+                int lastVisibleItem = layoutManager.findLastVisibleItemPosition();
+
+
+                if (!isLoading && totalItemCount < lastVisibleItem + visibleThreshold) {
+                    Log.e("TAG", "onScrolled: firstVisibleItem : " + firstVisibleItemPosition);
+                    Log.e("TAG", "onScrolled: lastVisibleItem : " + lastVisibleItem);
+                    Log.e("TAG", "onScrolled:  totalItemCount : " + totalItemCount);
+                    Log.e("TAG", "onScrolled: lastVisibleItem + visibleThreshold : " + (lastVisibleItem + visibleThreshold));
+                    Log.e("TAG", "onScrolled: current page " + currentPage);
+
+                    isLoading = true;
+                    call = RetrofitService.getClient(userActivitySession.getToken()).create(ProductInerface.class).fetchProducts(currentPage);
+                    getProducts(call);
+
+                }
+            }
+        });
 
         return root;
     }
@@ -197,19 +230,33 @@ public class ProductFragment extends Fragment {
         }, 2000);
     }
 
-    private void getProducts(int page) {
-        Call<ProductResponse> call = RetrofitService.getClient(userActivitySession.getToken()).create(ProductInerface.class).fetchProducts(page);
+    private void getProducts(Call<ProductResponse> call) {
+        Log.e("TAG", "getProducts:     last page  " + lastPage);
+        Log.e("TAG", "getProducts: curremnt page  " + currentPage);
+//        Call<ProductResponse> call =
+
+        if (lastPage >= currentPage) {
         call.enqueue(new Callback<ProductResponse>() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onResponse(Call<ProductResponse> call, Response<ProductResponse> response) {
+                isLoading = false;
                 if (response.isSuccessful()) {
                     ProductResponse productResponse = response.body();
                     ProductPaginatedRes paginatedResponse = productResponse.getPaginatedProducts();
-                    productList = paginatedResponse.getProductList();
-
-                    allProductAdapter = new AllProductAdapter(getContext(), productList);
-                    recyclerView.setAdapter(allProductAdapter);
+                    if (currentPage == 1) {
+                        productList = paginatedResponse.getProductList();
+                        allProductAdapter = new AllProductAdapter(getContext(), productList);
+                        recyclerView.setAdapter(allProductAdapter);
+                    } else {
+                        List<ProductModel> list = paginatedResponse.getProductList();
+                        for (ProductModel model : list) {
+                            productList.add(model);
+                            allProductAdapter.notifyItemInserted(productList.size());
+                        }
+                    }
+                    currentPage++;
+                    lastPage = paginatedResponse.getLast_page();
                     HidePageLoader();
                 } else {
                     if (isAdded()) handleApiError(TAG, response, getContext());
@@ -218,9 +265,12 @@ public class ProductFragment extends Fragment {
 
             @Override
             public void onFailure(Call<ProductResponse> call, Throwable t) {
+                isLoading = false;
+                HidePageLoader();
                 t.printStackTrace();
             }
         });
+        }
     }
 
     private void getProductByCategory(String category) {
@@ -356,5 +406,26 @@ public class ProductFragment extends Fragment {
         super.onStop();
         searchView.setQuery("", false);
         userActivitySession.setProductFetchIndicator(0);
+    }
+
+    private int getVisibleItems(GridLayoutManager layoutManager) {
+        int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
+        int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
+        int visibleitems = 0;
+        for (int i = firstVisibleItemPosition; i <= lastVisibleItemPosition; i++) {
+            View view = layoutManager.findViewByPosition(i);
+            if (view != null && isViewCompletelyVisible(view)) {
+                visibleitems++;
+            }
+        }
+        return visibleitems;
+    }
+
+    private boolean isViewCompletelyVisible(View view) {
+        Rect rect = new Rect();
+        view.getGlobalVisibleRect(rect);
+        Rect parentRect = new Rect();
+        recyclerView.getGlobalVisibleRect(parentRect);
+        return parentRect.contains(rect);
     }
 }
