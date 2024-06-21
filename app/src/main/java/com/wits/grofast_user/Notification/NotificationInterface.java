@@ -1,5 +1,6 @@
 package com.wits.grofast_user.Notification;
 
+import com.wits.grofast_user.Api.responseClasses.InAppNotificationResponse;
 import com.wits.grofast_user.Api.responseClasses.NotificationResponse;
 import com.wits.grofast_user.Api.responseModels.NotificationModel;
 
@@ -25,5 +26,8 @@ public interface NotificationInterface {
             @Query("social_notification_email") Integer social_notification_email,
             @Query("social_notification_email") Integer social_notification_push
     );
+
+    @GET("customer-inapp-notification")
+    Call<InAppNotificationResponse> inappnotification(@Query("page") int page);
 
 }

@@ -54,9 +54,6 @@
             android:name=".Details.CouponDetails"
             android:exported="false" />
         <activity
-            android:name=".Details.Support"
-            android:exported="false" />
-        <activity
             android:name=".Details.EditAddress"
             android:exported="false" />
         <activity

@@ -1,16 +1,13 @@
 package com.wits.grofast_user.Api.responseClasses;
 
-
 import com.google.gson.annotations.SerializedName;
 import com.wits.grofast_user.Api.paginatedResponses.InAppNotificationPaginatedRes;
-import com.wits.grofast_user.Api.paginatedResponses.ProductPaginatedRes;
-import com.wits.grofast_user.Api.responseModels.NotificationModel;
 
-public class NotificationResponse {
+public class InAppNotificationResponse {
     private String message;
     private Integer status;
     @SerializedName("data")
-    private NotificationModel notificationModel;
+    private InAppNotificationPaginatedRes inAppNotificationPaginatedRes;
 
     public String getMessage() {
         return message;
@@ -20,8 +17,7 @@ public class NotificationResponse {
         return status;
     }
 
-    public NotificationModel getNotificationModel() {
-        return notificationModel;
+    public InAppNotificationPaginatedRes getInAppNotificationPaginatedRes() {
+        return inAppNotificationPaginatedRes;
     }
-
 }
