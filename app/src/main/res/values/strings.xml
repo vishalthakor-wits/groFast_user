@@ -178,6 +178,8 @@
     <string name="checkout_button">Checkout</string>
     <string name="complete_button">Complete order</string>
     <string name="reorder_button">Reorder</string>
+    <string name="return_button">Return</string>
+    <string name="cancel_button">Cancel</string>
     <string name="edit_button">Edit</string>
 
 

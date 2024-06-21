@@ -58,6 +58,25 @@ public class OrderModel {
     @SerializedName("customer_order_items")
     private List<OrderItemModel> orderItems;
 
+    @SerializedName("is_cancel_allow")
+    private int isCancelAllow;
+    @SerializedName("is_return_allow")
+    private int isReturnAllow;
+    @SerializedName("is_reorder_allow")
+    private int isReorderAllow;
+
+    public int getIsCancelAllow() {
+        return isCancelAllow;
+    }
+
+    public int getIsReturnAllow() {
+        return isReturnAllow;
+    }
+
+    public int getIsReorderAllow() {
+        return isReorderAllow;
+    }
+
     public float getSgst() {
         return sgst;
     }

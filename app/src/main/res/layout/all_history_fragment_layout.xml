@@ -141,12 +141,43 @@
                     android:textStyle="bold" />
 
                 <LinearLayout
+                    android:id="@+id/history_product_return_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:background="@drawable/color_button"
+                    android:gravity="left"
+                    android:backgroundTint="@color/change_button_color"
+                    android:layout_marginRight="@dimen/_5sdp"
+                    android:orientation="horizontal"
+                    android:padding="5dp">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/baseline_reply_24"
+                        app:tint="@color/white" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:gravity="center"
+                        android:text="@string/return_button"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/hint_text_size" />
+
+                </LinearLayout>
+
+                <LinearLayout
                     android:id="@+id/history_product_reorder_layout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="left"
                     android:background="@drawable/color_button"
                     android:gravity="left"
+                    android:visibility="visible"
                     android:orientation="horizontal"
                     android:padding="5dp">
 
@@ -168,6 +199,35 @@
 
                 </LinearLayout>
 
+                <LinearLayout
+                    android:id="@+id/history_product_cancel_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:background="@drawable/color_button"
+                    android:backgroundTint="@color/expired"
+                    android:gravity="left"
+                    android:orientation="horizontal"
+                    android:padding="5dp">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/baseline_close_24"
+                        app:tint="@color/white" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:gravity="center"
+                        android:text="@string/cancel_button"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/hint_text_size" />
+
+                </LinearLayout>
+
                 <ProgressBar
                     android:id="@+id/reorder_progress_bar"
                     android:layout_width="@dimen/_25sdp"
@@ -175,7 +235,6 @@
                     android:elevation="@dimen/_2sdp"
                     android:layout_marginRight="@dimen/_10sdp"
                     android:visibility="gone" />
-
 
             </LinearLayout>
 
