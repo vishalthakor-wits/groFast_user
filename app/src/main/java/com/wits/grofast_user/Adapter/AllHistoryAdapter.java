@@ -70,7 +70,6 @@ public class AllHistoryAdapter extends RecyclerView.Adapter<AllHistoryAdapter.Vi
         holder.ProductOrderId.setText("" + item.getId());
         List<TaxAndCharge> taxesnCgargesList = new ArrayList<>();
 
-
         if (item.getCgst() != 0.0 || item.getCgst() != 0) {
             TaxAndCharge charge = new TaxAndCharge(context.getString(R.string.order_cgst), item.getCgst());
             taxesnCgargesList.add(charge);
@@ -99,6 +98,7 @@ public class AllHistoryAdapter extends RecyclerView.Adapter<AllHistoryAdapter.Vi
 
         OrderStatusModel orderStatus = item.getOrderStatus();
         holder.ProductPrice.setText("" + item.getTotal_amount());
+
         holder.ProductStatus.setText(orderStatus.getStatus());
         holder.ProductStatus.setTextColor(Color.parseColor(orderStatus.getColor()));
 
@@ -120,6 +120,28 @@ public class AllHistoryAdapter extends RecyclerView.Adapter<AllHistoryAdapter.Vi
                 reorder(item.getId(), holder);
             }
         });
+
+        if (item.getIsCancelAllow() == 1) {
+            holder.ProductCancel.setVisibility(View.VISIBLE);
+        } else {
+            holder.ProductCancel.setVisibility(View.GONE);
+        }
+        Log.e(TAG, "onBindViewHolder: cancel button " + item.getIsCancelAllow());
+        Log.e(TAG, "onBindViewHolder: Reorder button " + item.getIsReorderAllow());
+        Log.e(TAG, "onBindViewHolder: Return button " + item.getIsReturnAllow());
+
+        if (item.getIsReturnAllow() == 1) {
+            holder.ProductReturn.setVisibility(View.VISIBLE);
+        } else {
+            holder.ProductReturn.setVisibility(View.GONE);
+        }
+
+        if (item.getIsReorderAllow() == 1) {
+            holder.ProductReorder.setVisibility(View.VISIBLE);
+        } else {
+            holder.ProductReorder.setVisibility(View.GONE);
+        }
+
     }
 
     @Override
@@ -129,7 +151,7 @@ public class AllHistoryAdapter extends RecyclerView.Adapter<AllHistoryAdapter.Vi
 
     public class ViewHolders extends RecyclerView.ViewHolder {
         TextView ProductOrderId, ProductStatus, ProductInvoice, ProductDate, ProductPrice;
-        LinearLayout ProductReorder;
+        LinearLayout ProductReorder, ProductCancel, ProductReturn;
         RecyclerView recyclerView, chargesRecyclerView;
         ProgressBar reorderProgress;
 
@@ -141,6 +163,8 @@ public class AllHistoryAdapter extends RecyclerView.Adapter<AllHistoryAdapter.Vi
             ProductDate = itemView.findViewById(R.id.history_product_date);
             ProductPrice = itemView.findViewById(R.id.history_product_price);
             ProductReorder = itemView.findViewById(R.id.history_product_reorder_layout);
+            ProductReturn = itemView.findViewById(R.id.history_product_return_layout);
+            ProductCancel = itemView.findViewById(R.id.history_product_cancel_layout);
             recyclerView = itemView.findViewById(R.id.history_product_inner_recycleview);
             chargesRecyclerView = itemView.findViewById(R.id.order_history_taxes_and_charges_recyclerview);
             reorderProgress = itemView.findViewById(R.id.reorder_progress_bar);
