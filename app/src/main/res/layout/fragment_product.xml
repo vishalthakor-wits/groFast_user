@@ -8,7 +8,7 @@
     android:id="@+id/fram_product"
     tools:context=".MainHomePage.ProductFragment">
 
-    <androidx.core.widget.NestedScrollView
+    <ScrollView
         android:id="@+id/show_product_data"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -56,7 +56,8 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/product_page_banner_recycleview"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:visibility="gone" />
 
             </androidx.cardview.widget.CardView>
 
@@ -104,7 +105,7 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/all_product_recycleview"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_marginTop="@dimen/_10sdp" />
 
             <TextView
@@ -112,11 +113,11 @@
                 android:layout_height="match_parent"
                 android:text="hello"
                 android:textSize="40dp"
-                android:visibility="invisible"/>
+                android:visibility="invisible" />
 
         </LinearLayout>
 
-    </androidx.core.widget.NestedScrollView>
+    </ScrollView>
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/complete_order_btn"
