@@ -120,7 +120,7 @@ public class ProductFragment extends Fragment {
             String category = getArguments().getString(getString(R.string.intent_key_category_name));
 
             if (category != null) {
-                getProductByCategory(category);
+                getProductByCategory(category, currentPage);
             } else {
                 searchView.setQuery(searchQuery, false);
                 searchProducts(searchQuery, 1);
@@ -184,8 +184,21 @@ public class ProductFragment extends Fragment {
                     Log.e("TAG", "onScrolled: current page " + currentPage);
 
                     isLoading = true;
-                    call = RetrofitService.getClient(userActivitySession.getToken()).create(ProductInerface.class).fetchProducts(currentPage);
-                    getProducts(call);
+
+                    if (getArguments() != null) {
+                        searchQuery = getArguments().getString("searchParameter");
+                        String category = getArguments().getString(getString(R.string.intent_key_category_name));
+
+                        if (category != null) {
+                            getProductByCategory(category, currentPage);
+                        } else {
+                            searchView.setQuery(searchQuery, false);
+                            searchProducts(searchQuery, currentPage);
+                        }
+                    } else {
+                        call = RetrofitService.getClient(userActivitySession.getToken()).create(ProductInerface.class).fetchProducts(currentPage);
+                        getProducts(call);
+                    }
 
                 }
             }
@@ -273,8 +286,8 @@ public class ProductFragment extends Fragment {
         }
     }
 
-    private void getProductByCategory(String category) {
-        Call<ProductResponse> call = RetrofitService.getClient(userActivitySession.getToken()).create(ProductInerface.class).fetchProductsByCategory(1, category);
+    private void getProductByCategory(String category, int page) {
+        Call<ProductResponse> call = RetrofitService.getClient(userActivitySession.getToken()).create(ProductInerface.class).fetchProductsByCategory(page, category);
         call.enqueue(new Callback<ProductResponse>() {
             @Override
             public void onResponse(Call<ProductResponse> call, Response<ProductResponse> response) {
