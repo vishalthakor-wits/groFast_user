@@ -1,6 +1,9 @@
 package com.wits.grofast_user.Adapter;
 
+import static com.wits.grofast_user.CommonUtilities.getDateFromTimestamp;
+
 import android.content.Context;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,7 +38,11 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         InAppNotificationModel item = NotificationItems.get(position);
         holder.header.setText(item.getTitle());
         holder.description.setText(item.getBody());
-        holder.day.setText(item.getCreated_at());
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            holder.day.setText(getDateFromTimestamp(item.getCreated_at()));
+        } else holder.day.setText(item.getCreated_at());
+
     }
 
     @Override

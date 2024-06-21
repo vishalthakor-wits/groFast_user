@@ -33,6 +33,7 @@ import com.wits.grofast_user.Api.responseModels.OrderItemModel;
 import com.wits.grofast_user.Api.responseModels.OrderModel;
 import com.wits.grofast_user.Api.responseModels.OrderStatusModel;
 import com.wits.grofast_user.Api.responseModels.TaxAndCharge;
+import com.wits.grofast_user.Details.OrderCancel;
 import com.wits.grofast_user.MainHomePage.HomePage;
 import com.wits.grofast_user.R;
 import com.wits.grofast_user.session.UserActivitySession;
@@ -92,9 +93,13 @@ public class AllHistoryAdapter extends RecyclerView.Adapter<AllHistoryAdapter.Vi
             taxesnCgargesList.add(charge);
         }
 
+        String orderDate = item.getCreated_at();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            holder.ProductDate.setText(getDateFromTimestamp(item.getCreated_at()));
-        } else holder.ProductDate.setText(item.getCreated_at());
+            orderDate = getDateFromTimestamp(item.getCreated_at());
+        } else {
+            orderDate = item.getCreated_at().split(" ")[0];
+        }
+        holder.ProductDate.setText(orderDate);
 
         OrderStatusModel orderStatus = item.getOrderStatus();
         holder.ProductPrice.setText("" + item.getTotal_amount());
@@ -142,6 +147,20 @@ public class AllHistoryAdapter extends RecyclerView.Adapter<AllHistoryAdapter.Vi
             holder.ProductReorder.setVisibility(View.GONE);
         }
 
+        String finalOrderDate = orderDate;
+        holder.ProductCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent in = new Intent(context.getApplicationContext(), OrderCancel.class);
+                in.putExtra("order_id", item.getId());
+                in.putExtra("order_price", item.getTotal_amount());
+                in.putExtra("order_date", finalOrderDate);
+                in.putExtra("order_status", orderStatus.getStatus());
+                in.putExtra("order_status_color", orderStatus.getColor());
+                Log.d("AllHistoryAdapter", "Total amount: " + item.getTotal_amount());
+                context.startActivity(in);
+            }
+        });
     }
 
     @Override
