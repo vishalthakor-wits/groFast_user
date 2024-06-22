@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -88,6 +89,7 @@ public class ProductFragment extends Fragment {
 
     private int searchIndicator;
     private String searchName, searchCategory;
+    private ProgressBar recyclerProgressBar;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -107,6 +109,7 @@ public class ProductFragment extends Fragment {
         no_product_layout = root.findViewById(R.id.no_product_layout);
         no_product_text = root.findViewById(R.id.no_product_text1);
         no_product_text2 = root.findViewById(R.id.no_product_text2);
+        recyclerProgressBar = root.findViewById(R.id.centerProgressBar);
 
         //Banner Recycleview
         bannerrecycleview = root.findViewById(R.id.product_page_banner_recycleview);
@@ -121,6 +124,9 @@ public class ProductFragment extends Fragment {
         //Product Item
         layoutManager = new GridLayoutManager(getContext(), 2);
         recyclerView.setLayoutManager(layoutManager);
+
+        allProductAdapter = new AllProductAdapter(getContext(), productList);
+        recyclerView.setAdapter(allProductAdapter);
 
         Bundle bundle = getArguments();
         searchIndicator = userActivitySession.getProductSearchIndicator();
@@ -395,6 +401,13 @@ public class ProductFragment extends Fragment {
         }
     }
 
+    private void startProgress() {
+        recyclerProgressBar.setVisibility(View.VISIBLE);
+    }
+
+    private void stopProgress() {
+        recyclerProgressBar.setVisibility(GONE);
+    }
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
