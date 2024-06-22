@@ -89,7 +89,7 @@
             android:textSize="@dimen/hint_text_size" />
 
         <RadioButton
-            android:id="@+id/r8"
+            android:id="@+id/r8_other"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/r8"

@@ -56,6 +56,7 @@ public class HistoryFragment extends Fragment {
     private String searchQuery;
     private SearchView searchView;
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -148,7 +149,7 @@ public class HistoryFragment extends Fragment {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                }else handleApiError(TAG, response, getContext());
+                } else handleApiError(TAG, response, getContext());
             }
 
             @Override
@@ -171,7 +172,7 @@ public class HistoryFragment extends Fragment {
         showdata.setVisibility(View.VISIBLE);
     }
 
-    private void logOrderHistory(List<OrderModel> orderHistory){
+    private void logOrderHistory(List<OrderModel> orderHistory) {
         for (OrderModel order : orderHistory) {
             Log.e(TAG, " \n\nonResponse order: order id " + order.getId());
 
@@ -239,6 +240,12 @@ public class HistoryFragment extends Fragment {
         if (!orderList.isEmpty())
             allHistoryAdapter = new AllHistoryAdapter(getContext(), orderList);
         recyclerView.setAdapter(allHistoryAdapter);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadOrderHistory();
     }
 
     @Override

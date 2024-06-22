@@ -1,5 +1,6 @@
 package com.wits.grofast_user.Api.interfaces;
 
+import com.wits.grofast_user.Api.responseClasses.LoginResponse;
 import com.wits.grofast_user.Api.responseClasses.OrderHistoryResponse;
 import com.wits.grofast_user.Api.responseClasses.OrderPlaceResponse;
 
@@ -10,7 +11,7 @@ import retrofit2.http.Query;
 
 public interface OrderInterface {
     @POST("place-user-order")
-    Call<OrderPlaceResponse> placeOrder( @Query("coupon") String couponCode, @Query("tip") int tip, @Query("additional_note") String aditionalNote, @Query("address_id") int addressId, @Query("receiver_name") String receiverName, @Query("receiver_phone_no") Long receiverPhone, @Query("payment_metod") int paymentMethod);
+    Call<OrderPlaceResponse> placeOrder(@Query("coupon") String couponCode, @Query("tip") int tip, @Query("additional_note") String aditionalNote, @Query("address_id") int addressId, @Query("receiver_name") String receiverName, @Query("receiver_phone_no") Long receiverPhone, @Query("payment_metod") int paymentMethod);
 
     @GET("fetch-user-order-histroy")
     Call<OrderHistoryResponse> fetchOrderHistory();
@@ -20,4 +21,7 @@ public interface OrderInterface {
 
     @POST("user-reorder")
     Call<OrderPlaceResponse> reOrder(@Query("orderId") int orderId);
+
+    @POST("cancel-user-order")
+    Call<LoginResponse> cancelOrder(@Query("order_id") int order_id, @Query("reason") String reason);
 }

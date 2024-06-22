@@ -7,12 +7,12 @@
     android:layout_height="match_parent"
     android:background="@color/background_color"
     android:orientation="vertical"
+    android:padding="@dimen/linear_padding"
     tools:context=".Details.OrderCancel">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/padding"
         app:cardBackgroundColor="@color/white"
         app:cardCornerRadius="@dimen/card_corners"
         app:cardElevation="2dp">
@@ -109,14 +109,19 @@
 
             </LinearLayout>
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/cancel_reason"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="@dimen/_10sdp"
                 android:drawableRight="@drawable/hide_arrow"
-                android:text="@string/spinner_select_reason"
+                android:background="@null"
+                android:autoHandwritingEnabled="false"
+                android:inputType="none"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:hint="@string/spinner_select_reason"
                 android:textColor="@color/textview_text_color"
                 android:textSize="@dimen/hint_text_size" />
 
@@ -125,10 +130,10 @@
     </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/write_reason_card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/padding"
-        android:layout_marginRight="@dimen/padding"
+        android:visibility="gone"
         app:cardBackgroundColor="@color/white"
         app:cardCornerRadius="@dimen/card_corners"
         app:cardElevation="2dp">
@@ -148,6 +153,7 @@
                 android:textStyle="bold" />
 
             <EditText
+                android:id="@+id/edittext_other_reason"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="@dimen/_20sdp"
@@ -171,7 +177,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_margin="@dimen/_10sdp"
             android:background="@drawable/round_background"
             android:gravity="center"
             android:text="@string/cancel_order_button"

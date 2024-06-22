@@ -27,6 +27,8 @@
     <string name="toast_message_enter_valid_email">Please enter valid E-mail id</string>
     <string name="toast_message_new_phone">Please change to a new phone number.</string>
     <string name="toast_coupon_code_copied">Coupon code copied</string>
+    <string name="toast_enter_reason">Please enter a reason for cancelling order</string>
+    <string name="toast_select_reason">Please select a reason for cancelling order</string>
 
 
     <!--     VALIDATION TOAST-->
@@ -150,6 +152,7 @@
     <string name="wallet_page_name">Wallet</string>
     <string name="payment_page_name">Payment Details</string>
     <string name="notification_setting_page_name">Notification Setting</string>
+    <string name="Order_cancel_page_name">Cancel Order</string>
     <string name="notification_page_name">Notification</string>
     <string name="show_all_categories_page_name">Categories</string>
 
@@ -362,5 +365,7 @@
     <string name="r6">Wrong address selected</string>
     <string name="r7">Product price has reduced</string>
     <string name="r8">Other</string>
+    <string name="cancel_oredr_confirmation">Cancel Order</string>
+    <string name="cancel_oredr_msg">Are you sure, you want to cancel this order.</string>
 
 </resources>
