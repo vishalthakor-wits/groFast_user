@@ -129,16 +129,15 @@ public class ProductFragment extends Fragment {
         recyclerView.setAdapter(allProductAdapter);
 
         Bundle bundle = getArguments();
-        searchIndicator = userActivitySession.getProductSearchIndicator();
 
+
+        searchIndicator = userActivitySession.getProductSearchIndicator();
         if (searchIndicator == ProductSearchEnum.searchByName.getValue()) {
             searchName = userActivitySession.getetSearchProductName();
             searchProducts(searchName, currentPageSearchByName);
-//            searchName = bundle != null ? bundle.getString(getString(R.string.intent_key_product_name)) : null;
         } else if (searchIndicator == ProductSearchEnum.searchByCategory.getValue()) {
             searchCategory = userActivitySession.getSearchCategoryName();
             getProductByCategory(searchCategory, currentPageSearchByCategory);
-//            searchCategory = bundle != null ? bundle.getString(getString(R.string.intent_key_category_name)) : null;
         } else {
             getProducts(currentPageSearchAll);
         }
@@ -148,8 +147,9 @@ public class ProductFragment extends Fragment {
             public boolean onQueryTextSubmit(String query) {
                 userActivitySession.setProductSearchIndicator(ProductSearchEnum.searchByName.getValue());
                 userActivitySession.setSearchProductName(query);
-                searchIndicator = userActivitySession.getProductSearchIndicator();
                 searchName = query;
+                clearSearchByNameList();
+
                 searchProducts(query, currentPageSearchByName);
                 return true;
             }
@@ -169,7 +169,6 @@ public class ProductFragment extends Fragment {
             public void onClick(View v) {
                 userActivitySession.setProductSearchIndicator(ProductSearchEnum.searchByName.getValue());
                 userActivitySession.setSearchProductName(searchName);
-                searchIndicator = userActivitySession.getProductSearchIndicator();
                 searchProducts(searchName, currentPageSearchByName);
             }
         });
@@ -211,12 +210,13 @@ public class ProductFragment extends Fragment {
                         }
                     }, apiDelay);
 
+                    searchIndicator = userActivitySession.getProductSearchIndicator();
                     if (searchIndicator == ProductSearchEnum.searchByName.getValue()) {
                         searchProducts(searchName, currentPageSearchByName);
-                        Log.e(TAG, "onScrolled: fetching products by name");
+                        Log.e(TAG, "onScrolled: fetching products by name " + searchName);
                     } else if (searchIndicator == ProductSearchEnum.searchByCategory.getValue()) {
                         getProductByCategory(searchCategory, currentPageSearchByCategory);
-                        Log.e(TAG, "onScrolled: fetching products by category");
+                        Log.e(TAG, "onScrolled: fetching products by category " + searchCategory);
                     } else {
                         getProducts(currentPageSearchAll);
                         Log.e(TAG, "onScrolled: fetching all products");
@@ -279,15 +279,17 @@ public class ProductFragment extends Fragment {
                 if (response.isSuccessful()) {
                     ProductResponse productResponse = response.body();
                     ProductPaginatedRes paginatedResponse = productResponse.getPaginatedProducts();
+                    List<ProductModel> list = paginatedResponse.getProductList();
+
                     if (page == 1) {
                         productList = paginatedResponse.getProductList();
                         allProductAdapter = new AllProductAdapter(getContext(), productList);
                         recyclerView.setAdapter(allProductAdapter);
                     } else {
-                        List<ProductModel> list = paginatedResponse.getProductList();
                         for (ProductModel model : list) {
                             productList.add(model);
                             allProductAdapter.notifyItemInserted(productList.size());
+
                         }
                     }
                     currentPageSearchAll++;
@@ -299,7 +301,6 @@ public class ProductFragment extends Fragment {
 
             @Override
             public void onFailure(Call<ProductResponse> call, Throwable t) {
-                isLoading = false;
                 HidePageLoader();
                 t.printStackTrace();
             }
@@ -308,7 +309,13 @@ public class ProductFragment extends Fragment {
     }
 
     private void getProductByCategory(String category, int page) {
+        Log.e(TAG, "getProductByCategory: search by " + category);
+        Log.e(TAG, "getProductByCategory: current page " + page);
+        Log.e(TAG, "getProductByCategory: last page " + lastPageSearchByCategory);
+
         Call<ProductResponse> call = RetrofitService.getClient(userActivitySession.getToken()).create(ProductInerface.class).fetchProductsByCategory(page, category);
+
+        if (lastPageSearchByCategory >= page) {
         call.enqueue(new Callback<ProductResponse>() {
             @Override
             public void onResponse(Call<ProductResponse> call, Response<ProductResponse> response) {
@@ -316,10 +323,23 @@ public class ProductFragment extends Fragment {
                 if (response.isSuccessful()) {
                     ProductResponse productResponse = response.body();
                     ProductPaginatedRes paginatedResponse = productResponse.getPaginatedProducts();
-                    productListByCategory = paginatedResponse.getProductList();
+                    List<ProductModel> list = paginatedResponse.getProductList();
 
-                    allProductAdapter = new AllProductAdapter(getContext(), productListByCategory);
-                    recyclerView.setAdapter(allProductAdapter);
+                    if (page == 1) {
+                        productListByCategory = paginatedResponse.getProductList();
+                        allProductAdapter = new AllProductAdapter(getContext(), productListByCategory);
+                        recyclerView.setAdapter(allProductAdapter);
+                    } else {
+                        for (ProductModel model : list) {
+                            productListByCategory.add(model);
+                            allProductAdapter.notifyItemInserted(productListByCategory.size());
+
+                        }
+                    }
+                    currentPageSearchByCategory++;
+                    lastPageSearchByCategory = paginatedResponse.getLast_page();
+
+
                 } else if (response.code() == 422) {
                     try {
                         String errorBodyString = response.errorBody().string();
@@ -344,6 +364,7 @@ public class ProductFragment extends Fragment {
                 t.printStackTrace();
             }
         });
+        }
     }
 
     private void showNoProductMessage(String message, String errorMessage) {
@@ -369,8 +390,13 @@ public class ProductFragment extends Fragment {
     }
 
     private void searchProducts(String searchParameter, int page) {
+        Log.e(TAG, "searchProducts: search by name " + searchParameter);
+        Log.e(TAG, "searchProducts: current page " + page);
+        Log.e(TAG, "searchProducts: last page " + lastPageSearchByName);
+
         Call<ProductResponse> call = RetrofitService.getClient(userActivitySession.getToken()).create(ProductInerface.class).searchProduct(searchParameter, page);
 
+        if (lastPageSearchByName >= page) {
         call.enqueue(new Callback<ProductResponse>() {
             @Override
             public void onResponse(Call<ProductResponse> call, Response<ProductResponse> response) {
@@ -378,10 +404,22 @@ public class ProductFragment extends Fragment {
                 if (response.isSuccessful()) {
                     ProductResponse productResponse = response.body();
                     ProductPaginatedRes paginatedResponse = productResponse.getPaginatedProducts();
-                    productListByName = paginatedResponse.getProductList();
+                    List<ProductModel> list = paginatedResponse.getProductList();
 
-                    allProductAdapter = new AllProductAdapter(getContext(), productListByName);
-                    recyclerView.setAdapter(allProductAdapter);
+                    if (page == 1) {
+                        productListByName = paginatedResponse.getProductList();
+                        allProductAdapter = new AllProductAdapter(getContext(), productListByName);
+                        recyclerView.setAdapter(allProductAdapter);
+                    } else {
+                        for (ProductModel model : list) {
+                            productListByName.add(model);
+                            allProductAdapter.notifyItemInserted(productListByName.size());
+
+                        }
+                    }
+                    currentPageSearchByName++;
+                    lastPageSearchByName = paginatedResponse.getLast_page();
+
                 } else {
                     if (page <= 1) handleApiError(TAG, response, getContext());
                 }
@@ -392,13 +430,23 @@ public class ProductFragment extends Fragment {
                 HidePageLoader();
             }
         });
+        }
     }
 
     private void showAllProducts() {
         if (!productList.isEmpty()) {
+            clearSearchByNameList();
+
+            userActivitySession.setProductSearchIndicator(ProductSearchEnum.searchAll.getValue());
             allProductAdapter = new AllProductAdapter(getContext(), productList);
             recyclerView.setAdapter(allProductAdapter);
         }
+    }
+
+    private void clearSearchByNameList() {
+        productListByName.clear();
+        currentPageSearchByName = 1;
+        lastPageSearchByName = 1;
     }
 
     private void startProgress() {

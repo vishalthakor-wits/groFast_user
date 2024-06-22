@@ -86,6 +86,7 @@ public class HomeFragment extends Fragment {
         searchIcon = root.findViewById(R.id.home_product_search_icon);
 
 
+        userActivitySession.resetSearchIndicator();
         ShowPageLoader();
 
         //Banner Recycleview
