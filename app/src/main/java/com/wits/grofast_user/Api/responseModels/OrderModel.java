@@ -70,6 +70,8 @@ public class OrderModel implements Parcelable {
     @SerializedName("is_reorder_allow")
     private int isReorderAllow;
 
+    private String invoice;
+
     protected OrderModel(Parcel in) {
         sgst = in.readFloat();
         country = in.readString();
@@ -233,6 +235,10 @@ public class OrderModel implements Parcelable {
 
     public List<OrderItemModel> getOrderItems() {
         return orderItems;
+    }
+
+    public String getInvoice() {
+        return invoice;
     }
 
     @Override

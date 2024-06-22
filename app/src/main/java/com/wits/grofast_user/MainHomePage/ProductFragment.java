@@ -71,9 +71,7 @@ public class ProductFragment extends Fragment {
     private ImageView searchIcon;
     private int currentBannerPosition = 0;
     private Handler handler = new Handler();
-
     BannerAdapter bannerAdapter;
-
     private boolean isLoading = false;
     private int currentPageSearchAll = 1;
     private int lastPageSearchAll = 1;
@@ -90,6 +88,7 @@ public class ProductFragment extends Fragment {
     private int searchIndicator;
     private String searchName, searchCategory;
     private ProgressBar recyclerProgressBar;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -194,7 +193,6 @@ public class ProductFragment extends Fragment {
                 int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
                 int lastVisibleItem = layoutManager.findLastVisibleItemPosition();
 
-
                 if (!isLoading && totalItemCount < lastVisibleItem + visibleThreshold) {
                     Log.e("TAG", "onScrolled: firstVisibleItem : " + firstVisibleItemPosition);
                     Log.e("TAG", "onScrolled: lastVisibleItem : " + lastVisibleItem);
@@ -221,6 +219,7 @@ public class ProductFragment extends Fragment {
                         getProducts(currentPageSearchAll);
                         Log.e(TAG, "onScrolled: fetching all products");
                     }
+
 
                 }
             }
