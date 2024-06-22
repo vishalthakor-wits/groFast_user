@@ -3,7 +3,6 @@ package com.wits.grofast_user.Adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.wits.grofast_user.Api.responseModels.CategoryModel;
+import com.wits.grofast_user.Enums.ProductSearchEnum;
 import com.wits.grofast_user.MainHomePage.HomePage;
 import com.wits.grofast_user.R;
 import com.wits.grofast_user.session.UserActivitySession;
@@ -51,7 +51,8 @@ public class ShowAllCategoriesAdapter extends RecyclerView.Adapter<ShowAllCatego
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                userActivitySession.setProductFetchIndicator(1);
+                userActivitySession.setProductSearchIndicator(ProductSearchEnum.searchByCategory.getValue());
+                userActivitySession.setSearchCategoryName(item.getCategory_name());
                 Intent intent = new Intent(context, HomePage.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

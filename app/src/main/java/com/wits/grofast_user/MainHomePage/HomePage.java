@@ -43,6 +43,7 @@ import com.wits.grofast_user.Details.SettingsPage;
 import com.wits.grofast_user.Details.Wallet;
 import com.wits.grofast_user.Details.Wallethistory;
 import com.wits.grofast_user.Enums.FragmentEnum;
+import com.wits.grofast_user.Enums.ProductSearchEnum;
 import com.wits.grofast_user.KeyboardUtil;
 import com.wits.grofast_user.MainActivity;
 import com.wits.grofast_user.R;
@@ -99,6 +100,15 @@ public class HomePage extends AppCompatActivity {
         userName = headerView.findViewById(R.id.user_name);
         userPhoneNo = headerView.findViewById(R.id.user_phone_no);
         userProfile = headerView.findViewById(R.id.user_profile);
+
+        Intent intent = getIntent();
+        if (intent.hasExtra(getString(R.string.intent_key_category_name))) {
+            openProductFragment(intent.getStringExtra(getString(R.string.intent_key_category_name)));
+        }
+        if (intent.getBooleanExtra("openHomeFragment", false)) {
+            openProductFragment(null);
+        }
+
 
         menuBar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -337,9 +347,11 @@ public class HomePage extends AppCompatActivity {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         if (categoryName != null) {
-            Bundle bundle = new Bundle();
-            bundle.putString(getString(R.string.intent_key_category_name), categoryName);
-            productFragment.setArguments(bundle);
+            useractivitysession.setProductSearchIndicator(ProductSearchEnum.searchByCategory.getValue());
+            useractivitysession.setSearchCategoryName(categoryName);
+//            Bundle bundle = new Bundle();
+//            bundle.putString(getString(R.string.intent_key_category_name), categoryName);
+//            productFragment.setArguments(bundle);
         }
         fragmentTransaction.replace(R.id.fragmentnav, productFragment);
         fragmentTransaction.addToBackStack(null);

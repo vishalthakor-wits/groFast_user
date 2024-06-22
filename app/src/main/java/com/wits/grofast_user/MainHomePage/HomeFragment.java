@@ -34,11 +34,11 @@ import com.wits.grofast_user.Api.responseClasses.HomeProductResponse;
 import com.wits.grofast_user.Api.responseModels.BannerModel;
 import com.wits.grofast_user.Api.responseModels.HomeCategoryModel;
 import com.wits.grofast_user.Api.responseModels.HomeProductModel;
+import com.wits.grofast_user.Enums.ProductSearchEnum;
 import com.wits.grofast_user.R;
 import com.wits.grofast_user.session.UserActivitySession;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import retrofit2.Call;
@@ -85,7 +85,8 @@ public class HomeFragment extends Fragment {
         searchView = root.findViewById(R.id.home_product_search_view);
         searchIcon = root.findViewById(R.id.home_product_search_icon);
 
-        
+
+        userActivitySession.resetSearchIndicator();
         ShowPageLoader();
 
         //Banner Recycleview
@@ -124,6 +125,8 @@ public class HomeFragment extends Fragment {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 searchProductsOnProductFragment(query);
+                userActivitySession.setProductSearchIndicator(ProductSearchEnum.searchByName.getValue());
+                userActivitySession.setSearchProductName(query);
                 return true;
             }
 
@@ -137,6 +140,8 @@ public class HomeFragment extends Fragment {
         searchIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                userActivitySession.setProductSearchIndicator(ProductSearchEnum.searchByName.getValue());
+                userActivitySession.setSearchProductName(searchQuery);
                 searchProductsOnProductFragment(searchQuery);
             }
         });
@@ -265,7 +270,7 @@ public class HomeFragment extends Fragment {
         ProductFragment productFragment = new ProductFragment();
 
         Bundle bundle = new Bundle();
-        bundle.putString("searchParameter", searchParameter);
+        bundle.putString(getString(R.string.intent_key_product_name), searchParameter);
         productFragment.setArguments(bundle);
 
         getParentFragmentManager().beginTransaction().replace(R.id.fragmentnav, productFragment).addToBackStack(null).commit();
