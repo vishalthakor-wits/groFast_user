@@ -4,7 +4,6 @@ import static android.view.View.GONE;
 import static com.wits.grofast_user.CommonUtilities.handleApiError;
 
 import android.annotation.SuppressLint;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -40,6 +39,7 @@ import com.wits.grofast_user.Api.responseClasses.BannerResponse;
 import com.wits.grofast_user.Api.responseClasses.ProductResponse;
 import com.wits.grofast_user.Api.responseModels.BannerModel;
 import com.wits.grofast_user.Api.responseModels.ProductModel;
+import com.wits.grofast_user.Enums.ProductSearchEnum;
 import com.wits.grofast_user.KeyboardUtil;
 import com.wits.grofast_user.R;
 import com.wits.grofast_user.session.UserActivitySession;
@@ -53,12 +53,11 @@ import retrofit2.Response;
 
 public class ProductFragment extends Fragment {
 
-    private boolean isCategoriesProductLoaded = false;
-    private boolean isProductsLoaded = false;
     RecyclerView recyclerView, bannerrecycleview;
     AllProductAdapter allProductAdapter;
     private List<ProductModel> productList = new ArrayList<>();
-    private List<ProductModel> searchProductList = new ArrayList<>();
+    private List<ProductModel> productListByName = new ArrayList<>();
+    private List<ProductModel> productListByCategory = new ArrayList<>();
     private GridLayoutManager layoutManager;
     ScrollView show_data;
     private final String TAG = "ProductFragment";
@@ -69,18 +68,26 @@ public class ProductFragment extends Fragment {
     TextView no_product_text, no_product_text2;
     private SearchView searchView;
     private ImageView searchIcon;
-    private String searchQuery;
     private int currentBannerPosition = 0;
     private Handler handler = new Handler();
 
     BannerAdapter bannerAdapter;
 
     private boolean isLoading = false;
-    private int currentPage = 1;
+    private int currentPageSearchAll = 1;
+    private int lastPageSearchAll = 1;
+
+    private int currentPageSearchByName = 1;
+    private int lastPageSearchByName = 1;
+
+    private int currentPageSearchByCategory = 1;
+    private int lastPageSearchByCategory = 1;
+
     private int visibleThreshold = 4;
-    private int lastPage = 1;
     private final int apiDelay = 2000;
-    private Call<ProductResponse> call;
+
+    private int searchIndicator;
+    private String searchName, searchCategory;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -115,25 +122,29 @@ public class ProductFragment extends Fragment {
         layoutManager = new GridLayoutManager(getContext(), 2);
         recyclerView.setLayoutManager(layoutManager);
 
-        if (getArguments() != null) {
-            searchQuery = getArguments().getString("searchParameter");
-            String category = getArguments().getString(getString(R.string.intent_key_category_name));
+        Bundle bundle = getArguments();
+        searchIndicator = userActivitySession.getProductSearchIndicator();
 
-            if (category != null) {
-                getProductByCategory(category, currentPage);
-            } else {
-                searchView.setQuery(searchQuery, false);
-                searchProducts(searchQuery, 1);
-            }
+        if (searchIndicator == ProductSearchEnum.searchByName.getValue()) {
+            searchName = userActivitySession.getetSearchProductName();
+            searchProducts(searchName, currentPageSearchByName);
+//            searchName = bundle != null ? bundle.getString(getString(R.string.intent_key_product_name)) : null;
+        } else if (searchIndicator == ProductSearchEnum.searchByCategory.getValue()) {
+            searchCategory = userActivitySession.getSearchCategoryName();
+            getProductByCategory(searchCategory, currentPageSearchByCategory);
+//            searchCategory = bundle != null ? bundle.getString(getString(R.string.intent_key_category_name)) : null;
         } else {
-            call = RetrofitService.getClient(userActivitySession.getToken()).create(ProductInerface.class).fetchProducts(currentPage);
-            getProducts(call);
+            getProducts(currentPageSearchAll);
         }
 
-        searchView.setOnQueryTextListener(new androidx.appcompat.widget.SearchView.OnQueryTextListener() {
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                searchProducts(query, 1);
+                userActivitySession.setProductSearchIndicator(ProductSearchEnum.searchByName.getValue());
+                userActivitySession.setSearchProductName(query);
+                searchIndicator = userActivitySession.getProductSearchIndicator();
+                searchName = query;
+                searchProducts(query, currentPageSearchByName);
                 return true;
             }
 
@@ -142,7 +153,7 @@ public class ProductFragment extends Fragment {
                 if (newText.isEmpty()) {
                     showAllProducts();
                 }
-                searchQuery = newText;
+                searchName = newText;
                 return false;
             }
         });
@@ -150,7 +161,10 @@ public class ProductFragment extends Fragment {
         searchIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                searchProducts(searchQuery, 1);
+                userActivitySession.setProductSearchIndicator(ProductSearchEnum.searchByName.getValue());
+                userActivitySession.setSearchProductName(searchName);
+                searchIndicator = userActivitySession.getProductSearchIndicator();
+                searchProducts(searchName, currentPageSearchByName);
             }
         });
 
@@ -159,7 +173,7 @@ public class ProductFragment extends Fragment {
             @Override
             public void onKeyboardVisibilityChanged(boolean isVisible) {
                 if (isVisible) {
-                    completeorderbtn.setVisibility(View.GONE);
+                    completeorderbtn.setVisibility(GONE);
                 } else {
                     completeorderbtn.setVisibility(View.VISIBLE);
                 }
@@ -181,23 +195,25 @@ public class ProductFragment extends Fragment {
                     Log.e("TAG", "onScrolled: lastVisibleItem : " + lastVisibleItem);
                     Log.e("TAG", "onScrolled:  totalItemCount : " + totalItemCount);
                     Log.e("TAG", "onScrolled: lastVisibleItem + visibleThreshold : " + (lastVisibleItem + visibleThreshold));
-                    Log.e("TAG", "onScrolled: current page " + currentPage);
+//                    Log.e("TAG", "onScrolled: current page " + currentPage);
 
                     isLoading = true;
-
-                    if (getArguments() != null) {
-                        searchQuery = getArguments().getString("searchParameter");
-                        String category = getArguments().getString(getString(R.string.intent_key_category_name));
-
-                        if (category != null) {
-                            getProductByCategory(category, currentPage);
-                        } else {
-                            searchView.setQuery(searchQuery, false);
-                            searchProducts(searchQuery, currentPage);
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            isLoading = false;
                         }
+                    }, apiDelay);
+
+                    if (searchIndicator == ProductSearchEnum.searchByName.getValue()) {
+                        searchProducts(searchName, currentPageSearchByName);
+                        Log.e(TAG, "onScrolled: fetching products by name");
+                    } else if (searchIndicator == ProductSearchEnum.searchByCategory.getValue()) {
+                        getProductByCategory(searchCategory, currentPageSearchByCategory);
+                        Log.e(TAG, "onScrolled: fetching products by category");
                     } else {
-                        call = RetrofitService.getClient(userActivitySession.getToken()).create(ProductInerface.class).fetchProducts(currentPage);
-                        getProducts(call);
+                        getProducts(currentPageSearchAll);
+                        Log.e(TAG, "onScrolled: fetching all products");
                     }
 
                 }
@@ -243,21 +259,21 @@ public class ProductFragment extends Fragment {
         }, 2000);
     }
 
-    private void getProducts(Call<ProductResponse> call) {
-        Log.e("TAG", "getProducts:     last page  " + lastPage);
-        Log.e("TAG", "getProducts: curremnt page  " + currentPage);
-//        Call<ProductResponse> call =
+    private void getProducts(int page) {
+        Log.e("TAG", "getProducts:     last page  " + lastPageSearchAll);
+        Log.e("TAG", "getProducts: current page  " + currentPageSearchAll);
+        Call<ProductResponse> call = RetrofitService.getClient(userActivitySession.getToken()).create(ProductInerface.class).fetchProducts(currentPageSearchAll);
 
-        if (lastPage >= currentPage) {
+        if (lastPageSearchAll >= page) {
         call.enqueue(new Callback<ProductResponse>() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onResponse(Call<ProductResponse> call, Response<ProductResponse> response) {
-                isLoading = false;
+                HidePageLoader();
                 if (response.isSuccessful()) {
                     ProductResponse productResponse = response.body();
                     ProductPaginatedRes paginatedResponse = productResponse.getPaginatedProducts();
-                    if (currentPage == 1) {
+                    if (page == 1) {
                         productList = paginatedResponse.getProductList();
                         allProductAdapter = new AllProductAdapter(getContext(), productList);
                         recyclerView.setAdapter(allProductAdapter);
@@ -268,11 +284,10 @@ public class ProductFragment extends Fragment {
                             allProductAdapter.notifyItemInserted(productList.size());
                         }
                     }
-                    currentPage++;
-                    lastPage = paginatedResponse.getLast_page();
-                    HidePageLoader();
+                    currentPageSearchAll++;
+                    lastPageSearchAll = paginatedResponse.getLast_page();
                 } else {
-                    if (isAdded()) handleApiError(TAG, response, getContext());
+                    if (page <= 1) handleApiError(TAG, response, getContext());
                 }
             }
 
@@ -295,9 +310,9 @@ public class ProductFragment extends Fragment {
                 if (response.isSuccessful()) {
                     ProductResponse productResponse = response.body();
                     ProductPaginatedRes paginatedResponse = productResponse.getPaginatedProducts();
-                    productList = paginatedResponse.getProductList();
+                    productListByCategory = paginatedResponse.getProductList();
 
-                    allProductAdapter = new AllProductAdapter(getContext(), productList);
+                    allProductAdapter = new AllProductAdapter(getContext(), productListByCategory);
                     recyclerView.setAdapter(allProductAdapter);
                 } else if (response.code() == 422) {
                     try {
@@ -313,7 +328,7 @@ public class ProductFragment extends Fragment {
                         e.printStackTrace();
                     }
                 } else {
-                    handleApiError(TAG, response, getContext());
+                    if (page <= 1) handleApiError(TAG, response, getContext());
                 }
             }
 
@@ -326,7 +341,7 @@ public class ProductFragment extends Fragment {
     }
 
     private void showNoProductMessage(String message, String errorMessage) {
-        show_data.setVisibility(View.GONE);
+        show_data.setVisibility(GONE);
         completeorderbtn.setVisibility(GONE);
         no_product_layout.setVisibility(View.VISIBLE);
         no_product_text2.setText(errorMessage);
@@ -336,19 +351,18 @@ public class ProductFragment extends Fragment {
     private void ShowPageLoader() {
         shimmerFrameLayout.startShimmer();
         shimmerFrameLayout.setVisibility(View.VISIBLE);
-        show_data.setVisibility(View.GONE);
+        show_data.setVisibility(GONE);
         completeorderbtn.setVisibility(GONE);
     }
 
     private void HidePageLoader() {
-        shimmerFrameLayout.setVisibility(View.GONE);
+        shimmerFrameLayout.setVisibility(GONE);
         shimmerFrameLayout.stopShimmer();
         show_data.setVisibility(View.VISIBLE);
         completeorderbtn.setVisibility(View.VISIBLE);
     }
 
     private void searchProducts(String searchParameter, int page) {
-        ShowPageLoader();
         Call<ProductResponse> call = RetrofitService.getClient(userActivitySession.getToken()).create(ProductInerface.class).searchProduct(searchParameter, page);
 
         call.enqueue(new Callback<ProductResponse>() {
@@ -358,12 +372,12 @@ public class ProductFragment extends Fragment {
                 if (response.isSuccessful()) {
                     ProductResponse productResponse = response.body();
                     ProductPaginatedRes paginatedResponse = productResponse.getPaginatedProducts();
-                    searchProductList = paginatedResponse.getProductList();
+                    productListByName = paginatedResponse.getProductList();
 
-                    allProductAdapter = new AllProductAdapter(getContext(), searchProductList);
+                    allProductAdapter = new AllProductAdapter(getContext(), productListByName);
                     recyclerView.setAdapter(allProductAdapter);
                 } else {
-                    handleApiError(TAG, response, getContext());
+                    if (page <= 1) handleApiError(TAG, response, getContext());
                 }
             }
 
@@ -418,27 +432,8 @@ public class ProductFragment extends Fragment {
     public void onStop() {
         super.onStop();
         searchView.setQuery("", false);
-        userActivitySession.setProductFetchIndicator(0);
-    }
-
-    private int getVisibleItems(GridLayoutManager layoutManager) {
-        int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
-        int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
-        int visibleitems = 0;
-        for (int i = firstVisibleItemPosition; i <= lastVisibleItemPosition; i++) {
-            View view = layoutManager.findViewByPosition(i);
-            if (view != null && isViewCompletelyVisible(view)) {
-                visibleitems++;
-            }
-        }
-        return visibleitems;
-    }
-
-    private boolean isViewCompletelyVisible(View view) {
-        Rect rect = new Rect();
-        view.getGlobalVisibleRect(rect);
-        Rect parentRect = new Rect();
-        recyclerView.getGlobalVisibleRect(parentRect);
-        return parentRect.contains(rect);
+        userActivitySession.setProductSearchIndicator(ProductSearchEnum.searchAll.getValue());
+        userActivitySession.setSearchProductName(null);
+        userActivitySession.setSearchCategoryName(null);
     }
 }

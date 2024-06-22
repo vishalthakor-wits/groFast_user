@@ -30,12 +30,30 @@ public class UserActivitySession {
         return sharedPreferences.getString("userAccessToken", "");
     }
 
-    public void setProductFetchIndicator(int value) {
+    public void setProductSearchIndicator(int value) {
         editor.putInt("productFetchIndicator", value).apply();
     }
 
-    public int getProductFetchIndicator() {
+    public int getProductSearchIndicator() {
         return sharedPreferences.getInt("productFetchIndicator", 0);
+    }
+
+    public void setSearchCategoryName(String value) {
+        editor.putString("productSearchCategory", value).apply();
+        editor.putString("productSearchName", null).apply();
+    }
+
+    public String getSearchCategoryName() {
+        return sharedPreferences.getString("productSearchCategory", "");
+    }
+
+    public void setSearchProductName(String value) {
+        editor.putString("productSearchName", value).apply();
+        editor.putString("productSearchCategory", null).apply();
+    }
+
+    public String getetSearchProductName() {
+        return sharedPreferences.getString("productSearchName", "");
     }
 
     public void clearSession() {
