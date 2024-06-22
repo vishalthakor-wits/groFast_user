@@ -56,6 +56,11 @@ public class UserActivitySession {
         return sharedPreferences.getString("productSearchName", "");
     }
 
+    public void resetSearchIndicator() {
+        editor.putInt("productFetchIndicator", 0).apply();
+        editor.putString("productSearchName", null).apply();
+        editor.putString("productSearchCategory", null).apply();
+    }
     public void clearSession() {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.clear();
