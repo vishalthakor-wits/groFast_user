@@ -109,16 +109,19 @@ public class ShowAllAddressAdapter extends RecyclerView.Adapter<ShowAllAddressAd
 
     private void showDeleteConfirmationDialog(Context context, AddressModel item, int position) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle(context.getString(R.string.delete_address_confirmation));
-        builder.setMessage(context.getString(R.string.are_you_sure_delete));
 
         View dialogButtonsView = LayoutInflater.from(context).inflate(R.layout.confirmdeleteaddress, null);
         builder.setView(dialogButtonsView);
 
         // Find the buttons in the custom layout
+        TextView title = dialogButtonsView.findViewById(R.id.delete_confirmation_title);
+        TextView msg = dialogButtonsView.findViewById(R.id.delete_confirmation_msg);
         Button btnNo = dialogButtonsView.findViewById(R.id.btnNo);
         Button btnYes = dialogButtonsView.findViewById(R.id.btnYes);
         AlertDialog dialog = builder.create();
+
+        title.setText(R.string.delete_address_confirmation);
+        msg.setText(R.string.are_you_sure_delete);
         btnNo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
