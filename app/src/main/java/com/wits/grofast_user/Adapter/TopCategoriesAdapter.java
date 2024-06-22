@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.wits.grofast_user.Api.responseModels.CategoryModel;
 import com.wits.grofast_user.Api.responseModels.HomeCategoryModel;
+import com.wits.grofast_user.Enums.ProductSearchEnum;
 import com.wits.grofast_user.MainHomePage.ProductFragment;
 import com.wits.grofast_user.R;
 import com.wits.grofast_user.session.UserActivitySession;
@@ -51,7 +52,8 @@ public class TopCategoriesAdapter extends RecyclerView.Adapter<TopCategoriesAdap
         holder.Banner.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                userActivitySession.setProductFetchIndicator(1);
+                userActivitySession.setProductSearchIndicator(ProductSearchEnum.searchByCategory.getValue());
+                userActivitySession.setSearchCategoryName(item.getCategory_name());
                 openProducatFragment(item);
             }
         });
