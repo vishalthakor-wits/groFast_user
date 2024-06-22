@@ -72,14 +72,11 @@ public class ProductFragment extends Fragment {
     private String searchQuery;
     private int currentBannerPosition = 0;
     private Handler handler = new Handler();
-
     BannerAdapter bannerAdapter;
-
     private boolean isLoading = false;
     private int currentPage = 1;
     private int visibleThreshold = 4;
     private int lastPage = 1;
-    private final int apiDelay = 2000;
     private Call<ProductResponse> call;
 
     @Override
@@ -175,7 +172,6 @@ public class ProductFragment extends Fragment {
                 int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
                 int lastVisibleItem = layoutManager.findLastVisibleItemPosition();
 
-
                 if (!isLoading && totalItemCount < lastVisibleItem + visibleThreshold) {
                     Log.e("TAG", "onScrolled: firstVisibleItem : " + firstVisibleItemPosition);
                     Log.e("TAG", "onScrolled: lastVisibleItem : " + lastVisibleItem);
@@ -186,7 +182,6 @@ public class ProductFragment extends Fragment {
                     isLoading = true;
                     call = RetrofitService.getClient(userActivitySession.getToken()).create(ProductInerface.class).fetchProducts(currentPage);
                     getProducts(call);
-
                 }
             }
         });
