@@ -8,6 +8,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Build;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -126,25 +127,25 @@ public class AllHistoryAdapter extends RecyclerView.Adapter<AllHistoryAdapter.Vi
             }
         });
 
-        if (item.getIsCancelAllow() == 1) {
-            holder.ProductCancel.setVisibility(View.VISIBLE);
-        } else {
+        if (item.getIsCancelAllow() == 0) {
             holder.ProductCancel.setVisibility(View.GONE);
-        }
-        Log.e(TAG, "onBindViewHolder: cancel button " + item.getIsCancelAllow());
-        Log.e(TAG, "onBindViewHolder: Reorder button " + item.getIsReorderAllow());
-        Log.e(TAG, "onBindViewHolder: Return button " + item.getIsReturnAllow());
-
-        if (item.getIsReturnAllow() == 1) {
-            holder.ProductReturn.setVisibility(View.VISIBLE);
         } else {
+            holder.ProductCancel.setVisibility(View.VISIBLE);
+        }
+//        Log.e(TAG, "onBindViewHolder: cancel button " + item.getIsCancelAllow());
+//        Log.e(TAG, "onBindViewHolder: Reorder button " + item.getIsReorderAllow());
+//        Log.e(TAG, "onBindViewHolder: Return button " + item.getIsReturnAllow());
+
+        if (item.getIsReturnAllow() == 0) {
             holder.ProductReturn.setVisibility(View.GONE);
+        } else {
+            holder.ProductReturn.setVisibility(View.VISIBLE);
         }
 
-        if (item.getIsReorderAllow() == 1) {
-            holder.ProductReorder.setVisibility(View.VISIBLE);
-        } else {
+        if (item.getIsReorderAllow() == 0) {
             holder.ProductReorder.setVisibility(View.GONE);
+        } else {
+            holder.ProductReorder.setVisibility(View.VISIBLE);
         }
 
         String finalOrderDate = orderDate;
@@ -161,6 +162,19 @@ public class AllHistoryAdapter extends RecyclerView.Adapter<AllHistoryAdapter.Vi
                 context.startActivity(in);
             }
         });
+
+        holder.ProductInvoice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                downloadInvoice(item.getInvoice());
+                Log.e(TAG, "onClick: Invoice : " + item.getInvoice());
+            }
+        });
+    }
+
+    private void downloadInvoice(String downloadLink) {
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(downloadLink));
+        context.startActivity(browserIntent);
     }
 
     @Override
@@ -187,7 +201,6 @@ public class AllHistoryAdapter extends RecyclerView.Adapter<AllHistoryAdapter.Vi
             recyclerView = itemView.findViewById(R.id.history_product_inner_recycleview);
             chargesRecyclerView = itemView.findViewById(R.id.order_history_taxes_and_charges_recyclerview);
             reorderProgress = itemView.findViewById(R.id.reorder_progress_bar);
-
 
             LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
             recyclerView.setLayoutManager(layoutManager);
