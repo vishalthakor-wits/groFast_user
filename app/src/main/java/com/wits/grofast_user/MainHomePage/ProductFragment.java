@@ -89,6 +89,7 @@ public class ProductFragment extends Fragment {
     private String searchName, searchCategory;
     private ProgressBar recyclerProgressBar;
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
