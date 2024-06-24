@@ -20,8 +20,10 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.wits.grofast_user.Adapter.NotificationAdapter;
 import com.wits.grofast_user.Api.RetrofitService;
+import com.wits.grofast_user.Api.interfaces.WalletInterface;
 import com.wits.grofast_user.Api.paginatedResponses.InAppNotificationPaginatedRes;
 import com.wits.grofast_user.Api.responseClasses.InAppNotificationResponse;
+import com.wits.grofast_user.Api.responseClasses.WalletResponse;
 import com.wits.grofast_user.Api.responseModels.InAppNotificationModel;
 import com.wits.grofast_user.Notification.NotificationInterface;
 import com.wits.grofast_user.R;
@@ -38,13 +40,18 @@ public class Notification extends AppCompatActivity {
 
     RecyclerView recyclerView;
     NotificationAdapter notificationAdapter;
-    List<InAppNotificationModel> notificationModels = new ArrayList<>();
+    List<InAppNotificationModel> notificationModelslist = new ArrayList<>();
     UserActivitySession userActivitySession;
     private static String TAG = "Notification";
     ShimmerFrameLayout shimmerFrameLayout;
-    private int currentPage = 1;
     LinearLayout no_notification_layout;
     TextView no_text1, no_text2;
+    private int currentPage = 1;
+    private int lastPage = 1;
+    private int visibleThreshold = 4;
+    private Call<InAppNotificationResponse> call;
+    private boolean isLoading = false;
+    LinearLayoutManager linearLayoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,61 +72,86 @@ public class Notification extends AppCompatActivity {
 
         //Notification Item
         recyclerView = findViewById(R.id.notification_recycle);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
+        linearLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(linearLayoutManager);
-        notificationAdapter = new NotificationAdapter(getApplicationContext(), notificationModels);
-        recyclerView.setAdapter(notificationAdapter);
-
         ShowPageLoader();
-        fetchNotifications(currentPage);
+        call = RetrofitService.getClient(userActivitySession.getToken()).create(NotificationInterface.class).inappnotification(currentPage);
+        fetchNotifications(call);
 
-    }
-
-    private void fetchNotifications(int page) {
-        Call<InAppNotificationResponse> call = RetrofitService.getClient(userActivitySession.getToken()).create(NotificationInterface.class).inappnotification(page);
-        call.enqueue(new Callback<InAppNotificationResponse>() {
-            @SuppressLint("NotifyDataSetChanged")
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void onResponse(Call<InAppNotificationResponse> call, Response<InAppNotificationResponse> response) {
-                HidePageLoader();
-                if (response.isSuccessful()) {
-                    InAppNotificationResponse notificationResponse = response.body();
-                    if (notificationResponse != null) {
-                        InAppNotificationPaginatedRes paginatedResponse = notificationResponse.getInAppNotificationPaginatedRes();
-                        if (paginatedResponse != null) {
-                            List<InAppNotificationModel> notification = paginatedResponse.getInAppNotificationModels();
-                            if (notification != null && !notification.isEmpty()) {
-                                notificationAdapter.addNotification(notification);
-                            }
-                            Log.d(TAG, "onResponse: getProducts message " + notificationResponse.getMessage());
-                            Log.d(TAG, "onResponse: total products " + paginatedResponse.getTotal());
-                            Log.d(TAG, "onResponse: fetched products " + paginatedResponse.getTo());
-                        }
-                    }
-                } else if (response.code() == 422) {
-                    try {
-                        String errorBodyString = response.errorBody().string();
-                        Gson gson = new Gson();
-                        JsonObject errorBodyJson = gson.fromJson(errorBodyString, JsonObject.class);
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                int totalItemCount = linearLayoutManager.getItemCount();
+                int firstVisibleItemPosition = linearLayoutManager.findFirstVisibleItemPosition();
+                int lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
 
-                        String errorMessage = errorBodyJson.has("errorMessage") ? errorBodyJson.get("errorMessage").getAsString() : "No errorMessage";
-                        String message = errorBodyJson.has("message") ? errorBodyJson.get("message").getAsString() : "No message";
+                if (!isLoading && totalItemCount < lastVisibleItem + visibleThreshold) {
+                    Log.e("TAG", "onScrolled: firstVisibleItem : " + firstVisibleItemPosition);
+                    Log.e("TAG", "onScrolled: lastVisibleItem : " + lastVisibleItem);
+                    Log.e("TAG", "onScrolled:  totalItemCount : " + totalItemCount);
+                    Log.e("TAG", "onScrolled: lastVisibleItem + visibleThreshold : " + (lastVisibleItem + visibleThreshold));
+                    Log.e("TAG", "onScrolled: current page " + currentPage);
 
-                        showNoNotificationMessage(errorMessage, message);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                } else {
-                    handleApiError(TAG, response, getApplicationContext());
+                    isLoading = true;
+                    call = RetrofitService.getClient(userActivitySession.getToken()).create(NotificationInterface.class).inappnotification(currentPage);
+                    fetchNotifications(call);
                 }
             }
-
-            @Override
-            public void onFailure(Call<InAppNotificationResponse> call, Throwable t) {
-                t.printStackTrace();
-                HidePageLoader();
-            }
         });
+    }
+
+    private void fetchNotifications(Call<InAppNotificationResponse> call) {
+        Log.e("TAG", "getProducts:     last page  " + lastPage);
+        Log.e("TAG", "getProducts: curremnt page  " + currentPage);
+        if (lastPage >= currentPage) {
+            call.enqueue(new Callback<InAppNotificationResponse>() {
+                @SuppressLint("NotifyDataSetChanged")
+                @Override
+                public void onResponse(Call<InAppNotificationResponse> call, Response<InAppNotificationResponse> response) {
+                    HidePageLoader();
+                    isLoading = false;
+                    if (response.isSuccessful()) {
+                        InAppNotificationResponse notificationResponse = response.body();
+                        InAppNotificationPaginatedRes paginatedResponse = notificationResponse.getInAppNotificationPaginatedRes();
+                        if (currentPage == 1) {
+                            notificationModelslist = paginatedResponse.getInAppNotificationModels();
+                            notificationAdapter = new NotificationAdapter(getApplicationContext(), notificationModelslist);
+                            recyclerView.setAdapter(notificationAdapter);
+                        } else {
+                            List<InAppNotificationModel> list = paginatedResponse.getInAppNotificationModels();
+                            for (InAppNotificationModel model : list) {
+                                notificationModelslist.add(model);
+                                notificationAdapter.notifyItemInserted(notificationModelslist.size());
+                            }
+                        }
+                        currentPage++;
+                        lastPage = paginatedResponse.getLast_page();
+                    } else if (response.code() == 422) {
+                        try {
+                            String errorBodyString = response.errorBody().string();
+                            Gson gson = new Gson();
+                            JsonObject errorBodyJson = gson.fromJson(errorBodyString, JsonObject.class);
+
+                            String errorMessage = errorBodyJson.has("errorMessage") ? errorBodyJson.get("errorMessage").getAsString() : "No errorMessage";
+                            String message = errorBodyJson.has("message") ? errorBodyJson.get("message").getAsString() : "No message";
+
+                            showNoNotificationMessage(errorMessage, message);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        handleApiError(TAG, response, getApplicationContext());
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<InAppNotificationResponse> call, Throwable t) {
+                    t.printStackTrace();
+                    HidePageLoader();
+                }
+            });
+        }
     }
 
     private void showNoNotificationMessage(String errormessage, String message) {
