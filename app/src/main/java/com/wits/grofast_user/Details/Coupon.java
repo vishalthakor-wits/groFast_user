@@ -2,18 +2,20 @@ package com.wits.grofast_user.Details;
 
 import static com.wits.grofast_user.CommonUtilities.handleApiError;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.widget.NestedScrollView;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -41,8 +43,14 @@ public class Coupon extends AppCompatActivity {
     private final String TAG = "CouponActivity";
     private UserActivitySession userActivitySession;
     LinearLayout load_data, nocouponlayout;
-    NestedScrollView data;
+    ScrollView data;
     TextView nocoupontext1, nocoupontext2;
+
+    private boolean isLoading = false;
+    private int currentPage = 1;
+    private int lastPage = 1;
+    private int visibleThreshold = 4;
+    private final int apiDelay = 2000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,16 +70,48 @@ public class Coupon extends AppCompatActivity {
 
         userActivitySession = new UserActivitySession(getApplicationContext());
         ShowPageLoader();
-        loadCouponItems();
+        loadCouponItems(currentPage);
 
         //Coupon Item
         linearLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(linearLayoutManager);
 
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                int totalItemCount = linearLayoutManager.getItemCount();
+                int firstVisibleItemPosition = linearLayoutManager.findFirstVisibleItemPosition();
+                int lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
+
+
+                if (!isLoading && totalItemCount < lastVisibleItem + visibleThreshold) {
+                    Log.e("TAG", "onScrolled: firstVisibleItem : " + firstVisibleItemPosition);
+                    Log.e("TAG", "onScrolled: lastVisibleItem : " + lastVisibleItem);
+                    Log.e("TAG", "onScrolled:  totalItemCount : " + totalItemCount);
+                    Log.e("TAG", "onScrolled: lastVisibleItem + visibleThreshold : " + (lastVisibleItem + visibleThreshold));
+
+                    isLoading = true;
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            isLoading = false;
+                        }
+                    }, apiDelay);
+
+                    loadCouponItems(currentPage);
+                }
+            }
+        });
     }
 
-    private void loadCouponItems() {
-        Call<CouponResponse> call = RetrofitService.getClient(userActivitySession.getToken()).create(CouponInterface.class).fetchCoupon(1);
+    private void loadCouponItems(int page) {
+        Log.e(TAG, "loadCouponItems: current page : " + page);
+        Log.e(TAG, "loadCouponItems: last page    : " + lastPage);
+        Call<CouponResponse> call = RetrofitService.getClient(userActivitySession.getToken()).create(CouponInterface.class).fetchCoupon(page);
+        if (lastPage >= currentPage) {
         call.enqueue(new Callback<CouponResponse>() {
             @Override
             public void onResponse(Call<CouponResponse> call, Response<CouponResponse> response) {
@@ -79,9 +119,20 @@ public class Coupon extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     CouponResponse couponResponse = response.body();
                     CouponPaginationRes couponPaginationRes = couponResponse.getCouponPaginationRes();
-                    couponModelList = couponPaginationRes.getCouponList();
-                    allCouponAdapter = new AllCouponAdapter(getApplicationContext(), couponModelList);
-                    recyclerView.setAdapter(allCouponAdapter);
+                    List<CouponModel> list = couponPaginationRes.getCouponList();
+
+                    if (page == 1) {
+                        couponModelList = couponPaginationRes.getCouponList();
+                        allCouponAdapter = new AllCouponAdapter(getApplicationContext(), couponModelList);
+                        recyclerView.setAdapter(allCouponAdapter);
+                    } else {
+                        for (CouponModel model : list) {
+                            couponModelList.add(model);
+                            allCouponAdapter.notifyItemInserted(couponModelList.size());
+                        }
+                    }
+                    currentPage++;
+                    lastPage = couponPaginationRes.getLast_page();
                     Log.i(TAG, "onResponse: total products " + couponPaginationRes.getTotal());
                     Log.i(TAG, "onResponse: fetched products " + couponPaginationRes.getTo());
                 } else if (response.code() == 422) {
@@ -107,6 +158,7 @@ public class Coupon extends AppCompatActivity {
                 HidePageLoader();
             }
         });
+        } else Log.e(TAG, "loadCouponItems: coupon list end");
     }
 
     @Override

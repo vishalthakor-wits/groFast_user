@@ -220,7 +220,6 @@ public class ProductFragment extends Fragment {
                         Log.e(TAG, "onScrolled: fetching all products");
                     }
 
-
                 }
             }
         });

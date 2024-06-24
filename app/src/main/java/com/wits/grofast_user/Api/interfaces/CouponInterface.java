@@ -8,5 +8,5 @@ import retrofit2.http.Query;
 
 public interface CouponInterface {
     @GET("fetchCoupons")
-    Call<CouponResponse> fetchCoupon(@Query("current_page") int page);
+    Call<CouponResponse> fetchCoupon(@Query("page") int page);
 }
