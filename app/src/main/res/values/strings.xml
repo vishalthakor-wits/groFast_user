@@ -233,6 +233,8 @@
     <string name="wallet_card_1_subheading">Contrary to popular belief.</string>
     <string name="wallet_card_2_heading">Safe and Secure</string>
     <string name="wallet_card_2_subheading">Contrary to popular belief.</string>
+    <string name="creadited">Creadited</string>
+    <string name="debited">Debited</string>
 
 
     <!--    Notification Setting-->
