@@ -14,4 +14,7 @@ public interface WalletInterface {
 
     @GET("activateWallet")
     Call<LoginResponse> activateWallet();
+
+    @GET("get-customer-total-coins")
+    Call<WalletResponse> getWalletCoin();
 }

@@ -7,6 +7,7 @@ public class WalletResponse {
     private String message;
 
     private Integer status;
+    private Integer coins;
 
     @SerializedName("response")
     private WalletPaginatedRes walletPaginatedRes;
@@ -21,5 +22,9 @@ public class WalletResponse {
 
     public WalletPaginatedRes getWalletPaginatedRes() {
         return walletPaginatedRes;
+    }
+
+    public Integer getCoins() {
+        return coins;
     }
 }
