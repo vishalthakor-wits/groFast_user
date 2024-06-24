@@ -202,7 +202,14 @@ public class HomePage extends AppCompatActivity {
                 } else if (id == R.id.menu_my_address) {
                     startActivity(new Intent(HomePage.this, MyAddress.class));
                 } else if (id == R.id.menu_logout) {
-                    LogOut();
+//                    LogOut();
+                    useractivitysession.setLoginStaus(false);
+                    useractivitysession.clearSession();
+                    userDetailSession.clearSession();
+                    cartDetailSession.clearSession();
+                    Intent i = new Intent(getApplicationContext(), MainActivity.class);
+                    i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(i);
                 }
                 drawerLayout.closeDrawer(GravityCompat.START);
                 return false;
@@ -251,56 +258,6 @@ public class HomePage extends AppCompatActivity {
     public void updateActionBar(String text, int leftDrawable, int rightDrawable) {
         textview_set_location.setText(text);
         textview_set_location.setCompoundDrawablesWithIntrinsicBounds(leftDrawable, 0, rightDrawable, 0);
-    }
-
-    private void openlocationDialogbox() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        View dialogView = getLayoutInflater().inflate(R.layout.add_location_design, null);
-        builder.setView(dialogView);
-        AlertDialog dialog = builder.create();
-        dialog.setCanceledOnTouchOutside(false);
-
-        ImageView close = dialogView.findViewById(R.id.close_add_location);
-        close.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-
-        RecyclerView recyclerView = dialogView.findViewById(R.id.recycleview_search_result_add_location);
-        LocationItems = new ArrayList<>();
-
-        loadlocationItem();
-
-        //Top Stores Item
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
-        recyclerView.setLayoutManager(linearLayoutManager);
-        addLocationSerachResultAdapter = new AddLocationSerachResultAdapter(LocationItems);
-        recyclerView.setAdapter(addLocationSerachResultAdapter);
-
-        if (dialog.getWindow() != null) {
-            dialog.getWindow().setBackgroundDrawableResource(R.drawable.dailogbox_background);
-        }
-        dialog.show();
-    }
-
-    private void loadlocationItem() {
-        Map<String, Object> item1 = new HashMap<>();
-        item1.put("LocationName", "Ankleshwar");
-        item1.put("SubName", "Bharuch");
-
-        Map<String, Object> item2 = new HashMap<>();
-        item2.put("LocationName", "Ankleshwar");
-        item2.put("SubName", "Bharuch");
-
-        Map<String, Object> item3 = new HashMap<>();
-        item3.put("LocationName", "Ankleshwar");
-        item3.put("SubName", "Bharuch");
-
-        LocationItems.add(item1);
-        LocationItems.add(item2);
-        LocationItems.add(item3);
     }
 
     @Override

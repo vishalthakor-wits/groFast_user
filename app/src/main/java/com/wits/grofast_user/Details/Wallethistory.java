@@ -11,6 +11,7 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -22,6 +23,7 @@ import com.wits.grofast_user.Adapter.WallethistoryAdapter;
 import com.wits.grofast_user.Api.RetrofitService;
 import com.wits.grofast_user.Api.interfaces.WalletInterface;
 import com.wits.grofast_user.Api.paginatedResponses.WalletPaginatedRes;
+import com.wits.grofast_user.Api.responseClasses.LoginResponse;
 import com.wits.grofast_user.Api.responseClasses.WalletResponse;
 import com.wits.grofast_user.Api.responseModels.WalletModel;
 import com.wits.grofast_user.R;
@@ -41,7 +43,7 @@ public class Wallethistory extends AppCompatActivity {
     private List<WalletModel> walletModelslist = new ArrayList<>();
     private UserActivitySession userActivitySession;
     private LinearLayoutManager linearLayoutManager;
-    private TextView noWalletHistory,noWalletHistory1;
+    private TextView noWalletHistory, noWalletHistory1;
     LinearLayout nowalletlayout, walletlayout;
     ProgressBar loader;
     private int currentPage = 1;
@@ -49,6 +51,7 @@ public class Wallethistory extends AppCompatActivity {
     private int visibleThreshold = 4;
     private Call<WalletResponse> call;
     private boolean isLoading = false;
+    TextView TotalCoins;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +68,7 @@ public class Wallethistory extends AppCompatActivity {
         nowalletlayout = findViewById(R.id.no_wallet_layout);
         walletlayout = findViewById(R.id.wallet_history_layout);
         loader = findViewById(R.id.loader_wallet_history);
+        TotalCoins = findViewById(R.id.Total_wallet_coin);
 
         //Wallet history Item
         userActivitySession = new UserActivitySession(getApplicationContext());
@@ -73,6 +77,7 @@ public class Wallethistory extends AppCompatActivity {
         ShowPageLoader();
         call = RetrofitService.getClient(userActivitySession.getToken()).create(WalletInterface.class).fetchWallet(currentPage);
         loadWalletDetails(call);
+        TotalCoins();
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -93,6 +98,29 @@ public class Wallethistory extends AppCompatActivity {
                     call = RetrofitService.getClient(userActivitySession.getToken()).create(WalletInterface.class).fetchWallet(currentPage);
                     loadWalletDetails(call);
                 }
+            }
+        });
+    }
+
+    private void TotalCoins() {
+        Call<WalletResponse> call1 = RetrofitService.getClient(userActivitySession.getToken()).create(WalletInterface.class).getWalletCoin();
+        call1.enqueue(new Callback<WalletResponse>() {
+            @Override
+            public void onResponse(Call<WalletResponse> call, Response<WalletResponse> response) {
+                if (response.isSuccessful()) {
+                    WalletResponse walletResponse = response.body();
+                    int totalCoins = walletResponse.getCoins();
+                    TotalCoins.setText(String.valueOf(totalCoins));
+                    Log.i(TAG, "onResponse: status " + walletResponse.getStatus());
+                    Log.i(TAG, "onResponse: Coin " + walletResponse.getCoins());
+                    Log.i(TAG, "onResponse: message " + walletResponse.getMessage());
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<WalletResponse> call, Throwable t) {
+
             }
         });
     }
@@ -134,7 +162,7 @@ public class Wallethistory extends AppCompatActivity {
                             String errorMessage = errorBodyJson.has("errorMessage") ? errorBodyJson.get("errorMessage").getAsString() : "No errorMessage";
                             String message = errorBodyJson.has("message") ? errorBodyJson.get("message").getAsString() : "No message";
 
-                            showNoWalletMessage(message,errorMessage);
+                            showNoWalletMessage(message, errorMessage);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -168,7 +196,7 @@ public class Wallethistory extends AppCompatActivity {
         loader.setVisibility(GONE);
     }
 
-    private void showNoWalletMessage(String message,String errorMessage) {
+    private void showNoWalletMessage(String message, String errorMessage) {
         walletlayout.setVisibility(View.GONE);
         noWalletHistory.setText(message);
         noWalletHistory1.setText(errorMessage);

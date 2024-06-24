@@ -35,10 +35,11 @@
                     android:src="@drawable/wallet_coin" />
 
                 <TextView
+                    android:id="@+id/Total_wallet_coin"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
-                    android:text="0"
+                    android:text=""
                     android:textColor="@color/black"
                     android:textSize="@dimen/hint_text_size"
                     android:textStyle="bold" />
@@ -46,7 +47,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="2dp"
+                    android:layout_marginStart="5dp"
                     android:text="@string/coin"
                     android:textColor="@color/black"
                     android:textSize="@dimen/hint_text_size"
