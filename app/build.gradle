@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace 'com.wits.grofast_user'
+    namespace 'com.wits.grofastUser'
     compileSdk 34
 
     defaultConfig {
-        applicationId "com.wits.grofast_user"
+        applicationId "com.wits.grofastuser"
         minSdk 24
         targetSdk 34
         versionCode 4
