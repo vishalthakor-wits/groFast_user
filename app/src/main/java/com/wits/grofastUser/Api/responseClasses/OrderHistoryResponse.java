@@ -1,7 +1,7 @@
 package com.wits.grofastUser.Api.responseClasses;
 
 import com.google.gson.annotations.SerializedName;
-import com.wits.grofastUser.Api.responseModels.OrderModel;
+import com.wits.grofastUser.Api.paginatedResponses.OrderPaginatedResponse;
 
 import java.util.List;
 

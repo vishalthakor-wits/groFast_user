@@ -26,10 +26,12 @@ import com.google.gson.JsonObject;
 import com.wits.grofastUser.Adapter.AllHistoryAdapter;
 import com.wits.grofastUser.Api.RetrofitService;
 import com.wits.grofastUser.Api.interfaces.OrderInterface;
+import com.wits.grofastUser.Api.paginatedResponses.OrderPaginatedResponse;
 import com.wits.grofastUser.Api.responseClasses.OrderHistoryResponse;
 import com.wits.grofastUser.Api.responseModels.OrderItemModel;
 import com.wits.grofastUser.Api.responseModels.OrderModel;
 import com.wits.grofastUser.Api.responseModels.ProductModel;
+import com.wits.grofastUser.Enums.ProductSearchEnum;
 import com.wits.grofastUser.R;
 import com.wits.grofastUser.session.UserActivitySession;
 
@@ -69,8 +71,7 @@ public class HistoryFragment extends Fragment {
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_history, container, false);
         if (getActivity() instanceof HomePage) {
@@ -183,51 +184,52 @@ public class HistoryFragment extends Fragment {
         Log.e(TAG, "loadOrderHistory: last    page " + lastPageSearchAll);
 
         if (lastPageSearchAll >= page) {
-        call.enqueue(new Callback<OrderHistoryResponse>() {
-            @Override
-            public void onResponse(Call<OrderHistoryResponse> call, Response<OrderHistoryResponse> response) {
-                HidePageLoader();
-                if (response.isSuccessful()) {
-                    OrderHistoryResponse orderHistoryResponse = response.body();
-                    OrderPaginatedResponse orderPaginatedResponse = orderHistoryResponse.getPaginatedOrders();
-                    List<OrderModel> list = orderPaginatedResponse.getOrderList();
+            call.enqueue(new Callback<OrderHistoryResponse>() {
+                @Override
+                public void onResponse(Call<OrderHistoryResponse> call, Response<OrderHistoryResponse> response) {
+                    HidePageLoader();
+                    if (response.isSuccessful()) {
+                        OrderHistoryResponse orderHistoryResponse = response.body();
+                        OrderPaginatedResponse orderPaginatedResponse = orderHistoryResponse.getPaginatedOrders();
+                        List<OrderModel> list = orderPaginatedResponse.getOrderList();
 
-                    if (page == 1) {
-                        orderList = orderPaginatedResponse.getOrderList();
-                        allHistoryAdapter = new AllHistoryAdapter(getContext(), orderList);
-                        recyclerView.setAdapter(allHistoryAdapter);
-                    } else {
-                        for (OrderModel model : list) {
-                            orderList.add(model);
-                            allHistoryAdapter.notifyItemInserted(orderList.size());
+                        if (page == 1) {
+                            orderList = orderPaginatedResponse.getOrderList();
+                            allHistoryAdapter = new AllHistoryAdapter(getContext(), orderList);
+                            recyclerView.setAdapter(allHistoryAdapter);
+                        } else {
+                            for (OrderModel model : list) {
+                                orderList.add(model);
+                                allHistoryAdapter.notifyItemInserted(orderList.size());
+                            }
                         }
-                    }
-                    currentPageSearchAll++;
-                    lastPageSearchAll = orderPaginatedResponse.getLast_page();
-                    Log.e(TAG, "onResponse:    to items " + orderPaginatedResponse.getTo());
-                    Log.e(TAG, "onResponse: total items " + orderPaginatedResponse.getTotal());
-                } else if (response.code() == 422) {
-                    try {
-                        String errorBodyString = response.errorBody().string();
-                        Gson gson = new Gson();
-                        JsonObject errorBodyJson = gson.fromJson(errorBodyString, JsonObject.class);
+                        currentPageSearchAll++;
+                        lastPageSearchAll = orderPaginatedResponse.getLast_page();
+                        Log.e(TAG, "onResponse:  from items " + orderPaginatedResponse.getFrom());
+                        Log.e(TAG, "onResponse:    to items " + orderPaginatedResponse.getTo());
+                        Log.e(TAG, "onResponse: total items " + orderPaginatedResponse.getTotal());
+                    } else if (response.code() == 422) {
+                        try {
+                            String errorBodyString = response.errorBody().string();
+                            Gson gson = new Gson();
+                            JsonObject errorBodyJson = gson.fromJson(errorBodyString, JsonObject.class);
 
-                        String errorMessage = errorBodyJson.has("errorMessage") ? errorBodyJson.get("errorMessage").getAsString() : "No errorMessage";
-                        String message = errorBodyJson.has("message") ? errorBodyJson.get("message").getAsString() : "No message";
+                            String errorMessage = errorBodyJson.has("errorMessage") ? errorBodyJson.get("errorMessage").getAsString() : "No errorMessage";
+                            String message = errorBodyJson.has("message") ? errorBodyJson.get("message").getAsString() : "No message";
 
-                        showNoHistoryMessage(message, errorMessage);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                } else handleApiError(TAG, response, getContext());
-            }
+                            showNoHistoryMessage(message, errorMessage);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    } else handleApiError(TAG, response, getContext());
+                }
 
-            @Override
-            public void onFailure(Call<OrderHistoryResponse> call, Throwable t) {
-                HidePageLoader();
-                t.printStackTrace();
-            }
-        });
+                @Override
+                public void onFailure(Call<OrderHistoryResponse> call, Throwable t) {
+                    HidePageLoader();
+                    t.printStackTrace();
+                }
+            });
         }
     }
 
@@ -276,39 +278,40 @@ public class HistoryFragment extends Fragment {
 
         if (lastPageSearchByName >= page) {
 //            if (page == 1) ShowPageLoader();
-        call.enqueue(new Callback<OrderHistoryResponse>() {
-            @Override
-            public void onResponse(Call<OrderHistoryResponse> call, Response<OrderHistoryResponse> response) {
-                HidePageLoader();
-                if (response.isSuccessful()) {
-                    OrderHistoryResponse orderHistoryResponse = response.body();
-                    OrderPaginatedResponse orderPaginatedResponse = orderHistoryResponse.getPaginatedOrders();
-                    List<OrderModel> list = orderPaginatedResponse.getOrderList();
+            call.enqueue(new Callback<OrderHistoryResponse>() {
+                @Override
+                public void onResponse(Call<OrderHistoryResponse> call, Response<OrderHistoryResponse> response) {
+                    HidePageLoader();
+                    if (response.isSuccessful()) {
+                        OrderHistoryResponse orderHistoryResponse = response.body();
+                        OrderPaginatedResponse orderPaginatedResponse = orderHistoryResponse.getPaginatedOrders();
+                        List<OrderModel> list = orderPaginatedResponse.getOrderList();
 
-                    if (page == 1) {
-                        searchOrderList = orderPaginatedResponse.getOrderList();
-                        allHistoryAdapter = new AllHistoryAdapter(getContext(), searchOrderList);
-                        recyclerView.setAdapter(allHistoryAdapter);
-                    } else {
-                        for (OrderModel model : list) {
-                            searchOrderList.add(model);
-                            allHistoryAdapter.notifyItemInserted(searchOrderList.size());
+                        if (page == 1) {
+                            searchOrderList = orderPaginatedResponse.getOrderList();
+                            allHistoryAdapter = new AllHistoryAdapter(getContext(), searchOrderList);
+                            recyclerView.setAdapter(allHistoryAdapter);
+                        } else {
+                            for (OrderModel model : list) {
+                                searchOrderList.add(model);
+                                allHistoryAdapter.notifyItemInserted(searchOrderList.size());
+                            }
                         }
-                    }
-                    currentPageSearchByName++;
-                    lastPageSearchByName = orderPaginatedResponse.getLast_page();
-                    Log.e(TAG, "onResponse:    to items " + orderPaginatedResponse.getTo());
-                    Log.e(TAG, "onResponse: total items " + orderPaginatedResponse.getTotal());
+                        currentPageSearchByName++;
+                        lastPageSearchByName = orderPaginatedResponse.getLast_page();
+                        Log.e(TAG, "onResponse:  from items " + orderPaginatedResponse.getFrom());
+                        Log.e(TAG, "onResponse:    to items " + orderPaginatedResponse.getTo());
+                        Log.e(TAG, "onResponse: total items " + orderPaginatedResponse.getTotal());
 
-                } else handleApiError(TAG, response, getContext());
-            }
+                    } else handleApiError(TAG, response, getContext());
+                }
 
-            @Override
-            public void onFailure(Call<OrderHistoryResponse> call, Throwable t) {
-                HidePageLoader();
-                t.printStackTrace();
-            }
-        });
+                @Override
+                public void onFailure(Call<OrderHistoryResponse> call, Throwable t) {
+                    HidePageLoader();
+                    t.printStackTrace();
+                }
+            });
         }
     }
 
