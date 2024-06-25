@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace 'com.wits.grofast_user'
+    namespace 'com.wits.grofastUser'
     compileSdk 34
 
     defaultConfig {
