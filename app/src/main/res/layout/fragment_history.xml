@@ -6,14 +6,9 @@
     android:layout_height="match_parent"
     tools:context=".MainHomePage.HistoryFragment">
 
-    <androidx.core.widget.NestedScrollView
-        android:id="@+id/show_history_data"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="10dp"
-        android:scrollbars="none">
 
-        <LinearLayout
+    <LinearLayout
+        android:id="@+id/show_history_data"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
@@ -54,7 +49,6 @@
 
         </LinearLayout>
 
-    </androidx.core.widget.NestedScrollView>
 
     <LinearLayout
         android:id="@+id/history_empty_layout"

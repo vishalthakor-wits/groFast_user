@@ -1,9 +1,7 @@
 package com.wits.grofast_user.Api.responseClasses;
 
 import com.google.gson.annotations.SerializedName;
-import com.wits.grofast_user.Api.responseModels.OrderModel;
-
-import java.util.List;
+import com.wits.grofast_user.Api.paginatedResponses.OrderPaginatedResponse;
 
 public class OrderHistoryResponse {
 
@@ -11,7 +9,7 @@ public class OrderHistoryResponse {
     private String message;
 
     @SerializedName("orders")
-    private List<OrderModel> orderList;
+    private OrderPaginatedResponse paginatedOrders;
 
     public int getStatus() {
         return status;
@@ -21,8 +19,7 @@ public class OrderHistoryResponse {
         return message;
     }
 
-    public List<OrderModel> getOrderList() {
-        return orderList;
+    public OrderPaginatedResponse getPaginatedOrders() {
+        return paginatedOrders;
     }
-
 }
