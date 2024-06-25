@@ -1,7 +1,6 @@
 package com.wits.grofast_user.Adapter;
 
 import static com.wits.grofast_user.CommonUtilities.getDateFromTimestamp;
-import static com.wits.grofast_user.CommonUtilities.handleApiError;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -28,7 +27,6 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.wits.grofast_user.Api.RetrofitService;
 import com.wits.grofast_user.Api.interfaces.OrderInterface;
-import com.wits.grofast_user.Api.responseClasses.OrderHistoryResponse;
 import com.wits.grofast_user.Api.responseClasses.OrderPlaceResponse;
 import com.wits.grofast_user.Api.responseModels.OrderItemModel;
 import com.wits.grofast_user.Api.responseModels.OrderModel;
@@ -218,7 +216,6 @@ public class AllHistoryAdapter extends RecyclerView.Adapter<AllHistoryAdapter.Vi
                 if (response.isSuccessful()) {
                     orderPlaceDialog();
                     Toast.makeText(context, "" + response.body().getMessage(), Toast.LENGTH_SHORT);
-                    loadOrderHistory();
                 }
                 try {
                     String errorBodyString = response.errorBody().string();
@@ -239,27 +236,6 @@ public class AllHistoryAdapter extends RecyclerView.Adapter<AllHistoryAdapter.Vi
             @Override
             public void onFailure(Call<OrderPlaceResponse> call, Throwable t) {
                 stopProgress(holder);
-                t.printStackTrace();
-            }
-        });
-    }
-
-    private void loadOrderHistory() {
-        Call<OrderHistoryResponse> call = RetrofitService.getClient(userActivitySession.getToken()).create(OrderInterface.class).fetchOrderHistory();
-
-        call.enqueue(new Callback<OrderHistoryResponse>() {
-            @Override
-            public void onResponse(Call<OrderHistoryResponse> call, Response<OrderHistoryResponse> response) {
-                if (response.isSuccessful()) {
-                    OrderHistoryResponse orderHistoryResponse = response.body();
-                    orderList = orderHistoryResponse.getOrderList();
-
-                    adapter.notifyDataSetChanged();
-                } else handleApiError(TAG, response, context);
-            }
-
-            @Override
-            public void onFailure(Call<OrderHistoryResponse> call, Throwable t) {
                 t.printStackTrace();
             }
         });

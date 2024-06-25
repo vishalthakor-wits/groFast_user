@@ -61,6 +61,23 @@ public class UserActivitySession {
         editor.putString("productSearchName", null).apply();
         editor.putString("productSearchCategory", null).apply();
     }
+
+    public void setOrderHistoryFetchIndicator(int value) {
+        editor.putInt("orderFetchIndicator", value).apply();
+    }
+
+    public int getOrderHistoryFetchIndicator() {
+        return sharedPreferences.getInt("orderFetchIndicator", 0);
+    }
+
+    public void setOrderHistoryFetchName(String value) {
+        editor.putString("orderHistorySearchName", value).apply();
+    }
+
+    public String getOrderHistoryFetchName() {
+        return sharedPreferences.getString("orderHistorySearchName", "");
+    }
+
     public void clearSession() {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.clear();

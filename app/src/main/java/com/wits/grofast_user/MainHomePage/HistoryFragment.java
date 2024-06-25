@@ -3,6 +3,7 @@ package com.wits.grofast_user.MainHomePage;
 import static com.wits.grofast_user.CommonUtilities.handleApiError;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,9 +12,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.SearchView;
-import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -25,10 +26,12 @@ import com.google.gson.JsonObject;
 import com.wits.grofast_user.Adapter.AllHistoryAdapter;
 import com.wits.grofast_user.Api.RetrofitService;
 import com.wits.grofast_user.Api.interfaces.OrderInterface;
+import com.wits.grofast_user.Api.paginatedResponses.OrderPaginatedResponse;
 import com.wits.grofast_user.Api.responseClasses.OrderHistoryResponse;
 import com.wits.grofast_user.Api.responseModels.OrderItemModel;
 import com.wits.grofast_user.Api.responseModels.OrderModel;
 import com.wits.grofast_user.Api.responseModels.ProductModel;
+import com.wits.grofast_user.Enums.ProductSearchEnum;
 import com.wits.grofast_user.R;
 import com.wits.grofast_user.session.UserActivitySession;
 
@@ -49,12 +52,22 @@ public class HistoryFragment extends Fragment {
     LinearLayout empty_layout;
     TextView empty_text1, empty_text2;
     AppCompatButton gotoproduct;
-    NestedScrollView showdata;
+    LinearLayout showdata;
     ShimmerFrameLayout shimmerFrameLayout;
 
     private ImageView searchIcon;
     private String searchQuery;
     private SearchView searchView;
+
+    private int currentPageSearchAll = 1;
+    private int lastPageSearchAll = 1;
+
+    private int currentPageSearchByName = 1;
+    private int lastPageSearchByName = 1;
+
+    private boolean isLoading = false;
+    private int visibleThreshold = 4;
+    private final int apiDelay = 2000;
 
 
     @Override
@@ -66,6 +79,7 @@ public class HistoryFragment extends Fragment {
             ((HomePage) getActivity()).updateActionBar(getString(R.string.bottom_menu_history), 0, 0);
         }
 
+        userActivitySession = new UserActivitySession(getContext());
         showdata = root.findViewById(R.id.show_history_data);
         shimmerFrameLayout = root.findViewById(R.id.shimmer_layout_history);
         empty_layout = root.findViewById(R.id.history_empty_layout);
@@ -74,7 +88,6 @@ public class HistoryFragment extends Fragment {
         gotoproduct = root.findViewById(R.id.history_empty_start_shopping);
         //History Item
         recyclerView = root.findViewById(R.id.history_fragment_recycleview);
-        userActivitySession = new UserActivitySession(getContext());
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(linearLayoutManager);
 
@@ -85,6 +98,8 @@ public class HistoryFragment extends Fragment {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 searchOrders(query);
+                userActivitySession.setOrderHistoryFetchIndicator(ProductSearchEnum.searchByName.getValue());
+                userActivitySession.setOrderHistoryFetchName(query);
                 return false;
             }
 
@@ -101,12 +116,14 @@ public class HistoryFragment extends Fragment {
         searchIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                userActivitySession.setOrderHistoryFetchIndicator(ProductSearchEnum.searchByName.getValue());
+                userActivitySession.setOrderHistoryFetchName(searchQuery);
                 searchOrders(searchQuery);
             }
         });
 
         ShowPageLoader();
-        loadOrderHistory();
+        loadOrderHistory(currentPageSearchAll);
 
         gotoproduct.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -118,24 +135,67 @@ public class HistoryFragment extends Fragment {
             }
         });
 
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                int totalItemCount = linearLayoutManager.getItemCount();
+                int firstVisibleItemPosition = linearLayoutManager.findFirstVisibleItemPosition();
+                int lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
+
+
+                if (!isLoading && totalItemCount < lastVisibleItem + visibleThreshold) {
+                    Log.e("TAG", "onScrolled: firstVisibleItem : " + firstVisibleItemPosition);
+                    Log.e("TAG", "onScrolled: lastVisibleItem : " + lastVisibleItem);
+                    Log.e("TAG", "onScrolled:  totalItemCount : " + totalItemCount);
+                    Log.e("TAG", "onScrolled: lastVisibleItem + visibleThreshold : " + (lastVisibleItem + visibleThreshold));
+
+                    isLoading = true;
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            isLoading = false;
+                        }
+                    }, apiDelay);
+
+                    if (userActivitySession.getOrderHistoryFetchIndicator() == ProductSearchEnum.searchByName.getValue()) {
+                        searchOrders(userActivitySession.getOrderHistoryFetchName());
+                    } else loadOrderHistory(currentPageSearchAll);
+                }
+
+            }
+        });
+
         return root;
     }
 
-    private void loadOrderHistory() {
+    private void loadOrderHistory(int page) {
         Call<OrderHistoryResponse> call = RetrofitService.getClient(userActivitySession.getToken()).create(OrderInterface.class).fetchOrderHistory();
 
+        if (lastPageSearchAll >= page) {
         call.enqueue(new Callback<OrderHistoryResponse>() {
             @Override
             public void onResponse(Call<OrderHistoryResponse> call, Response<OrderHistoryResponse> response) {
                 HidePageLoader();
                 if (response.isSuccessful()) {
                     OrderHistoryResponse orderHistoryResponse = response.body();
-                    orderList = orderHistoryResponse.getOrderList();
+                    OrderPaginatedResponse orderPaginatedResponse = orderHistoryResponse.getPaginatedOrders();
+                    List<OrderModel> list = orderPaginatedResponse.getOrderList();
 
-//                    logOrderHistory(orderList);
-
-                    allHistoryAdapter = new AllHistoryAdapter(getContext(), orderList);
-                    recyclerView.setAdapter(allHistoryAdapter);
+                    if (page == 1) {
+                        orderList = orderPaginatedResponse.getOrderList();
+                        allHistoryAdapter = new AllHistoryAdapter(getContext(), orderList);
+                        recyclerView.setAdapter(allHistoryAdapter);
+                    } else {
+                        for (OrderModel model : list) {
+                            orderList.add(model);
+                            allHistoryAdapter.notifyItemInserted(orderList.size());
+                        }
+                    }
+                    currentPageSearchAll++;
+                    lastPageSearchAll = orderPaginatedResponse.getLast_page();
                 } else if (response.code() == 422) {
                     try {
                         String errorBodyString = response.errorBody().string();
@@ -158,6 +218,7 @@ public class HistoryFragment extends Fragment {
                 t.printStackTrace();
             }
         });
+        }
     }
 
     private void ShowPageLoader() {
@@ -207,8 +268,8 @@ public class HistoryFragment extends Fragment {
                 HidePageLoader();
                 if (response.isSuccessful()) {
                     OrderHistoryResponse orderHistoryResponse = response.body();
-                    searchOrderList = orderHistoryResponse.getOrderList();
-
+                    OrderPaginatedResponse orderPaginatedResponse = orderHistoryResponse.getPaginatedOrders();
+                    searchOrderList = orderPaginatedResponse.getOrderList();
 
                     allHistoryAdapter = new AllHistoryAdapter(getContext(), searchOrderList);
                     recyclerView.setAdapter(allHistoryAdapter);
@@ -245,7 +306,7 @@ public class HistoryFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        loadOrderHistory();
+        loadOrderHistory(currentPageSearchAll);
     }
 
     @Override
