@@ -7,18 +7,23 @@ import static com.wits.grofast_user.CommonUtilities.startCountdown;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
+import androidx.cardview.widget.CardView;
 
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.wits.grofast_user.Api.RetrofitService;
@@ -33,6 +38,8 @@ import com.wits.grofast_user.Notification.NotificationInterface;
 import com.wits.grofast_user.session.UserActivitySession;
 import com.wits.grofast_user.session.UserDetailSession;
 
+import java.util.Locale;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -44,20 +51,26 @@ public class OtpPage extends AppCompatActivity {
     EditText digit1, digit2, digit3, digit4;
     long COUNTDOWN_TIME_MILLIS = 30000;
     String TAG = "OtpPage";
-    LinearLayout loadingOverlay;
+    ProgressBar loadingOverlay;
     private UserActivitySession userActivitySession;
     UserDetailSession userDetailSession;
+    ImageView login_back_ground,login_image;
+    CardView cardView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        getSupportActionBar().hide();
+        getSupportActionBar().setTitle(getString(R.string.otp_title));
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.outline_arrow_back_24);
         setContentView(R.layout.activity_otp_page);
 
         userActivitySession = new UserActivitySession(getApplicationContext());
         loadingOverlay = findViewById(R.id.loading_overlay);
+        cardView = findViewById(R.id.login_card);
+        login_back_ground = findViewById(R.id.login_back_ground);
+        login_image = findViewById(R.id.login_image);
         userDetailSession = new UserDetailSession(getApplicationContext());
 
         Intent intent = getIntent();
@@ -79,6 +92,10 @@ public class OtpPage extends AppCompatActivity {
         phone = findViewById(R.id.otp_phone_no);
         countDownTimer = findViewById(R.id.countdown_timer);
         phone.setText(receivedPhone);
+
+        resend.setVisibility(View.GONE);
+        countDownTimer.setVisibility(View.VISIBLE);
+
         startCountdown(resend, countDownTimer, getApplicationContext(), COUNTDOWN_TIME_MILLIS);
         Continue.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,7 +107,7 @@ public class OtpPage extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (countDownTimer.getText().toString().equals("00:00")) {
-                    loadingOverlay.setVisibility(View.VISIBLE);
+                   Showloder();
                     Call<LoginResponse> call = RetrofitService.getUnAuthorizedClient().create(OtpInterface.class).login(receivedPhone);
 
                     call.enqueue(new Callback<LoginResponse>() {
@@ -101,18 +118,20 @@ public class OtpPage extends AppCompatActivity {
                                 LoginResponse loginResponse = response.body();
                                 if (loginResponse != null) {
                                     Toast.makeText(getApplicationContext(), "" + loginResponse.getMessage(), Toast.LENGTH_SHORT).show();
-                                    loadingOverlay.setVisibility(View.GONE);
+                                    Hideloader();
+                                    resend.setVisibility(View.GONE);
+                                    countDownTimer.setVisibility(View.VISIBLE);
                                 }
                             } else {
                                 handleApiError(TAG, response, getApplicationContext());
-                                loadingOverlay.setVisibility(View.GONE);
+                                Hideloader();
                             }
                         }
 
                         @Override
                         public void onFailure(Call<LoginResponse> call, Throwable t) {
                             t.printStackTrace();
-                            loadingOverlay.setVisibility(View.GONE);
+                           Hideloader();
                         }
                     });
                 } else {
@@ -123,6 +142,32 @@ public class OtpPage extends AppCompatActivity {
 
     }
 
+    private void startCountdown(AppCompatButton resend, TextView countDownTimer, Context applicationContext, long countdownTimeMillis) {
+        new CountDownTimer(countdownTimeMillis, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                int minutes = (int) (millisUntilFinished / 1000) / 60;
+                int seconds = (int) (millisUntilFinished / 1000) % 60;
+                String timeLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds);
+                countDownTimer.setText(timeLeftFormatted);
+
+                resend.setClickable(false);
+                resend.setBackgroundDrawable(applicationContext.getDrawable(R.drawable.textview_design));
+                resend.setTextColor(applicationContext.getColor(R.color.default_color));
+            }
+
+            @Override
+            public void onFinish() {
+                resend.setClickable(true);
+                countDownTimer.setText("00:00");
+                resend.setVisibility(View.VISIBLE);
+                countDownTimer.setVisibility(View.GONE);
+                resend.setBackgroundDrawable(applicationContext.getDrawable(R.drawable.color_button));
+                resend.setTextColor(getApplicationContext().getColor(R.color.button_text_color));
+            }
+        }.start();
+    }
+
     private void otpVerify() {
         Intent i = new Intent(getApplicationContext(), HomePage.class);
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -130,13 +175,13 @@ public class OtpPage extends AppCompatActivity {
         Log.e(TAG, "onCreate: enteredOtp " + enteredOtp);
 
         if (isOtpValid()) {
-            loadingOverlay.setVisibility(View.VISIBLE);
+            Showloder();
             Integer userOtp = Integer.parseInt(enteredOtp);
             Call<OtpVerifyResponse> call = RetrofitService.getUnAuthorizedClient().create(OtpInterface.class).verifyOtp(receivedPhone, userOtp);
             call.enqueue(new Callback<OtpVerifyResponse>() {
                 @Override
                 public void onResponse(Call<OtpVerifyResponse> call, Response<OtpVerifyResponse> response) {
-                    loadingOverlay.setVisibility(View.GONE);
+                   Hideloader();
                     if (response.isSuccessful()) {
                         OtpVerifyResponse otpVerifyResponse = response.body();
                         UserModel userModel = otpVerifyResponse.getUser();
@@ -233,4 +278,26 @@ public class OtpPage extends AppCompatActivity {
             });
         });
     }
+
+    private void Hideloader(){
+        loadingOverlay.setVisibility(View.GONE);
+        cardView.setVisibility(View.VISIBLE);
+        login_image.setVisibility(View.VISIBLE);
+        login_back_ground.setVisibility(View.VISIBLE);
     }
+
+    private void Showloder(){
+        loadingOverlay.setVisibility(View.VISIBLE);
+        cardView.setVisibility(View.GONE);
+        login_image.setVisibility(View.GONE);
+        login_back_ground.setVisibility(View.GONE);
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+}
