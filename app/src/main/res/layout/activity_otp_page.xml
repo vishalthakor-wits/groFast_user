@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,44 +8,41 @@
     android:orientation="vertical"
     tools:context=".OtpPage">
 
-    <include
-        android:id="@+id/loading_overlay"
-        layout="@layout/loading_activity"
+    <ImageView
+        android:id="@+id/login_back_ground"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone" />
+        android:layout_height="350dp"
+        android:src="@drawable/login_view"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
 
-    <LinearLayout
+    <ImageView
+        android:id="@+id/login_image"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
-        android:orientation="horizontal">
-
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:background="@drawable/round_background"
-            android:padding="@dimen/_5sdp"
-            android:src="@drawable/outline_arrow_back_24" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:text="@string/otp_title"
-            android:textColor="@color/main_heading_color"
-            android:textSize="@dimen/main_heading_size"
-            android:textStyle="bold" />
-
-    </LinearLayout>
+        android:layout_height="240dp"
+        android:src="@drawable/login"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.025" />
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/login_card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/_15sdp"
         app:cardBackgroundColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.535"
         app:cardCornerRadius="@dimen/card_corners"
         app:cardElevation="10dp">
 
@@ -160,7 +157,7 @@
                         android:inputType="number"
                         android:maxLength="1"
                         android:textColor="@color/textview_text_color"
-                        android:textSize="@dimen/hint_text_size"/>
+                        android:textSize="@dimen/hint_text_size" />
 
                 </androidx.cardview.widget.CardView>
 
@@ -201,12 +198,13 @@
                     android:layout_weight="1"
                     android:text="@string/otp_resed_button"
                     android:textAllCaps="false"
-                    android:textSize="@dimen/hint_text_size" />
+                    android:textSize="@dimen/hint_text_size"
+                    android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/countdown_timer"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_marginStart="10dp"
                     android:layout_weight="1"
                     android:background="@drawable/textview_design"
@@ -217,31 +215,33 @@
                     android:textColor="@color/color_button"
                     android:textSize="@dimen/hint_text_size" />
 
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/Continue_otp_page"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/color_button"
+                    android:text="@string/continue_button"
+                    android:textAllCaps="false"
+                    android:textColor="@color/button_text_color"
+                    android:textSize="@dimen/hint_text_size" />
+
             </LinearLayout>
 
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="bottom"
-        android:gravity="bottom"
-        android:orientation="vertical">
+  <ProgressBar
+      android:id="@+id/loading_overlay"
+      android:layout_width="wrap_content"
+      android:layout_height="match_parent"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      android:visibility="gone"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"/>
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/Continue_otp_page"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="20dp"
-            android:layout_marginTop="@dimen/top_margin"
-            android:background="@drawable/color_button"
-            android:text="@string/continue_button"
-            android:textAllCaps="false"
-            android:textColor="@color/button_text_color"
-            android:textSize="@dimen/button_text_size" />
 
-    </LinearLayout>
-
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
