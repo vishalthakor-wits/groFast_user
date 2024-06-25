@@ -97,9 +97,14 @@ public class HistoryFragment extends Fragment {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                searchOrders(query);
+                searchOrders(query, currentPageSearchByName);
                 userActivitySession.setOrderHistoryFetchIndicator(ProductSearchEnum.searchByName.getValue());
                 userActivitySession.setOrderHistoryFetchName(query);
+
+                currentPageSearchByName = 1;
+                lastPageSearchByName = 1;
+
+                searchOrders(query, currentPageSearchByName);
                 return false;
             }
 
@@ -118,7 +123,10 @@ public class HistoryFragment extends Fragment {
             public void onClick(View v) {
                 userActivitySession.setOrderHistoryFetchIndicator(ProductSearchEnum.searchByName.getValue());
                 userActivitySession.setOrderHistoryFetchName(searchQuery);
-                searchOrders(searchQuery);
+
+                currentPageSearchByName = 1;
+                lastPageSearchByName = 1;
+                searchOrders(searchQuery, currentPageSearchByName);
             }
         });
 
@@ -161,7 +169,7 @@ public class HistoryFragment extends Fragment {
                     }, apiDelay);
 
                     if (userActivitySession.getOrderHistoryFetchIndicator() == ProductSearchEnum.searchByName.getValue()) {
-                        searchOrders(userActivitySession.getOrderHistoryFetchName());
+                        searchOrders(userActivitySession.getOrderHistoryFetchName(), currentPageSearchByName);
                     } else loadOrderHistory(currentPageSearchAll);
                 }
 
@@ -173,6 +181,8 @@ public class HistoryFragment extends Fragment {
 
     private void loadOrderHistory(int page) {
         Call<OrderHistoryResponse> call = RetrofitService.getClient(userActivitySession.getToken()).create(OrderInterface.class).fetchOrderHistory();
+        Log.e(TAG, "loadOrderHistory: current page " + page);
+        Log.e(TAG, "loadOrderHistory: last    page " + lastPageSearchAll);
 
         if (lastPageSearchAll >= page) {
         call.enqueue(new Callback<OrderHistoryResponse>() {
@@ -196,6 +206,8 @@ public class HistoryFragment extends Fragment {
                     }
                     currentPageSearchAll++;
                     lastPageSearchAll = orderPaginatedResponse.getLast_page();
+                    Log.e(TAG, "onResponse:    to items " + orderPaginatedResponse.getTo());
+                    Log.e(TAG, "onResponse: total items " + orderPaginatedResponse.getTotal());
                 } else if (response.code() == 422) {
                     try {
                         String errorBodyString = response.errorBody().string();
@@ -258,10 +270,14 @@ public class HistoryFragment extends Fragment {
         empty_text2.setText(messaage2);
     }
 
-    private void searchOrders(String searchValue) {
-        ShowPageLoader();
-        Call<OrderHistoryResponse> call = RetrofitService.getClient(userActivitySession.getToken()).create(OrderInterface.class).searchOrders(searchValue);
+    private void searchOrders(String searchValue, int page) {
 
+        Call<OrderHistoryResponse> call = RetrofitService.getClient(userActivitySession.getToken()).create(OrderInterface.class).searchOrders(searchValue);
+        Log.e(TAG, "searchOrders: current page " + page);
+        Log.e(TAG, "searchOrders: last    page " + lastPageSearchAll);
+
+        if (lastPageSearchByName >= page) {
+//            if (page == 1) ShowPageLoader();
         call.enqueue(new Callback<OrderHistoryResponse>() {
             @Override
             public void onResponse(Call<OrderHistoryResponse> call, Response<OrderHistoryResponse> response) {
@@ -269,23 +285,23 @@ public class HistoryFragment extends Fragment {
                 if (response.isSuccessful()) {
                     OrderHistoryResponse orderHistoryResponse = response.body();
                     OrderPaginatedResponse orderPaginatedResponse = orderHistoryResponse.getPaginatedOrders();
-                    searchOrderList = orderPaginatedResponse.getOrderList();
+                    List<OrderModel> list = orderPaginatedResponse.getOrderList();
 
-                    allHistoryAdapter = new AllHistoryAdapter(getContext(), searchOrderList);
-                    recyclerView.setAdapter(allHistoryAdapter);
-                } else if (response.code() == 422) {
-                    try {
-                        String errorBodyString = response.errorBody().string();
-                        Gson gson = new Gson();
-                        JsonObject errorBodyJson = gson.fromJson(errorBodyString, JsonObject.class);
-
-                        String errorMessage = errorBodyJson.has("errorMessage") ? errorBodyJson.get("errorMessage").getAsString() : "No errorMessage";
-                        String message = errorBodyJson.has("message") ? errorBodyJson.get("message").getAsString() : "No message";
-
-                        showNoHistoryMessage(message, errorMessage);
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                    if (page == 1) {
+                        searchOrderList = orderPaginatedResponse.getOrderList();
+                        allHistoryAdapter = new AllHistoryAdapter(getContext(), searchOrderList);
+                        recyclerView.setAdapter(allHistoryAdapter);
+                    } else {
+                        for (OrderModel model : list) {
+                            searchOrderList.add(model);
+                            allHistoryAdapter.notifyItemInserted(searchOrderList.size());
+                        }
                     }
+                    currentPageSearchByName++;
+                    lastPageSearchByName = orderPaginatedResponse.getLast_page();
+                    Log.e(TAG, "onResponse:    to items " + orderPaginatedResponse.getTo());
+                    Log.e(TAG, "onResponse: total items " + orderPaginatedResponse.getTotal());
+
                 } else handleApiError(TAG, response, getContext());
             }
 
@@ -295,6 +311,7 @@ public class HistoryFragment extends Fragment {
                 t.printStackTrace();
             }
         });
+        }
     }
 
     private void showAllorderHistory() {
@@ -313,5 +330,7 @@ public class HistoryFragment extends Fragment {
     public void onStop() {
         super.onStop();
         searchView.setQuery("", false);
+        userActivitySession.setOrderHistoryFetchIndicator(0);
+        userActivitySession.setOrderHistoryFetchName(null);
     }
 }

@@ -281,4 +281,11 @@ public class HomeFragment extends Fragment {
         super.onStop();
         searchView.setQuery("",false);
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        userActivitySession.setOrderHistoryFetchIndicator(0);
+        userActivitySession.setOrderHistoryFetchName(null);
+    }
 }
