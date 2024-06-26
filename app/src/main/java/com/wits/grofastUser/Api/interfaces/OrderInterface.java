@@ -14,10 +14,10 @@ public interface OrderInterface {
     Call<OrderPlaceResponse> placeOrder(@Query("coupon") String couponCode, @Query("tip") int tip, @Query("additional_note") String aditionalNote, @Query("address_id") int addressId, @Query("receiver_name") String receiverName, @Query("receiver_phone_no") Long receiverPhone, @Query("payment_metod") int paymentMethod);
 
     @GET("fetch-user-order-histroy")
-    Call<OrderHistoryResponse> fetchOrderHistory();
+    Call<OrderHistoryResponse> fetchOrderHistory(@Query("page") int page);
 
     @POST("search-user-order")
-    Call<OrderHistoryResponse> searchOrders(@Query("name") String couponCode);
+    Call<OrderHistoryResponse> searchOrders(@Query("name") String couponCode, @Query("page") int page);
 
     @POST("user-reorder")
     Call<OrderPlaceResponse> reOrder(@Query("orderId") int orderId);
