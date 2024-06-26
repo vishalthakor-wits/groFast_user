@@ -88,8 +88,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:layout_marginEnd="5dp"
+                android:layout_marginStart="@dimen/_5sdp"
+                android:layout_marginEnd="@dimen/_5sdp"
                 android:layout_marginBottom="10dp"
                 android:orientation="horizontal">
 
@@ -103,27 +103,30 @@
 
                     <ImageView
                         android:id="@+id/remove_product_quantity"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
+                        android:layout_weight="1"
                         android:background="@drawable/rectangle_background"
                         android:src="@drawable/baseline_remove_24" />
 
                     <TextView
                         android:id="@+id/total_product_quantity"
-                        android:layout_width="30dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:gravity="center"
                         android:text="@string/min_product_quantity"
+                        android:layout_weight="1"
                         android:textColor="@color/textview_text_color"
                         android:textSize="@dimen/hint_text_size" />
 
                     <ImageView
                         android:id="@+id/add_product_quantity"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
+                        android:layout_weight="1"
                         android:background="@drawable/rectangle_background"
                         android:src="@drawable/baseline_add_24" />
 
