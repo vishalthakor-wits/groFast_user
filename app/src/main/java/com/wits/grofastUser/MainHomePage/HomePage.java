@@ -277,6 +277,7 @@ public class HomePage extends AppCompatActivity {
         }
         userName.setText(name);
         Glide.with(getApplicationContext()).load(domain + userDetailSession.getImage()).placeholder(R.drawable.account).into(userProfile);
+        Log.e(TAG, "onStart: Profile image : " + domain + userDetailSession.getImage());
     }
 
     @Override
