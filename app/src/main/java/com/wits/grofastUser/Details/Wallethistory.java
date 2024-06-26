@@ -139,9 +139,6 @@ public class Wallethistory extends AppCompatActivity {
                             walletModelslist = walletPaginatedRes.getWalletList();
                             wallethistoryAdapter = new WallethistoryAdapter(walletModelslist, getApplicationContext());
                             recyclerView.setAdapter(wallethistoryAdapter);
-//                            if (walletPaginatedRes.getWalletList().isEmpty()) {
-//                                showNoWalletMessage(walletResponse.getMessage());
-//                            }
                         } else {
                             List<WalletModel> list = walletPaginatedRes.getWalletList();
                             for (WalletModel model : list) {
