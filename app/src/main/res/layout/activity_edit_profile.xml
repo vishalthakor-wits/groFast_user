@@ -106,14 +106,15 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
+                        android:layout_marginTop="@dimen/padding"
                         android:text="@string/gender"
-                        android:textColor="@color/default_color"
-                        android:textSize="@dimen/hint_text_size" />
+                        android:textSize="@dimen/hint_text_size"
+                        android:textColor="@color/default_color" />
 
                     <RadioGroup
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_5sdp"
                         android:orientation="horizontal">
 
                         <RadioButton
@@ -121,6 +122,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_weight="1"
+                            android:textSize="@dimen/hint_text_size"
                             android:text="@string/gender_male" />
 
                         <RadioButton
@@ -128,6 +130,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_weight="1"
+                            android:textSize="@dimen/hint_text_size"
                             android:text="@string/gender_female" />
 
                         <RadioButton
@@ -135,6 +138,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_weight="1"
+                            android:textSize="@dimen/hint_text_size"
                             android:text="@string/gender_other" />
 
                     </RadioGroup>
@@ -142,17 +146,16 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
+                        android:layout_marginTop="@dimen/padding"
                         android:text="@string/phone_number"
                         android:textColor="@color/default_color"
-                        android:textSize="@dimen/text_size"
-                        android:textStyle="bold" />
+                        android:textSize="@dimen/hint_text_size" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginTop="10dp"
+                        android:layout_marginTop="@dimen/padding"
                         android:background="@drawable/textview_design"
                         android:gravity="center"
                         android:orientation="horizontal">
@@ -161,10 +164,10 @@
                             android:id="@+id/country_code"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:padding="10dp"
+                            android:padding="@dimen/padding"
                             android:text="+91"
                             android:textColor="@color/textview_text_color"
-                            android:textSize="16sp" />
+                            android:textSize="@dimen/hint_text_size" />
 
                         <View
                             android:layout_width="1dp"
@@ -184,7 +187,7 @@
                             android:padding="@dimen/textview_inner_padding"
                             android:textColor="@color/textview_text_color"
                             android:textColorHint="@color/default_color"
-                            android:textSize="16sp" />
+                            android:textSize="@dimen/hint_text_size" />
 
                         <View
                             android:layout_width="1dp"
@@ -198,6 +201,7 @@
                             android:layout_gravity="center"
                             android:background="#00000000"
                             android:gravity="center"
+                            android:padding="@dimen/_5sdp"
                             android:text="@string/change_button"
                             android:textAllCaps="false"
                             android:textColor="@color/change_button_color"

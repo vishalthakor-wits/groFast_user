@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
+import androidx.appcompat.widget.AppCompatMultiAutoCompleteTextView;
 import androidx.cardview.widget.CardView;
 
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -41,7 +42,8 @@ import retrofit2.Response;
 
 public class OtpPage extends AppCompatActivity {
     AppCompatButton Continue, resend;
-    TextView phone, countDownTimer;
+    TextView phone;
+    AppCompatButton countDownTimer;
     String receivedPhone, enteredOtp = "";
     EditText digit1, digit2, digit3, digit4;
     long COUNTDOWN_TIME_MILLIS = 30000;
