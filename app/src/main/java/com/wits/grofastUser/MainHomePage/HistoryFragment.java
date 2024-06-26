@@ -2,6 +2,7 @@ package com.wits.grofastUser.MainHomePage;
 
 import static com.wits.grofastUser.CommonUtilities.handleApiError;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -96,13 +97,7 @@ public class HistoryFragment extends Fragment {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                searchOrders(query, currentPageSearchByName);
-                userActivitySession.setOrderHistoryFetchIndicator(ProductSearchEnum.searchByName.getValue());
-                userActivitySession.setOrderHistoryFetchName(query);
-
-                currentPageSearchByName = 1;
-                lastPageSearchByName = 1;
-
+                initialiseSearcByName(query);
                 searchOrders(query, currentPageSearchByName);
                 return false;
             }
@@ -110,7 +105,7 @@ public class HistoryFragment extends Fragment {
             @Override
             public boolean onQueryTextChange(String newText) {
                 if (newText.isEmpty()) {
-                    showAllorderHistory();
+                    showAllOrderHistory(getContext());
                 }
                 searchQuery = newText;
                 return false;
@@ -120,11 +115,7 @@ public class HistoryFragment extends Fragment {
         searchIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                userActivitySession.setOrderHistoryFetchIndicator(ProductSearchEnum.searchByName.getValue());
-                userActivitySession.setOrderHistoryFetchName(searchQuery);
-
-                currentPageSearchByName = 1;
-                lastPageSearchByName = 1;
+                initialiseSearcByName(searchQuery);
                 searchOrders(searchQuery, currentPageSearchByName);
             }
         });
@@ -150,7 +141,7 @@ public class HistoryFragment extends Fragment {
 
                 int totalItemCount = linearLayoutManager.getItemCount();
                 int firstVisibleItemPosition = linearLayoutManager.findFirstVisibleItemPosition();
-                int lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
+                int lastVisibleItem = linearLayoutManager.findLastCompletelyVisibleItemPosition();
 
 
                 if (!isLoading && totalItemCount < lastVisibleItem + visibleThreshold) {
@@ -179,7 +170,7 @@ public class HistoryFragment extends Fragment {
     }
 
     private void loadOrderHistory(int page) {
-        Call<OrderHistoryResponse> call = RetrofitService.getClient(userActivitySession.getToken()).create(OrderInterface.class).fetchOrderHistory();
+        Call<OrderHistoryResponse> call = RetrofitService.getClient(userActivitySession.getToken()).create(OrderInterface.class).fetchOrderHistory(page);
         Log.e(TAG, "loadOrderHistory: current page " + page);
         Log.e(TAG, "loadOrderHistory: last    page " + lastPageSearchAll);
 
@@ -272,9 +263,9 @@ public class HistoryFragment extends Fragment {
 
     private void searchOrders(String searchValue, int page) {
 
-        Call<OrderHistoryResponse> call = RetrofitService.getClient(userActivitySession.getToken()).create(OrderInterface.class).searchOrders(searchValue);
+        Call<OrderHistoryResponse> call = RetrofitService.getClient(userActivitySession.getToken()).create(OrderInterface.class).searchOrders(searchValue, page);
         Log.e(TAG, "searchOrders: current page " + page);
-        Log.e(TAG, "searchOrders: last    page " + lastPageSearchAll);
+        Log.e(TAG, "searchOrders: last    page " + lastPageSearchByName);
 
         if (lastPageSearchByName >= page) {
 //            if (page == 1) ShowPageLoader();
@@ -315,23 +306,30 @@ public class HistoryFragment extends Fragment {
         }
     }
 
-    private void showAllorderHistory() {
-        if (!orderList.isEmpty())
-            allHistoryAdapter = new AllHistoryAdapter(getContext(), orderList);
-        recyclerView.setAdapter(allHistoryAdapter);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        loadOrderHistory(currentPageSearchAll);
-    }
-
     @Override
     public void onStop() {
         super.onStop();
         searchView.setQuery("", false);
         userActivitySession.setOrderHistoryFetchIndicator(0);
         userActivitySession.setOrderHistoryFetchName(null);
+    }
+
+    private void initialiseSearcByName(String name) {
+        userActivitySession.setOrderHistoryFetchIndicator(ProductSearchEnum.searchByName.getValue());
+        userActivitySession.setOrderHistoryFetchName(name);
+
+        currentPageSearchByName = 1;
+        lastPageSearchByName = 1;
+    }
+
+    private void showAllOrderHistory(Context context) {
+        if (!orderList.isEmpty()) {
+            UserActivitySession userActivitySession = new UserActivitySession(context);
+            userActivitySession.setOrderHistoryFetchIndicator(ProductSearchEnum.searchAll.getValue());
+            userActivitySession.setOrderHistoryFetchName(null);
+
+            allHistoryAdapter = new AllHistoryAdapter(context, orderList);
+            recyclerView.setAdapter(allHistoryAdapter);
+        }
     }
 }
