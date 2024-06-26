@@ -197,14 +197,7 @@ public class HomePage extends AppCompatActivity {
                 } else if (id == R.id.menu_my_address) {
                     startActivity(new Intent(HomePage.this, MyAddress.class));
                 } else if (id == R.id.menu_logout) {
-//                    LogOut();
-                    useractivitysession.setLoginStaus(false);
-                    useractivitysession.clearSession();
-                    userDetailSession.clearSession();
-                    cartDetailSession.clearSession();
-                    Intent i = new Intent(getApplicationContext(), MainActivity.class);
-                    i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(i);
+                    LogOut();
                 }
                 drawerLayout.closeDrawer(GravityCompat.START);
                 return false;
