@@ -14,6 +14,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.MenuItem;
@@ -23,6 +24,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -47,6 +49,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Locale;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import okhttp3.MediaType;
@@ -164,6 +167,7 @@ public class EditProfile extends AppCompatActivity {
         ImageView close = dialogView.findViewById(R.id.close_change_phone_number);
         EditText phone = dialogView.findViewById(R.id.edit_phone_no);
         AppCompatButton changenumber = dialogView.findViewById(R.id.change_number);
+        ProgressBar progressBar = dialogView.findViewById(R.id.loader_edit_phone_number);
         String currentPhoneNumber = userDetailSession.getPhoneNo();
         phone.setText(currentPhoneNumber);
 
@@ -181,6 +185,8 @@ public class EditProfile extends AppCompatActivity {
                 if (newPhoneNumber.equals(currentPhoneNumber)) {
                     Toast.makeText(EditProfile.this, getString(R.string.toast_message_new_phone), Toast.LENGTH_SHORT).show();
                 } else {
+                    progressBar.setVisibility(View.VISIBLE);
+                    changenumber.setVisibility(View.GONE);
                     sendOtp(newPhoneNumber, dialog);
                 }
             }
@@ -192,11 +198,11 @@ public class EditProfile extends AppCompatActivity {
         dialog.show();
     }
 
+
     private void openOtpPage(String phone) {
+        EditText digit1, digit2, digit3, digit4;
         AppCompatButton resentOtp, continueButton;
         TextView phoneNo, countDownTimer;
-        EditText digit1, digit2, digit3, digit4;
-
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         View dialogView = getLayoutInflater().inflate(R.layout.otp_layout, null);
@@ -234,7 +240,7 @@ public class EditProfile extends AppCompatActivity {
                 if (countDownTimer.getText().toString().equals("00:00")) {
                     loadingOverlay.setVisibility(View.VISIBLE);
                     startCountdown(resentOtp, countDownTimer, getApplicationContext(), COUNTDOWN_TIME_MILLIS);
-                    sendOtp(phone, null);
+                    sendOtp(phone, dialog);
                 } else {
                     Toast.makeText(getApplicationContext(), getString(R.string.toast_message_resend_otp), Toast.LENGTH_SHORT).show();
                 }
@@ -456,7 +462,6 @@ public class EditProfile extends AppCompatActivity {
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                 if (response.isSuccessful()) {
                     LoginResponse phoneUpdateResponse = response.body();
-
                     userDetailSession.setPhoneNo(phoneUpdateResponse.getPhone_no());
                     tvPhone.setText(phoneUpdateResponse.getPhone_no());
                     Toast.makeText(EditProfile.this, "" + phoneUpdateResponse.getMessage(), Toast.LENGTH_SHORT).show();

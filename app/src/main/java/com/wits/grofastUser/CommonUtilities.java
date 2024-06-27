@@ -222,7 +222,6 @@ public class CommonUtilities {
                 int seconds = (int) (millisUntilFinished / 1000) % 60;
                 String timeLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds);
                 countDownTimer.setText(timeLeftFormatted);
-
                 resend.setClickable(false);
                 resend.setBackgroundDrawable(context.getDrawable(R.drawable.textview_design));
                 resend.setTextColor(context.getColor(R.color.default_color));
@@ -232,10 +231,14 @@ public class CommonUtilities {
             public void onFinish() {
                 resend.setClickable(true);
                 countDownTimer.setText("00:00");
+                countDownTimer.setVisibility(View.GONE);
+                resend.setVisibility(View.VISIBLE);
                 resend.setBackgroundDrawable(context.getDrawable(R.drawable.color_button));
                 resend.setTextColor(context.getColor(R.color.button_text_color));
             }
         }.start();
+        countDownTimer.setVisibility(View.VISIBLE);
+        resend.setVisibility(View.GONE);
     }
 
     public static boolean validatePhone(EditText etPhone, Context context) {
