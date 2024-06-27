@@ -116,6 +116,7 @@
     <string name="settings_privacy_policy">Privacy policy</string>
     <string name="settings_terms_and_conditions">Terms and conditions</string>
     <string name="settings_refund_policy">Refund policy</string>
+    <string name="settings_return_policy">Return policy</string>
     <string name="settings_cancellation_policy">Cancellation policy</string>
     <string name="settings_delete_data_policy">Delete data policy</string>
     <string name="settings_delete_account_policy">Delete account policy</string>
@@ -352,7 +353,7 @@
     <string name="term_and_condition_link">https://grofast.in/terms-and-conditions</string>
     <string name="delete_data_policy_link">https://grofast.in/data-delete</string>
     <string name="delete_Account_policy_link">https://grofast.in/account-delete</string>
-
+    <string name="return_policy_link">https://grofast.in/account-delete</string>
     <string name="refund_policy_link">https://grofast.in/privacy-policy</string>
     <string name="cancellation_policy_link">https://grofast.in/privacy-policy</string>
     <string name="report_policy_link">https://grofast.in/privacy-policy</string>

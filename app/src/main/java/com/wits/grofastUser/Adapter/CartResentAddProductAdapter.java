@@ -79,6 +79,7 @@ public class CartResentAddProductAdapter extends RecyclerView.Adapter<CartResent
             }
         };
 
+        Log.e(TAG, "onBindViewHolder: Product image " + product.getImage());
         holder.product_image.setOnClickListener(productDetailClicklistner);
         holder.product_name.setOnClickListener(productDetailClicklistner);
         holder.product_price.setOnClickListener(productDetailClicklistner);
