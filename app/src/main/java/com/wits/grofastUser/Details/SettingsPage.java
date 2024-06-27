@@ -13,6 +13,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -135,16 +136,18 @@ public class SettingsPage extends AppCompatActivity {
 
     private void DeleteAccountConfirmation() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(getString(R.string.delete_account_confirmation));
-        builder.setMessage(getString(R.string.are_you_sure_delete_account));
-
         View dialogButtonsView = LayoutInflater.from(this).inflate(R.layout.confirmdeleteaddress, null);
         builder.setView(dialogButtonsView);
 
         // Find the buttons in the custom layout
+        TextView title = dialogButtonsView.findViewById(R.id.delete_confirmation_title);
+        TextView msg = dialogButtonsView.findViewById(R.id.delete_confirmation_msg);
         Button btnNo = dialogButtonsView.findViewById(R.id.btnNo);
         Button btnYes = dialogButtonsView.findViewById(R.id.btnYes);
         AlertDialog dialog = builder.create();
+
+        title.setText(R.string.delete_account_confirmation);
+        msg.setText(R.string.are_you_sure_delete_account);
         btnNo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
