@@ -28,6 +28,7 @@ import com.wits.grofastUser.Policy.DeleteDataPolicy;
 import com.wits.grofastUser.Policy.PrivacyPolicyActivity;
 import com.wits.grofastUser.Policy.RefundPolicy;
 import com.wits.grofastUser.Policy.ReportPolicy;
+import com.wits.grofastUser.Policy.ReturnPolicy;
 import com.wits.grofastUser.Policy.TermsConditionPolicy;
 import com.wits.grofastUser.R;
 import com.wits.grofastUser.session.CartDetailSession;
@@ -40,7 +41,7 @@ import retrofit2.Response;
 
 public class SettingsPage extends AppCompatActivity {
     RadioButton englosh_rd;
-    LinearLayout delete_account, privacy_policy, terms_condition_policy, delete_data_policy, delete_account_policy, refund_policy, cancellation_policy, report_policy;
+    LinearLayout delete_account, privacy_policy, terms_condition_policy, delete_data_policy, delete_account_policy, refund_policy, cancellation_policy, report_policy, return_policy;
     UserActivitySession userActivitySession;
     UserDetailSession userDetailSession;
     CartDetailSession cartDetailSession;
@@ -65,6 +66,7 @@ public class SettingsPage extends AppCompatActivity {
         refund_policy = findViewById(R.id.refund_policy);
         cancellation_policy = findViewById(R.id.cancellation_policy);
         report_policy = findViewById(R.id.report_policy);
+        return_policy = findViewById(R.id.return_policy);
 
         userActivitySession = new UserActivitySession(this);
         userDetailSession = new UserDetailSession(this);
@@ -113,6 +115,14 @@ public class SettingsPage extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent in = new Intent(getApplicationContext(), RefundPolicy.class);
+                startActivity(in);
+            }
+        });
+
+        return_policy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent in = new Intent(getApplicationContext(), ReturnPolicy.class);
                 startActivity(in);
             }
         });
