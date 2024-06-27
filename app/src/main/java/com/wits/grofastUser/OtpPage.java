@@ -2,6 +2,7 @@ package com.wits.grofastUser;
 
 import static com.wits.grofastUser.CommonUtilities.handleApiError;
 import static com.wits.grofastUser.CommonUtilities.setEditTextListeners;
+import static com.wits.grofastUser.CommonUtilities.startCountdown;
 
 import android.content.Context;
 import android.content.Intent;
@@ -51,7 +52,7 @@ public class OtpPage extends AppCompatActivity {
     ProgressBar loadingOverlay;
     private UserActivitySession userActivitySession;
     UserDetailSession userDetailSession;
-    ImageView login_back_ground,login_image;
+    ImageView login_back_ground, login_image;
     CardView cardView;
 
     @Override
@@ -90,9 +91,6 @@ public class OtpPage extends AppCompatActivity {
         countDownTimer = findViewById(R.id.countdown_timer);
         phone.setText(receivedPhone);
 
-        resend.setVisibility(View.GONE);
-        countDownTimer.setVisibility(View.VISIBLE);
-
         startCountdown(resend, countDownTimer, getApplicationContext(), COUNTDOWN_TIME_MILLIS);
         Continue.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -104,7 +102,7 @@ public class OtpPage extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (countDownTimer.getText().toString().equals("00:00")) {
-                   Showloder();
+                    Showloder();
                     Call<LoginResponse> call = RetrofitService.getUnAuthorizedClient().create(OtpInterface.class).login(receivedPhone);
 
                     call.enqueue(new Callback<LoginResponse>() {
@@ -128,7 +126,7 @@ public class OtpPage extends AppCompatActivity {
                         @Override
                         public void onFailure(Call<LoginResponse> call, Throwable t) {
                             t.printStackTrace();
-                           Hideloader();
+                            Hideloader();
                         }
                     });
                 } else {
@@ -137,32 +135,6 @@ public class OtpPage extends AppCompatActivity {
             }
         });
 
-    }
-
-    private void startCountdown(AppCompatButton resend, TextView countDownTimer, Context applicationContext, long countdownTimeMillis) {
-        new CountDownTimer(countdownTimeMillis, 1000) {
-            @Override
-            public void onTick(long millisUntilFinished) {
-                int minutes = (int) (millisUntilFinished / 1000) / 60;
-                int seconds = (int) (millisUntilFinished / 1000) % 60;
-                String timeLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds);
-                countDownTimer.setText(timeLeftFormatted);
-
-                resend.setClickable(false);
-                resend.setBackgroundDrawable(applicationContext.getDrawable(R.drawable.textview_design));
-                resend.setTextColor(applicationContext.getColor(R.color.default_color));
-            }
-
-            @Override
-            public void onFinish() {
-                resend.setClickable(true);
-                countDownTimer.setText("00:00");
-                resend.setVisibility(View.VISIBLE);
-                countDownTimer.setVisibility(View.GONE);
-                resend.setBackgroundDrawable(applicationContext.getDrawable(R.drawable.color_button));
-                resend.setTextColor(getApplicationContext().getColor(R.color.button_text_color));
-            }
-        }.start();
     }
 
     private void otpVerify() {
@@ -178,7 +150,7 @@ public class OtpPage extends AppCompatActivity {
             call.enqueue(new Callback<OtpVerifyResponse>() {
                 @Override
                 public void onResponse(Call<OtpVerifyResponse> call, Response<OtpVerifyResponse> response) {
-                   Hideloader();
+                    Hideloader();
                     if (response.isSuccessful()) {
                         OtpVerifyResponse otpVerifyResponse = response.body();
                         UserModel userModel = otpVerifyResponse.getUser();
@@ -276,19 +248,20 @@ public class OtpPage extends AppCompatActivity {
         });
     }
 
-    private void Hideloader(){
+    private void Hideloader() {
         loadingOverlay.setVisibility(View.GONE);
         cardView.setVisibility(View.VISIBLE);
         login_image.setVisibility(View.VISIBLE);
         login_back_ground.setVisibility(View.VISIBLE);
     }
 
-    private void Showloder(){
+    private void Showloder() {
         loadingOverlay.setVisibility(View.VISIBLE);
         cardView.setVisibility(View.GONE);
         login_image.setVisibility(View.GONE);
         login_back_ground.setVisibility(View.GONE);
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
