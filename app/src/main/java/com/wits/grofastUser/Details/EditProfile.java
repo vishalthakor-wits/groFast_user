@@ -107,7 +107,7 @@ public class EditProfile extends AppCompatActivity {
         etName.setText(userDetailSession.getName());
         etEmail.setText(userDetailSession.getEmail());
         String image = userDetailSession.getImage();
-        Glide.with(getApplicationContext()).load(domain+image).placeholder(defaultImage).into(showProfileImage);
+        Glide.with(getApplicationContext()).load(domain + image).placeholder(defaultImage).into(showProfileImage);
 
         if (image != null) {
             showEditProfileButton();
