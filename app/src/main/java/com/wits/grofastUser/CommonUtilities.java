@@ -343,17 +343,6 @@ public class CommonUtilities {
         return istDateTime.format(dateFormatter);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    public static String getTimeFromTimestamp(String isoTimestamp) {
-        if (isoTimestamp == null || isoTimestamp.isEmpty()) {
-            return "";
-        }
-        ZonedDateTime zonedDateTime = ZonedDateTime.parse(isoTimestamp);
-        ZonedDateTime istDateTime = zonedDateTime.withZoneSameInstant(ZoneId.of("Asia/Kolkata"));
-
-        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
-        return istDateTime.format(timeFormatter);
-    }
 
 
     public static boolean validateCustomSpinner(AppCompatSpinner spinner, Context context, int messageId) {

@@ -325,16 +325,16 @@ public class EditProfile extends AppCompatActivity {
         }
 
         if (selectedGender == null) {
-            showToastAndFocus(getString(R.string.toast_message_select_gender), etName);
+            showToastAndFocus(getString(R.string.toast_message_select_gender), radioMale);
             return;
         }
 
         if (uemail.isEmpty()) {
-            showToastAndFocus(getString(R.string.toast_message_enter_email), etName);
+            showToastAndFocus(getString(R.string.toast_message_enter_email), etEmail);
             return;
         }
         if (!android.util.Patterns.EMAIL_ADDRESS.matcher(uemail).matches()) {
-            showToastAndFocus(getString(R.string.toast_message_enter_valid_email), etName);
+            showToastAndFocus(getString(R.string.toast_message_enter_valid_email), etEmail);
             return;
         }
 
@@ -349,7 +349,6 @@ public class EditProfile extends AppCompatActivity {
             scrollView.setVisibility(View.GONE);
             updateProfile.setVisibility(View.GONE);
             loadingOverlay.setVisibility(View.VISIBLE);
-
             removeProfile();
 
             call.enqueue(new Callback<EditProfileResponse>() {
