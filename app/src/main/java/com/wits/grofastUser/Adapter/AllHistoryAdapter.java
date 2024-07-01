@@ -102,9 +102,9 @@ public class AllHistoryAdapter extends RecyclerView.Adapter<AllHistoryAdapter.Vi
         }
         holder.ProductDate.setText(orderDate);
 
-        OrderStatusModel orderStatus = item.getOrderStatus();
         holder.ProductPrice.setText("" + item.getTotal_amount());
 
+        OrderStatusModel orderStatus = item.getOrderStatus();
         holder.ProductStatus.setText(orderStatus.getStatus());
         holder.ProductStatus.setTextColor(Color.parseColor(orderStatus.getColor()));
 

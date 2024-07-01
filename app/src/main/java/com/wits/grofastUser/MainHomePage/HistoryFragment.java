@@ -86,6 +86,7 @@ public class HistoryFragment extends Fragment {
         empty_text1 = root.findViewById(R.id.history_empty_text1);
         empty_text2 = root.findViewById(R.id.history_empty_text2);
         gotoproduct = root.findViewById(R.id.history_empty_start_shopping);
+
         //History Item
         recyclerView = root.findViewById(R.id.history_fragment_recycleview);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
