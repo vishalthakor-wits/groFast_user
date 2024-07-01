@@ -17,11 +17,15 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.wits.grofastUser.Api.RetrofitService;
 import com.wits.grofastUser.Api.interfaces.OtpInterface;
 import com.wits.grofastUser.Api.responseClasses.LoginResponse;
+import com.wits.grofastUser.Policy.PrivacyPolicyActivity;
+import com.wits.grofastUser.Policy.ReturnPolicy;
+import com.wits.grofastUser.Policy.TermsConditionPolicy;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -33,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
     EditText phoneNo;
     String TAG = "MainActivity";
     LinearLayout loadingOverlay;
+    TextView privacy_policy, terms_policy, retun_policy;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +50,21 @@ public class MainActivity extends AppCompatActivity {
         Continue = findViewById(R.id.Continue);
         phoneNo = findViewById(R.id.phone_no);
         loadingOverlay = findViewById(R.id.loading_overlay);
+        privacy_policy = findViewById(R.id.main_privacy_policy);
+        terms_policy = findViewById(R.id.main_terms_condition);
+        retun_policy = findViewById(R.id.main_return_policy);
+
+        privacy_policy.setOnClickListener(v -> {
+            startActivity(new Intent(getApplicationContext(), PrivacyPolicyActivity.class));
+        });
+
+        terms_policy.setOnClickListener(v -> {
+            startActivity(new Intent(getApplicationContext(), TermsConditionPolicy.class));
+        });
+
+        retun_policy.setOnClickListener(v -> {
+            startActivity(new Intent(getApplicationContext(), ReturnPolicy.class));
+        });
 
         Continue.setOnClickListener(new View.OnClickListener() {
             @Override

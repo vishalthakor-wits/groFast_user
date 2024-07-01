@@ -353,10 +353,10 @@
     <string name="term_and_condition_link">https://grofast.in/terms-and-conditions</string>
     <string name="delete_data_policy_link">https://grofast.in/data-delete</string>
     <string name="delete_Account_policy_link">https://grofast.in/account-delete</string>
-    <string name="return_policy_link">https://grofast.in/account-delete</string>
-    <string name="refund_policy_link">https://grofast.in/privacy-policy</string>
-    <string name="cancellation_policy_link">https://grofast.in/privacy-policy</string>
-    <string name="report_policy_link">https://grofast.in/privacy-policy</string>
+    <string name="return_policy_link">https://grofast.in/return-policy</string>
+    <string name="refund_policy_link">https://grofast.in/refund-policy</string>
+    <string name="cancellation_policy_link">https://grofast.in/cancellation-policy</string>
+    <string name="report_policy_link">https://grofast.in/report-policy</string>
 
     <!-- Order Cancel -->
     <string name="order_detail">Order Detail</string>
