@@ -49,10 +49,6 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         return NotificationItems.size();
     }
 
-    public void addNotification(List<InAppNotificationModel> notification) {
-        NotificationItems.addAll(notification);
-        notifyDataSetChanged();
-    }
 
     public class ViewHolders extends RecyclerView.ViewHolder {
         TextView header, description, day;
