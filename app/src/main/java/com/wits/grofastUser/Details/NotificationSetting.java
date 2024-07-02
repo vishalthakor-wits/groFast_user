@@ -16,8 +16,8 @@ import android.widget.Toast;
 
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.wits.grofastUser.Api.RetrofitService;
-import com.wits.grofastUser.Api.responseClasses.NotificationResponse;
-import com.wits.grofastUser.Api.responseModels.NotificationModel;
+import com.wits.grofastUser.Notification.NotificationResponse;
+import com.wits.grofastUser.Notification.NotificationModel;
 import com.wits.grofastUser.Notification.NotificationInterface;
 import com.wits.grofastUser.R;
 import com.wits.grofastUser.session.UserActivitySession;

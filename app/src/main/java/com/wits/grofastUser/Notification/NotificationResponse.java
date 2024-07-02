@@ -1,8 +1,8 @@
-package com.wits.grofastUser.Api.responseClasses;
+package com.wits.grofastUser.Notification;
 
 
 import com.google.gson.annotations.SerializedName;
-import com.wits.grofastUser.Api.responseModels.NotificationModel;
+import com.wits.grofastUser.Notification.NotificationModel;
 
 public class NotificationResponse {
     private String message;

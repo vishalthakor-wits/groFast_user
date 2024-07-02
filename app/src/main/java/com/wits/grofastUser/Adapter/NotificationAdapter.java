@@ -12,7 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.wits.grofastUser.Api.responseModels.InAppNotificationModel;
+import com.wits.grofastUser.Notification.InAppNotificationModel;
 import com.wits.grofastUser.R;
 
 import java.util.List;
@@ -49,10 +49,6 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         return NotificationItems.size();
     }
 
-    public void addNotification(List<InAppNotificationModel> notification) {
-        NotificationItems.addAll(notification);
-        notifyDataSetChanged();
-    }
 
     public class ViewHolders extends RecyclerView.ViewHolder {
         TextView header, description, day;
