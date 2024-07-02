@@ -1,7 +1,6 @@
-package com.wits.grofastUser.Api.responseClasses;
+package com.wits.grofastUser.Notification;
 
 import com.google.gson.annotations.SerializedName;
-import com.wits.grofastUser.Api.paginatedResponses.InAppNotificationPaginatedRes;
 
 public class InAppNotificationResponse {
     private String message;

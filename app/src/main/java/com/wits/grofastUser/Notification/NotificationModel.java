@@ -1,4 +1,4 @@
-package com.wits.grofastUser.Api.responseModels;
+package com.wits.grofastUser.Notification;
 
 public class NotificationModel {
     private int id;

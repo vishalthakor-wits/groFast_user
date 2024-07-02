@@ -1,7 +1,7 @@
-package com.wits.grofastUser.Api.paginatedResponses;
+package com.wits.grofastUser.Notification;
 
 import com.google.gson.annotations.SerializedName;
-import com.wits.grofastUser.Api.responseModels.InAppNotificationModel;
+import com.wits.grofastUser.Notification.InAppNotificationModel;
 
 import java.util.List;
 

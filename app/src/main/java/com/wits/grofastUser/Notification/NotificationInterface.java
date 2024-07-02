@@ -1,8 +1,5 @@
 package com.wits.grofastUser.Notification;
 
-import com.wits.grofastUser.Api.responseClasses.InAppNotificationResponse;
-import com.wits.grofastUser.Api.responseClasses.NotificationResponse;
-
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.POST;

@@ -12,7 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.wits.grofastUser.Api.responseModels.InAppNotificationModel;
+import com.wits.grofastUser.Notification.InAppNotificationModel;
 import com.wits.grofastUser.R;
 
 import java.util.List;
