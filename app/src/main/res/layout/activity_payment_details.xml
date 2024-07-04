@@ -151,14 +151,15 @@
                         android:drawablePadding="5dp"
                         android:drawableTint="@color/Login_theme"
                         android:text="@string/delivery_address"
+                        android:layout_gravity="center"
                         android:textColor="@color/Login_theme"
                         android:textSize="@dimen/text_size" />
 
                     <androidx.appcompat.widget.AppCompatButton
                         android:id="@+id/change_selected_address"
                         android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/selected_text"
+                        android:layout_height="@dimen/_30sdp"
+                        android:background="@drawable/color_button"
                         android:text="@string/change_button"
                         android:textAllCaps="false"
                         android:textColor="@color/button_text_color"
