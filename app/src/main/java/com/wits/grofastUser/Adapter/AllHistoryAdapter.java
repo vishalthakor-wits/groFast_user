@@ -164,8 +164,8 @@ public class AllHistoryAdapter extends RecyclerView.Adapter<AllHistoryAdapter.Vi
         holder.ProductInvoice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                downloadInvoice(domain + item.getInvoice());
-                Log.e(TAG, "onClick: Invoice : " + domain + item.getInvoice());
+                downloadInvoice( item.getInvoice());
+                Log.e(TAG, "onClick: Invoice : " +  item.getInvoice());
             }
         });
     }
