@@ -289,7 +289,7 @@
     <string name="cancelation_policy">Cancellation Policy</string>
     <string name="show_coupon">Show Coupon</string>
     <string name="add_amount">Enter Amount</string>
-    <string name="Invoice">Invoice</string>
+    <string name="Invoice">Download Invoice</string>
     <string name="Total">Total : </string>
 
 
