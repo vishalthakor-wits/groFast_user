@@ -257,22 +257,22 @@ public class PaymentDetails extends AppCompatActivity {
                     cartDetailSession.clearSession();
                     OrderPlaceDialog();
 
-//                    {
-//                        Log.i(TAG, "onResponse placeOrder: message " + orderPlaceResponse.getMessage());
-//                        Log.i(TAG, "onResponse placeOrder: total " + orderDetails.getTotal_amount());
-//                        Log.i(TAG, "onResponse placeOrder: coupon " + orderDetails.getCoupon());
-//                        Log.i(TAG, "onResponse placeOrder: discount " + orderDetails.getDiscount());
-//                        Log.i(TAG, "onResponse placeOrder: cgst " + orderDetails.getCgst());
-//                        Log.i(TAG, "onResponse placeOrder: sgst " + orderDetails.getSgst());
-//                        Log.i(TAG, "onResponse placeOrder: Delevery Charges " + orderDetails.getDelivery_charges());
-//                        Log.i(TAG, "onResponse placeOrder: tip " + orderDetails.getTip());
-//                        Log.i(TAG, "onResponse placeOrder: address " + orderDetails.getAddress());
-//                        Log.i(TAG, "onResponse placeOrder: note " + orderDetails.getAdditional_note());
-//                        Log.i(TAG, "onResponse placeOrder: receiver name  " + orderDetails.getReceiver_name());
-//                        Log.i(TAG, "onResponse placeOrder: receiver number " + orderDetails.getReceiver_phone_no());
-//                        Log.i(TAG, "onResponse placeOrder: payment method " + orderDetails.getPayment_metod());
-//                        Log.i(TAG, "onResponse placeOrder: order status " + orderDetails.getOrderStatus().getStatus());
-//                    }
+                    {
+                        Log.i(TAG, "onResponse placeOrder: message " + orderPlaceResponse.getMessage());
+                        Log.i(TAG, "onResponse placeOrder: total " + orderDetails.getTotal_amount());
+                        Log.i(TAG, "onResponse placeOrder: coupon " + orderDetails.getCoupon());
+                        Log.i(TAG, "onResponse placeOrder: discount " + orderDetails.getDiscount());
+                        Log.i(TAG, "onResponse placeOrder: cgst " + orderDetails.getCgst());
+                        Log.i(TAG, "onResponse placeOrder: sgst " + orderDetails.getSgst());
+                        Log.i(TAG, "onResponse placeOrder: Delevery Charges " + orderDetails.getDelivery_charges());
+                        Log.i(TAG, "onResponse placeOrder: tip " + orderDetails.getTip());
+                        Log.i(TAG, "onResponse placeOrder: address " + orderDetails.getAddress());
+                        Log.i(TAG, "onResponse placeOrder: note " + orderDetails.getAdditional_note());
+                        Log.i(TAG, "onResponse placeOrder: receiver name  " + orderDetails.getReceiver_name());
+                        Log.i(TAG, "onResponse placeOrder: receiver number " + orderDetails.getReceiver_phone_no());
+                        Log.i(TAG, "onResponse placeOrder: payment method " + orderDetails.getPayment_metod());
+                        Log.i(TAG, "onResponse placeOrder: order status " + orderDetails.getOrderStatus().getStatus());
+                    }
 
                 } else {
                     placeOrder.setVisibility(View.VISIBLE);
