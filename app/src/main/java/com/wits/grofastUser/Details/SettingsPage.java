@@ -40,7 +40,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class SettingsPage extends AppCompatActivity {
-    RadioButton englosh_rd;
+    RadioButton english_rd;
     LinearLayout delete_account, privacy_policy, terms_condition_policy, delete_data_policy, delete_account_policy, refund_policy, cancellation_policy, report_policy, return_policy;
     UserActivitySession userActivitySession;
     UserDetailSession userDetailSession;
@@ -56,8 +56,8 @@ public class SettingsPage extends AppCompatActivity {
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.outline_arrow_back_24);
         setContentView(R.layout.activity_settings_page);
 
-        englosh_rd = findViewById(R.id.language_english);
-        englosh_rd.setChecked(true);
+        english_rd = findViewById(R.id.language_english);
+        english_rd.setChecked(true);
         delete_account = findViewById(R.id.delete_account);
         privacy_policy = findViewById(R.id.privacy_policy);
         terms_condition_policy = findViewById(R.id.terms_condition__policy);

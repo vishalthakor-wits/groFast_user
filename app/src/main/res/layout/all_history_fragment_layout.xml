@@ -134,9 +134,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:gravity="center"
                     android:layout_weight="1"
                     android:text="@string/Invoice"
-                    android:textColor="@color/Login_theme"
+                    android:padding="5dp"
+                    android:layout_marginRight="@dimen/_5sdp"
+                    android:background="@drawable/color_button"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
                     android:textSize="@dimen/hint_text_size"
                     android:textStyle="bold" />
 
@@ -147,6 +152,7 @@
                     android:layout_gravity="left"
                     android:background="@drawable/color_button"
                     android:gravity="left"
+                    android:visibility="gone"
                     android:backgroundTint="@color/change_button_color"
                     android:layout_marginRight="@dimen/_5sdp"
                     android:orientation="horizontal"

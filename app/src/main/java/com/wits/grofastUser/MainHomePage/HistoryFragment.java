@@ -55,7 +55,6 @@ public class HistoryFragment extends Fragment {
     AppCompatButton gotoproduct;
     LinearLayout showdata;
     ShimmerFrameLayout shimmerFrameLayout;
-
     private ImageView searchIcon;
     private String searchQuery;
     private SearchView searchView;

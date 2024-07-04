@@ -1,5 +1,6 @@
 package com.wits.grofastUser.Adapter;
 
+import static com.wits.grofastUser.Api.RetrofitService.domain;
 import static com.wits.grofastUser.CommonUtilities.getDateFromTimestamp;
 import static com.wits.grofastUser.CommonUtilities.handleApiError;
 
@@ -132,9 +133,6 @@ public class AllHistoryAdapter extends RecyclerView.Adapter<AllHistoryAdapter.Vi
         } else {
             holder.ProductCancel.setVisibility(View.VISIBLE);
         }
-//        Log.e(TAG, "onBindViewHolder: cancel button " + item.getIsCancelAllow());
-//        Log.e(TAG, "onBindViewHolder: Reorder button " + item.getIsReorderAllow());
-//        Log.e(TAG, "onBindViewHolder: Return button " + item.getIsReturnAllow());
 
         if (item.getIsReturnAllow() == 0) {
             holder.ProductReturn.setVisibility(View.GONE);
@@ -166,8 +164,8 @@ public class AllHistoryAdapter extends RecyclerView.Adapter<AllHistoryAdapter.Vi
         holder.ProductInvoice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                downloadInvoice(item.getInvoice());
-                Log.e(TAG, "onClick: Invoice : " + item.getInvoice());
+                downloadInvoice(domain + item.getInvoice());
+                Log.e(TAG, "onClick: Invoice : " + domain + item.getInvoice());
             }
         });
     }
