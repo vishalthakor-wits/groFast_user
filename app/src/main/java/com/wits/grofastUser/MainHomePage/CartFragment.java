@@ -63,7 +63,8 @@ public class CartFragment extends Fragment {
     private static LinearLayout cartLinearLayout, cart_empty_layout;
     private UserActivitySession userActivitySession;
     private CartDetailSession cartDetailSession;
-    private String selectedTip = "0";
+    private String TipAmount = "0";
+    private String TipSelection = "";
     ImageView additemimage, couponimagechange, Taxesimage;
     LinearLayoutManager linearLayoutManager;
     private final String TAG = "CartFragment";
@@ -160,9 +161,10 @@ public class CartFragment extends Fragment {
                 selectedTip = ((TextView) v).getText().toString();
 
                 if (selectedTip.equals(getString(R.string.other))) {
+                if (TipAmount.equals(getString(R.string.other))) {
                     tipamount.setVisibility(View.VISIBLE);
                 } else {
-                    cartDetailSession.setTip(selectedTip);
+                    cartDetailSession.setTip(TipAmount);
                     loadCartItems(cartDetailSession.getCoupon(), null, false);
                     tipamount.setText("");
                     tipamount.setVisibility(View.GONE);
