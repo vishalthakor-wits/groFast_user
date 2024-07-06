@@ -1,7 +1,7 @@
 package com.wits.grofastUser.Enums;
 
 public enum TipEnum {
-    tip10("10RS"),tip20("20RS"),tipOther("CUSTOM_TIP");
+    tip30("30RS"), tip20("20RS"), tipOther("CUSTOM_TIP");
 
     private String value;
 

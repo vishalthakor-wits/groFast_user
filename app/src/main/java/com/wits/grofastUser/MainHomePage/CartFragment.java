@@ -37,6 +37,7 @@ import com.wits.grofastUser.Api.responseModels.CartModel;
 import com.wits.grofastUser.Api.responseModels.TaxAndCharge;
 import com.wits.grofastUser.Details.Coupon;
 import com.wits.grofastUser.Details.PaymentDetails;
+import com.wits.grofastUser.Enums.TipEnum;
 import com.wits.grofastUser.R;
 import com.wits.grofastUser.session.CartDetailSession;
 import com.wits.grofastUser.session.UserActivitySession;
@@ -64,12 +65,60 @@ public class CartFragment extends Fragment {
     private UserActivitySession userActivitySession;
     private CartDetailSession cartDetailSession;
     private String TipAmount = "0";
-    private String TipSelection = "";
+    private String tipSelection = "";
     ImageView additemimage, couponimagechange, Taxesimage;
     LinearLayoutManager linearLayoutManager;
     private final String TAG = "CartFragment";
     private NestedScrollView datashow;
     private ShimmerFrameLayout shimmerFrameLayout;
+    private final View.OnClickListener tipClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            resetTipSelection();
+            TipAmount = ((TextView) v).getText().toString();
+            int viewId = v.getId();
+
+            if (viewId == tipother.getId()) {
+                if (tipSelection.equals(TipEnum.tipOther.getValue())) {
+                    resetTip(tipother);
+                    tipSelection = "";
+                    if (!cartDetailSession.getTip().equals("0")) {
+                        cartDetailSession.setTip("0");
+                        loadCartItems(cartDetailSession.getCoupon(), null, false);
+                    }
+                } else {
+                    tipamount.setVisibility(View.VISIBLE);
+                    tipSelection = TipEnum.tipOther.getValue();
+                    updateTipSelection(tipother, TipEnum.tipOther.getValue());
+                }
+            } else {
+                tipamount.setText("");
+                tipamount.setVisibility(View.GONE);
+                if (viewId == tip20.getId()) {
+                    if (tipSelection.equals(TipEnum.tip20.getValue())) {
+                        resetTip(tip20);
+                        tipSelection = "";
+                        cartDetailSession.setTip("0");
+                    } else {
+                        cartDetailSession.setTip(tip20.getText().toString());
+                        tipSelection = TipEnum.tip20.getValue();
+                        updateTipSelection(tip20, TipEnum.tip20.getValue());
+                    }
+                } else if (viewId == tip30.getId()) {
+                    if (tipSelection.equals(TipEnum.tip30.getValue())) {
+                        resetTip(tip30);
+                        tipSelection = "";
+                        cartDetailSession.setTip("0");
+                    } else {
+                        cartDetailSession.setTip(tip30.getText().toString());
+                        tipSelection = TipEnum.tip30.getValue();
+                        updateTipSelection(tip30, TipEnum.tip30.getValue());
+                    }
+                }
+                loadCartItems(cartDetailSession.getCoupon(), null, false);
+            }
+        }
+    };
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -151,27 +200,6 @@ public class CartFragment extends Fragment {
             }
         });
 
-        View.OnClickListener tipClickListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                resetTipSelection();
-                updateTipSelection((TextView) v);
-
-                cartDetailSession.setTip("0");
-                selectedTip = ((TextView) v).getText().toString();
-
-                if (selectedTip.equals(getString(R.string.other))) {
-                if (TipAmount.equals(getString(R.string.other))) {
-                    tipamount.setVisibility(View.VISIBLE);
-                } else {
-                    cartDetailSession.setTip(TipAmount);
-                    loadCartItems(cartDetailSession.getCoupon(), null, false);
-                    tipamount.setText("");
-                    tipamount.setVisibility(View.GONE);
-                }
-            }
-        };
-
         coupontext.setText(cartDetailSession.getCoupon());
         additemedittext.setText(cartDetailSession.getAditionalNote());
 
@@ -183,10 +211,12 @@ public class CartFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (tipamount.getVisibility() == View.VISIBLE) {
                 Log.e(TAG, "onTextChanged: tip text " + s.toString());
                 if (tipamount.getVisibility() == View.VISIBLE) {
                     cartDetailSession.setTip(s.toString());
                     loadCartItems(cartDetailSession.getCoupon(), null, false);
+                }
                 }
             }
 
@@ -211,13 +241,13 @@ public class CartFragment extends Fragment {
             Log.e(TAG, "onCreateView: session tip " + sessionTip);
             if (sessionTip.equals(tip20.getText().toString())) {
                 resetTipSelection();
-                updateTipSelection(tip20);
+                updateTipSelection(tip20, TipEnum.tip20.getValue());
             } else if (sessionTip.equals(tip30.getText().toString())) {
                 resetTipSelection();
-                updateTipSelection(tip30);
+                updateTipSelection(tip30, TipEnum.tip30.getValue());
             } else {
                 resetTipSelection();
-                updateTipSelection(tipother);
+                updateTipSelection(tipother, TipEnum.tipOther.getValue());
                 tipamount.setText(sessionTip);
                 tipamount.setVisibility(View.VISIBLE);
             }
@@ -372,9 +402,12 @@ public class CartFragment extends Fragment {
         tipView.setTextColor(getResources().getColor(R.color.Login_theme));
         tipView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.baseline_currency_rupee_24, 0, 0, 0);
         tipView.setCompoundDrawableTintList(ColorStateList.valueOf(getResources().getColor(R.color.Login_theme)));
+        if (tipView.getId() == tipother.getId()) {
+            tipamount.setVisibility(View.GONE);
+        }
     }
 
-    private void updateTipSelection(TextView selectedTip) {
+    private void updateTipSelection(TextView selectedTip, String selection) {
         selectedTip.setBackground(getResources().getDrawable(R.drawable.selected_text));
         selectedTip.setTextColor(getResources().getColor(R.color.white));
         selectedTip.setCompoundDrawablesWithIntrinsicBounds(R.drawable.baseline_currency_rupee_24, 0, 0, 0);
@@ -382,6 +415,9 @@ public class CartFragment extends Fragment {
 
         // Ensure the padding remains 20dp on left and right
         selectedTip.setPadding(getResources().getDimensionPixelSize(R.dimen.padding_left_right), selectedTip.getPaddingTop(), getResources().getDimensionPixelSize(R.dimen.padding_left_right), selectedTip.getPaddingBottom());
+        if (selection != null) {
+            tipSelection = selection;
+        }
     }
 
     public static TextView getSubTotalTextView() {
