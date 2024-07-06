@@ -64,22 +64,24 @@ public class CartResentAddProductAdapter extends RecyclerView.Adapter<CartResent
         CartModel item = cartItems.get(position);
         ProductModel product = item.getProduct();
 
-        holder.product_name.setText(product.getName());
+        if (product != null) {
+            holder.product_name.setText(product.getName());
+            Glide.with(context).load(product.getImage()).placeholder(R.mipmap.ic_launcher).into(holder.product_image);
+        }
+
         holder.product_price.setText(item.getAmount().toString());
         holder.totalquantity.setText(item.getQuantity().toString());
-
-        Glide.with(context).load(product.getImage()).placeholder(R.mipmap.ic_launcher).into(holder.product_image);
 
         productDetailClicklistner = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, ProductDetailActivity.class);
-                intent.putExtra(context.getString(R.string.intent_key_product_model), product);
+                if (product != null)
+                    intent.putExtra(context.getString(R.string.intent_key_product_model), product);
                 context.startActivity(intent);
             }
         };
 
-        Log.e(TAG, "onBindViewHolder: Product image " + product.getImage());
         holder.product_image.setOnClickListener(productDetailClicklistner);
         holder.product_name.setOnClickListener(productDetailClicklistner);
         holder.product_price.setOnClickListener(productDetailClicklistner);
