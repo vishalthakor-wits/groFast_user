@@ -160,19 +160,6 @@ public class AllHistoryAdapter extends RecyclerView.Adapter<AllHistoryAdapter.Vi
                 context.startActivity(in);
             }
         });
-
-        holder.ProductInvoice.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                downloadInvoice( item.getInvoice());
-                Log.e(TAG, "onClick: Invoice : " +  item.getInvoice());
-            }
-        });
-    }
-
-    private void downloadInvoice(String downloadLink) {
-        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(downloadLink));
-        context.startActivity(browserIntent);
     }
 
     @Override
