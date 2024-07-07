@@ -118,6 +118,7 @@
         </LinearLayout>
 
     </ScrollView>
+
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/complete_order_btn"
         android:layout_width="match_parent"
