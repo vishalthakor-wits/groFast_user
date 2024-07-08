@@ -117,6 +117,7 @@ public class PaymentDetails extends AppCompatActivity {
                 String receiver = receiverName.getText().toString().trim();
                 if (validateReceiverName(receiver, getApplicationContext()) && validatePhone(receiverNumber, getApplicationContext())) {
                     if (selectedAddressId != null) {
+                        Log.e(TAG, "onClick: selected address Id : " + selectedAddressId);
                         placeOrder.setVisibility(View.GONE);
                         place_order_loader.setVisibility(View.VISIBLE);
                         placeOrder(cartDetailSession.getCoupon(), Integer.parseInt(cartDetailSession.getTip()), cartDetailSession.getAditionalNote(), selectedAddressId, receiver, Long.parseLong(receiverNumber.getText().toString()), 1);
@@ -246,6 +247,7 @@ public class PaymentDetails extends AppCompatActivity {
 
     private void placeOrder(String couponCode, int tip, String aditionalNote, int addressId, String receiverName, Long receiverPhone, int paymentMethod) {
         Call<OrderPlaceResponse> call = RetrofitService.getClient(userActivitySession.getToken()).create(OrderInterface.class).placeOrder(couponCode, tip, aditionalNote, addressId, receiverName, receiverPhone, paymentMethod);
+        Log.e(TAG, "placeOrder: address id : " + addressId);
         call.enqueue(new Callback<OrderPlaceResponse>() {
             @Override
             public void onResponse(Call<OrderPlaceResponse> call, Response<OrderPlaceResponse> response) {

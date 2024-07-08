@@ -69,7 +69,6 @@ public class OrderModel implements Parcelable {
     private int isReturnAllow;
     @SerializedName("is_reorder_allow")
     private int isReorderAllow;
-
     private String invoice;
 
     protected OrderModel(Parcel in) {
