@@ -47,7 +47,7 @@ import retrofit2.Response;
 
 public class HomeFragment extends Fragment {
 
-    RecyclerView top_stores_recycleview, product_recycleview,bannerrecycleview;
+    RecyclerView top_stores_recycleview, product_recycleview, bannerrecycleview;
     TopCategoriesAdapter topStoreAdapter;
     HomeViewProductAdapter productAdapter;
     private List<HomeCategoryModel> categoryList = new ArrayList<>();
@@ -93,7 +93,6 @@ public class HomeFragment extends Fragment {
         bannerrecycleview = root.findViewById(R.id.home_page_banner_recycleview);
         bannerrecycleview.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         getbanner();
-
 
 
         //Top Stores Item
@@ -159,6 +158,7 @@ public class HomeFragment extends Fragment {
                     bannerAdapter = new BannerAdapter(getContext(), banners);
                     bannerrecycleview.setAdapter(bannerAdapter);
                     bannerAdapter.notifyDataSetChanged();
+                    Log.e(TAG, "onResponse: message  : " + response.body().getMessage());
                     startAutoScroll();
                 } else {
                     handleApiError(TAG, response, getContext());
@@ -279,7 +279,7 @@ public class HomeFragment extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
-        searchView.setQuery("",false);
+        searchView.setQuery("", false);
     }
 
     @Override
