@@ -63,7 +63,7 @@ public class EditProfile extends AppCompatActivity {
     private static final int GALLERY_REQUEST_CODE = 100;
     private static final int STORAGE_PERMISSION_CODE = 101;
     private CircleImageView showProfileImage;
-    private AppCompatButton addProfileImage, editProfileImage, updateProfile, changephonenumber;
+    private AppCompatButton addProfileImage, editProfileImage, updateProfile, changephonenumber,changenumber;
     private UserDetailSession userDetailSession;
     private MultipartBody.Part image;
     private File imageFile;
@@ -77,6 +77,7 @@ public class EditProfile extends AppCompatActivity {
     private final int defaultImage = R.drawable.account;
     private boolean isRemoveProfile = false;
     private long COUNTDOWN_TIME_MILLIS = 30000;
+    ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -166,8 +167,8 @@ public class EditProfile extends AppCompatActivity {
 
         ImageView close = dialogView.findViewById(R.id.close_change_phone_number);
         EditText phone = dialogView.findViewById(R.id.edit_phone_no);
-        AppCompatButton changenumber = dialogView.findViewById(R.id.change_number);
-        ProgressBar progressBar = dialogView.findViewById(R.id.loader_edit_phone_number);
+        changenumber = dialogView.findViewById(R.id.change_number);
+        progressBar = dialogView.findViewById(R.id.loader_edit_phone_number);
         String currentPhoneNumber = userDetailSession.getPhoneNo();
         phone.setText(currentPhoneNumber);
 
@@ -432,7 +433,8 @@ public class EditProfile extends AppCompatActivity {
         call.enqueue(new Callback<LoginResponse>() {
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
-                loadingOverlay.setVisibility(View.GONE);
+                progressBar.setVisibility(View.GONE);
+                changenumber.setVisibility(View.VISIBLE);
                 if (response.isSuccessful()) {
                     LoginResponse otpSendResponse = response.body();
                     if (otpSendResponse != null) {
@@ -442,6 +444,8 @@ public class EditProfile extends AppCompatActivity {
                     if (dialog != null) dialog.dismiss();
                 } else {
                     handleApiError(TAG, response, getApplicationContext());
+                    progressBar.setVisibility(View.GONE);
+                    changenumber.setVisibility(View.VISIBLE);
                 }
             }
 
